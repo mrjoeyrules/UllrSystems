@@ -12,35 +12,51 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
     <body>
         <h1>Enter Account information</h1>
         <!--Form to create an account-->
-        <form id="SignUpForm" action="createUser" method="POST">
+        <form id="SignUpForm" method="POST">
             <label for="userData">Enter Username and Select role to create an account</label>
             <br>
             <label for="username">Username:</label>
-            <input type="text" id="userName" name="userName" required>
+            <input type="text" id="username" name="username" required>
             <br>
             <!-- Drop down menu for roles -->
+            <select id="role" name="role">
+                <option value="1">Delivery Driver</option>
+                <option value="2">Head Chef</option>
+                <option value="3">Admin</option>
+            </select>
             <br>
             <button type="submit">Submit</button>
 
         </form>
-        <div id= "errorMessage" style="color: red;">
-            <!-- This will display the error message passed as a query parameter -->
+        <div id="passwordPopup">
             <script>
-                // Display error message dynamically
-                const urlParams = new URLSearchParams(window.location.search);
-                const errorMessage = urlParams.get('error');
-                if (errorMessage) {
-                    document.getElementById("errorMessage").innerText = decodeURIComponent(errorMessage);
+                function showPassword(password) {
+                    alert("New users generated password us: " + password);
                 }
-
-                // Clear query parameters on form submission
-                document.getElementById("SignUpForm").addEventListener("submit", function (event) {
-                    const url = new URL(window.location.href);
-                    url.search = ""; // Clear query parameters
-                    history.replaceState(null, "", url);
+                document.getElementById("SignUpForm").addEventListener("submit", async function (event) {
+                    event.preventDefault();
+                    const formData = new FormData(document.getElementById("SignUpForm"));
+                    try {
+                        const response = await fetch('/UllrSystems/createUser', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        if (!response.ok) {
+                            throw new Error("Failed to submit the form.");
+                        }
+                        const data = await response.json();
+                        if (data.success) {
+                            showPassword(data.password);
+                        } else {
+                            alert("Username already in use please try again with a different Username");
+                        }
+                    } catch (error) {
+                        console.error("Error:", error);
+                        alert("Username already in use please try again with a different Username");
+                    }
                 });
             </script>
-            <--<!-- Need to implement popup for new passwords made by admins -->
+
         </div>
     </body>
 </html>
