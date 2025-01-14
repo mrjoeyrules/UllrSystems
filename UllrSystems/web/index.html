@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <!--
 Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -5,23 +8,23 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
 -->
 <html>
     <head>
-        <title>Create Account</title>
+        <title>Log In</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
         <h1>Enter Account information</h1>
-        <!--Form to create an account-->
-        <form id="SignUpForm" action="createUser" method="POST">
-            <label for="userData">Enter Username and Select role to create an account</label>
+        <!-- Form for username and password -->
+        <form id="LogInForm" action="loginUser" method="POST">
+            <label for="userData">Enter Username and password to login</label>
             <br>
             <label for="username">Username:</label>
-            <input type="text" id="userName" name="userName" required>
+            <input type="text" id="username" name="username" required>
             <br>
-            <!-- Drop down menu for roles -->
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
             <br>
             <button type="submit">Submit</button>
-
         </form>
         <div id= "errorMessage" style="color: red;">
             <!-- This will display the error message passed as a query parameter -->
@@ -34,7 +37,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                 }
 
                 // Clear query parameters on form submission
-                document.getElementById("SignUpForm").addEventListener("submit", function (event) {
+                document.getElementById("LogInForm").addEventListener("submit", function (event) {
                     const url = new URL(window.location.href);
                     url.search = ""; // Clear query parameters
                     history.replaceState(null, "", url);
@@ -44,3 +47,4 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
         </div>
     </body>
 </html>
+

@@ -16,13 +16,14 @@ public class SQLInterfacing {
         String username = "Joseph";
         String password = "Joseph01";
         String url = "jdbc:postgresql://81.110.173.250:5432/" + database; // url of server, postgresql is the server type, IP is the server ip with the port its on and adds on the database specified
-        try {
-            // Connect to PostgreSQL database
-            conn = DriverManager.getConnection(url, username, password); // actually connects using the url above and username and password for admin acc
-            System.out.println("Connected to the PostgreSQL server successfully."); // console test to prove connection succeded
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return conn; // returns the connection server connection
+        while (conn == null) {
+            try {
+                // Connect to PostgreSQL database
+                conn = DriverManager.getConnection(url, username, password); // actually connects using the url above and username and password for admin acc
+                System.out.println("Connected to the PostgreSQL server successfully."); // console test to prove connection succeded
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
         }
         return conn;
     }

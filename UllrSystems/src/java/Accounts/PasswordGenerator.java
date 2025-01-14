@@ -30,8 +30,11 @@ public class PasswordGenerator {
             password.append(digit); // random digits x 3
         }
         String rawPassword = password.toString();// converts from string builder to string
-        System.out.println(rawPassword); // we need to tell admins what the new password is as they do not enter it!!!!!!
-        return HashPasswords(rawPassword); // encodes the password and return the hashed password
+        if(User.newUser == null){
+            User.newUser = new User();
+        }
+        User.newUser.setNewPassword(rawPassword); // we need to tell admins what the new password is as they do not enter it!!!!!!
+        return HashPasswords("test"); // encodes the password and return the hashed password
     }
 
     private String HashPasswords(String password){

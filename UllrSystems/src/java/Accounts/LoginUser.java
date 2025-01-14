@@ -37,7 +37,7 @@ public class LoginUser extends HttpServlet {
                 response.sendRedirect("MainMenu.html"); // if logged in correct send to next page
             }
             else{
-                response.sendRedirect("LoginPage.html?error=Username+or+Password+is+incorrect."); // if incorrect send error to page
+                response.sendRedirect("index.html?error=Username+or+Password+is+incorrect."); // if incorrect send error to page
             }
             
         } catch (SQLException ex) {

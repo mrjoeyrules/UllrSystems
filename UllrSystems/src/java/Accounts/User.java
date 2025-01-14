@@ -10,7 +10,9 @@ package Accounts;
  */
 public class User {
     public static User currentUser; // to allow for the current user to be pulled instead of wiping the data
+    public static User newUser;
     private String username = "";
+    private String newPassword = "";
     private Integer role = 0;
     private boolean isCreated = false;
 
@@ -23,6 +25,13 @@ public class User {
         this.role = role;
     }
 
+    public void setNewPassword(String newPassword){
+        this.newPassword = newPassword;
+    }
+    public String getNewPassword(){
+        return newPassword;
+    }
+    
     public void setIsCreated(boolean isCreated){
         this.isCreated = isCreated;
     }
