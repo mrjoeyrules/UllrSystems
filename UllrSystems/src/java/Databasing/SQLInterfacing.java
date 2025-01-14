@@ -55,6 +55,7 @@ public class SQLInterfacing {
     public boolean AuthenticateUserFromDB(String username, String rawPassword) throws SQLException {
         Connection conn = getConnection("Accounts"); // connect to db
         String query = "SELECT password FROM users WHERE username = ?"; // selects the stored password from users table where the username equals what user specifies
+        boolean isPasswordCorrect = false;
         try (PreparedStatement stmt = conn.prepareStatement(query)){ // prepars the query
             stmt.setString(1, username); // inputs the username into the ? in query
             ResultSet rs = stmt.executeQuery(); // runs the query
@@ -63,22 +64,22 @@ public class SQLInterfacing {
                 String storedPassword = rs.getString("password");
                 System.out.println(storedPassword);
                 BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-                boolean isPasswordCorrect = encoder.matches(rawPassword, storedPassword);// returns a bool if rawpassword matches the stored hashed password
+                isPasswordCorrect = encoder.matches(rawPassword, storedPassword);// returns a bool if rawpassword matches the stored hashed password
                 if(isPasswordCorrect){
                     UserInfo(conn, username);// sets user info
                     conn.close();
-                    return true; // returns that a user has entered users name and password correctly.
+                    return isPasswordCorrect; // returns that a user has entered users name and password correctly.
                 }
             } else {
                 System.out.println("User not found");
-                return false;
+                return isPasswordCorrect;
             }
         }
         catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return isPasswordCorrect;
         }
-        return false; // needed for try statement and function to work should never be called though
+        return isPasswordCorrect; // needed for try statement and function to work should never be called though
     }
 
     private void UserInfo(Connection conn, String username){
