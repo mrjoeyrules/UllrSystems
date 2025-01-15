@@ -4,14 +4,15 @@
  */
 
 import Accounts.PasswordGenerator;
+import Databasing.SQLInterfacing;
+import java.sql.SQLException;
 /**
  *
  * @author mrjoe
  */
 public class Main { // use for testing
-    public static void main(String[] args){
-        PasswordGenerator pwg = new PasswordGenerator();
-        String hashedpw = pwg.getNewPassword();
-        System.out.println(hashedpw);
+    public static void main(String[] args) throws SQLException{
+        SQLInterfacing sql = new SQLInterfacing();
+        sql.WriteLog("The whole thing imploded", 1);
     }
 }
