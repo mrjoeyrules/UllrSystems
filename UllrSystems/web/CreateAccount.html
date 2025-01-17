@@ -1,62 +1,92 @@
 <!DOCTYPE html>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit this template
--->
-<html>
-    <head>
-        <title>Create Account</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <h1>Enter Account information</h1>
-        <!--Form to create an account-->
-        <form id="SignUpForm" method="POST">
-            <label for="userData">Enter Username and Select role to create an account</label>
-            <br>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-            <br>
-            <!-- Drop down menu for roles -->
-            <select id="role" name="role">
-                <option value="1">Delivery Driver</option>
-                <option value="2">Head Chef</option>
-                <option value="3">Admin</option>
-            </select>
-            <br>
-            <button type="submit">Submit</button>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create Account | Ullr Systems</title>
+  
+  <!-- Link to your CSS file -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  
+  <!-- Top navbar / banner -->
+  <header>
+    <h1 class="brand">
+      Ullr <span>Systems</span>
+    </h1>
+  </header>
 
-        </form>
-        <div id="passwordPopup">
-            <script>
-                function showPassword(password) {
-                    alert("New users generated password us: " + password);
-                }
-                document.getElementById("SignUpForm").addEventListener("submit", async function (event) {
-                    event.preventDefault();
-                    const formData = new FormData(document.getElementById("SignUpForm"));
-                    try {
-                        const response = await fetch('/UllrSystems/createUser', {
-                            method: 'POST',
-                            body: formData
-                        });
-                        if (!response.ok) {
-                            throw new Error("Failed to submit the form.");
-                        }
-                        const data = await response.json();
-                        if (data.success) {
-                            showPassword(data.password);
-                        } else {
-                            alert("Username already in use please try again with a different Username");
-                        }
-                    } catch (error) {
-                        console.error("Error:", error);
-                        alert("Username already in use please try again with a different Username");
-                    }
-                });
-            </script>
-
-        </div>
-    </body>
+  <!-- Main content wrapper -->
+  <main class="form-container">
+    
+    <h2>Create Account</h2>
+    
+    <!-- Same form ID and action as existing code -->
+    <form id="SignUpForm" method="POST" action="createUser" class="create-form">
+      <!-- Label for screen readers only -->
+      <label for="userData" class="sr-only">Enter Username and Select role to create an account</label>
+      
+      <!-- Username field -->
+      <div class="form-group">
+        <label for="username" class="sr-only">Username</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          placeholder="Enter your username here"
+          required
+        />
+      </div>
+      
+      <!-- Role dropdown -->
+      <div class="form-group">
+        <label for="role" class="sr-only">Select Role</label>
+        <select id="role" name="role" required>
+          <option value="1">Delivery Driver</option>
+          <option value="2">Head Chef</option>
+          <option value="3">Admin</option>
+          <!-- Add/edit roles if needed, but keep the numeric values your code expects -->
+        </select>
+      </div>
+      
+      <!-- Submit button -->
+      <button type="submit" class="btn-submit">Submit</button>
+    </form>
+    
+    <!-- Popup / password script container -->
+    <div id="passwordPopup">
+      <script>
+        function showPassword(password) {
+          alert("New user's generated password is: " + password);
+        }
+        
+        document.getElementById("SignUpForm").addEventListener("submit", async function (event) {
+          event.preventDefault();
+          const formData = new FormData(document.getElementById("SignUpForm"));
+          try {
+            const response = await fetch('/UllrSystems/createUser', {
+              method: 'POST',
+              body: formData
+            });
+            if (!response.ok) {
+              throw new Error("Failed to submit the form.");
+            }
+            const data = await response.json();
+            if (data.success) {
+              showPassword(data.password);
+            } else {
+              alert("Username already in use. Please try again with a different username.");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            alert("Username already in use. Please try again with a different username.");
+          }
+        });
+      </script>
+    </div>
+    
+  </main>
+  
+</body>
 </html>
