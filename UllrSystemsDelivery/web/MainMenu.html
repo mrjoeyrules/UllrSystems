@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main Menu | Ullr Systems</title>
+  <link rel="stylesheet" href="mainmenu.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <h1 class="brand">Ullr <span>Systems</span></h1>
+  </header>
+
+  <!-- Main Content -->
+  <main class="content-area">
+    <h2>Enter a Number</h2>
+    <form class="number-form" action="NumberHandler" method="POST">
+      <label for="numberInput">Number</label>
+      <input type="number" id="numberInput" name="numberInput" placeholder="Enter a number" required>
+      <button type="submit">Submit</button>
+    </form>
+  </main>
+</body>
+</html>
