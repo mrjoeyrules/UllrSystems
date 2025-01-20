@@ -1,10 +1,13 @@
 package Databasing;
 import Accounts.User;
+import Placement.Order;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 /**
  *
  * @author mrjoe
@@ -29,7 +32,7 @@ public class SQLInterfacing {
 
     public boolean AuthenticateUserFromDB(String username, String rawPassword) throws SQLException {
         Connection conn = getConnection("Accounts"); // connect to db
-        String query = "SELECT password FROM users WHERE username = ?"; // selects the stored password from users table where the username equals what user specifies
+        String query = "SELECT password, role FROM users WHERE username = ?"; // selects the stored password from users table where the username equals what user specifies
         boolean isPasswordCorrect = false;
         try (PreparedStatement stmt = conn.prepareStatement(query)){ // prepars the query
             stmt.setString(1, username); // inputs the username into the ? in query
@@ -37,12 +40,12 @@ public class SQLInterfacing {
 
             if (rs.next()) {
                 String storedPassword = rs.getString("password");
+                int role = rs.getInt("role");
                 System.out.println(storedPassword);
                 BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
                 isPasswordCorrect = encoder.matches(rawPassword, storedPassword);// returns a bool if rawpassword matches the stored hashed password
-                if(isPasswordCorrect){
+                if(isPasswordCorrect && role == 1){
                     UserInfo(conn, username);// sets user info
-                    conn.close();
                     return isPasswordCorrect; // returns that a user has entered users name and password correctly.
                 }
             } else {
@@ -54,6 +57,7 @@ public class SQLInterfacing {
             e.printStackTrace();
             return isPasswordCorrect;
         }
+        conn.close();
         return isPasswordCorrect; // needed for try statement and function to work should never be called though
     }
 
@@ -74,6 +78,86 @@ public class SQLInterfacing {
         }
     }
 
+    public boolean GetOrderById(int orderId) throws SQLException{
+        Connection conn = getConnection("Fridges");
+        boolean isComplete = false;
+        ArrayList<String> foods = new ArrayList<>();
+        String query = "SELECT * FROM Orders WHERE orderid = ?";
+        try(PreparedStatement stmt = conn.prepareStatement(query)){
+            stmt.setString(1, String.valueOf(orderId));
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()){
+                if(Order.currentOrder == null){
+                    Order.currentOrder = new Order();
+                }
+                Order.currentOrder.SetOrderId(rs.getInt("orderid"));
+                Order.currentOrder.SetFood((String[]) rs.getArray("food").getArray());
+                Order.currentOrder.SetOrderDate(rs.getString("orderdate"));
+                Order.currentOrder.SetDeliveryDate(rs.getString("deliverydate"));
+                isComplete = true;
+            }else{
+                System.out.print("Order not found");
+            }
+        } catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+        return isComplete;
+    }
+    
+    
+    
+    private int GetRowCount(Connection conn, String tableName ) throws SQLException{
+        String query = "SELECT COUNT(*) AS totalRows FROM " + tableName;
+        int rowCount = 0;
+        try(PreparedStatement stmt = conn.prepareStatement(query)){
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()){
+                rowCount = rs.getInt("totalRows");
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return rowCount;
+    }
+    private LocalDateTime GetTimestamp(){
+        LocalDateTime now = LocalDateTime.now();
+        return now;
+    }
+            
+            
+            
+    public boolean WriteLog(String logMessage, int eventType) throws SQLException{
+        Connection conn = getConnection("AdminInfo");
+        boolean isEntered = false;
+        String table = "";
+        if(eventType == 1){
+            table = "adminlogs";
+        } else if(eventType == 2){
+            table = "hselogs";
+        }else{
+            System.out.println("You didnt enter a correct event type");
+            return isEntered; // stops code from running and crashing
+        }
+        String query = "INSERT INTO "+ table + " (eventid, eventype, eventtext, eventtime) VALUES (?,?,?,?)";
+        int eventid = GetRowCount(conn, table)  + 1;
+        try(PreparedStatement stmt = conn.prepareStatement(query)){
+            stmt.setInt(1, eventid);
+            stmt.setInt(2, eventType);
+            stmt.setString(3, logMessage);
+            stmt.setObject(4, GetTimestamp());
+            int rowsInserted = stmt.executeUpdate();
+            if(rowsInserted > 0){
+                System.out.println("Rows inserted");
+                isEntered = true;
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+        conn.close();
+        return isEntered;
+    }
+    
+    
 
     public String SelectQuery(String database, String query) {
         Connection conn = getConnection(database); //Gets the connection from above function
