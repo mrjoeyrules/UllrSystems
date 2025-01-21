@@ -1,71 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login | Ullr Systems</title>
-  
-  <!-- Link to CSS file -->
-  <link rel="stylesheet" href="style.css">
-  
-</head>
-<body>
-  
-  <!-- Top navbar / banner -->
-  <header>
-    <h1 class="brand">Ullr <span>Systems</span></h1>
-  </header>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>Login | Ullr Systems</title>
 
-  <!-- Main content wrapper -->
-  <main class="login-container">
-    
-    <h2>welcome back</h2>
-    
-    
-    <form id="LogInForm" action="loginUser" method="POST" class="login-form">
-      <label for="username" class="sr-only">Username</label>
-      <input 
-        type="text" 
-        id="username" 
-        name="username" 
-        placeholder="Enter username" 
-        required 
-      />
-      
-      <label for="password" class="sr-only">Password</label>
-      <input 
-        type="password" 
-        id="password" 
-        name="password" 
-        placeholder="********" 
-        required
-      />
-      
-      <!-- I "forgotten password" link,can be added here -->
-      <div class="forgot-password">
-        <a href="#">forgotten password?</a>
-      </div>
-      
-      <button type="submit" class="login-button">Login</button>
-      
-    </form>
-    
-  </main>
-  
-  <script>
-    // Grab ?error= from the URL and display
-    const urlParams = new URLSearchParams(window.location.search);
-    const errorMessage = urlParams.get('error');
-    if (errorMessage) {
-      document.getElementById("errorMessage").innerText = decodeURIComponent(errorMessage);
-    }
+        <!-- Link to CSS file -->
+        <link rel="stylesheet" href="style.css">
 
-    // Clear query parameters on form submission
-    document.getElementById("LogInForm").addEventListener("submit", function (event) {
-      const url = new URL(window.location.href);
-      url.search = ""; // Clear query parameters
-      history.replaceState(null, "", url);
-    });
-  </script>
-</body>
+    </head>
+    <body>
+
+        <!-- Top navbar / banner -->
+        <header>
+            <h1 class="brand">Ullr <span>Systems</span></h1>
+        </header>
+
+        <!-- Main content wrapper -->
+        <main class="login-container">
+
+            <h2>welcome back</h2>
+
+
+            <form id="LogInForm" action="loginUser" method="POST" class="login-form">
+                <label for="username" class="sr-only">Username</label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    name="username" 
+                    placeholder="Enter username" 
+                    required 
+                    />
+
+                <label for="password" class="sr-only">Password</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    placeholder="********" 
+                    required
+                    />
+
+                <!-- I "forgotten password" link,can be added here -->
+                <div class="forgot-password">
+                    <a href="#">forgotten password?</a>
+                </div>
+
+                <button type="submit" class="login-button">Login</button>
+
+            </form>
+            <div id="errorMessage" style ="color:red;">
+                <script>
+                    // Grab ?error= from the URL and display
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const errorMessage = urlParams.get('error');
+                    if (errorMessage) {
+                        document.getElementById("errorMessage").innerText = decodeURIComponent(errorMessage);
+                    }
+
+                    // Clear query parameters on form submission
+                    document.getElementById("LogInForm").addEventListener("submit", function (event) {
+                        const url = new URL(window.location.href);
+                        url.search = ""; // Clear query parameters
+                        history.replaceState(null, "", url);
+                    });
+                </script>
+            </div>
+
+        </main>
+
+
+    </body>
 </html>

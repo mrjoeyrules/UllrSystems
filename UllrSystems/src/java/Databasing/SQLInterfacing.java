@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 /**
  *
  * @author mrjoe
@@ -218,6 +219,85 @@ public class SQLInterfacing {
         return isComplete;
     }
     
+    public boolean DeleteUser(String username) throws SQLException {
+        boolean isComplete = false;
+        Connection conn = getConnection("Accounts");
+        String query = "DELETE FROM users WHERE username = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, username);
+            int rowsDeleted = stmt.executeUpdate();
+            if (rowsDeleted > 0) {
+                isComplete = true;
+            } else {
+                System.err.println("Error deleting user");
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        conn.close();
+        return isComplete;
+    }
+    
+    public boolean UpdatePassword(String username, String newPassword) throws SQLException{
+        boolean isComplete = false;
+        Connection conn = getConnection("Accounts");
+        String hashedPassword = HashPasswords(newPassword);
+        String query = "UPDATE users SET password = ? WHERE username = ?";
+        try(PreparedStatement stmt = conn.prepareStatement(query)){
+            stmt.setString(1, hashedPassword);
+            stmt.setString(2, username);
+            int rowsUpdated = stmt.executeUpdate();
+            if(rowsUpdated > 0){
+                isComplete = true;
+            }else{
+                System.err.println("User doesnt exist");
+            }
+        }catch (SQLException e){
+            System.err.println(e.getMessage());
+        }
+        conn.close();
+        return isComplete;
+    }
+    
+    public ArrayList<User> GetAllUsers() throws SQLException{
+        Connection conn = getConnection("Accounts");
+        ArrayList<User> users = new ArrayList<>();
+        String query = "SELECT * FROM users";
+        try(PreparedStatement stmt = conn.prepareStatement(query)){
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+                User user = new User();
+                user.setUsername(rs.getString("username"));
+                users.add(user);
+            }
+        }catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+        conn.close();
+        return users;
+    }
+    
+    public boolean UpdateRole(String username, int newRole) throws SQLException{
+        boolean isComplete = false;
+        Connection conn = getConnection("Accounts");
+        String query = "UPDATE users SET role = ? WHERE username = ?";
+        try(PreparedStatement stmt = conn.prepareStatement(query)){
+            stmt.setInt(1, newRole);
+            stmt.setString(2, username);
+            int rowsUpdated = stmt.executeUpdate();
+            if(rowsUpdated > 0){
+                isComplete = true;
+            }else{
+                System.err.println("User doesnt exist");
+            }
+        }catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+        conn.close();
+        return isComplete;
+    }
+    
+    
     
     
     public String SelectQuery(String database, String query) {
@@ -231,7 +311,14 @@ public class SQLInterfacing {
         }
     }
     
-    
+    private String HashPasswords(String password){
+        try{
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(); // object of password encoder
+            return encoder.encode(password); // encodes the new password
+        } catch (Exception e) {
+            throw new RuntimeException("Password encoding failed: " + e.getMessage(), e);
+        }
+    }
     
 
 
