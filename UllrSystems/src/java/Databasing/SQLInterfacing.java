@@ -1,6 +1,7 @@
 package Databasing;
 import Accounts.PasswordGenerator;
 import Accounts.User;
+import Food.FoodItem;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -152,8 +153,73 @@ public class SQLInterfacing {
         conn.close();
         return isEntered;
     }
-
-
+    
+    private boolean CacheDeletedFoodItem(int itemId, Connection conn) throws SQLException{
+        boolean isComplete = false;
+        String query = "SELECT * FROM food WHERE itemid = ?";
+        try(PreparedStatement stmt = conn.prepareStatement(query)){
+            stmt.setInt(1, itemId);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()){
+                FoodItem.cachedFoodItem = new FoodItem();
+                FoodItem.cachedFoodItem.SetFoodName(rs.getString("foodname"));
+                FoodItem.cachedFoodItem.SetFoodID(rs.getInt("foodid"));
+                FoodItem.cachedFoodItem.SetExpirationDate(rs.getTimestamp("expirationdate").toLocalDateTime());
+                FoodItem.cachedFoodItem.SetWeight(rs.getDouble("weight"));
+                isComplete = true;
+            }
+        } catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+        return isComplete;
+    }
+    
+    public boolean RemoveItemFromFridge(int itemId) throws SQLException {
+        boolean isComplete = false;
+        Connection conn = getConnection("Fridges");
+        String query = "DELETE FROM food WHERE itemid = ?";
+        if (CacheDeletedFoodItem(itemId, conn)) {
+            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setInt(1, itemId);
+                int rowsDeleted = stmt.executeUpdate();
+                if (rowsDeleted > 0) {
+                    System.out.println("Successfully deleted+ " + rowsDeleted);
+                    isComplete = true;
+                } else {
+                    System.out.println("Error deleting");
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+        }else{
+            System.out.println("Failed to cache item");
+        }
+        conn.close();
+        return isComplete;
+    }
+    
+    public boolean AddItemToFridge() throws SQLException{
+        boolean isComplete = false;
+        Connection conn = getConnection("Fridges");
+        String query = "INSERT INTO food (foodname, itemid, expirationdate, weight) VALUES (?,?,?,?)";
+        try(PreparedStatement stmt = conn.prepareStatement(query)){
+            stmt.setString(1, FoodItem.addFoodItem.GetFoodName());
+            stmt.setInt(2, FoodItem.addFoodItem.GetFoodID());
+            stmt.setObject(3, FoodItem.addFoodItem.GetExpirationDate());
+            stmt.setDouble(4, FoodItem.addFoodItem.GetWeight());
+            int rowsInserted = stmt.executeUpdate();
+            if(rowsInserted > 0){
+                isComplete = true;
+            }
+        }catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+        conn.close();
+        return isComplete;
+    }
+    
+    
+    
     public String SelectQuery(String database, String query) {
         Connection conn = getConnection(database); //Gets the connection from above function
         try(PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()){ // does the sql query and stores the results
