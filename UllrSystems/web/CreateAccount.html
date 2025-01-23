@@ -7,86 +7,109 @@
   
   <!-- Link to your CSS file -->
   <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
   
   <!-- Top navbar / banner -->
-  <header>
-    <h1 class="brand">
-      Ullr <span>Systems</span>
-    </h1>
-  </header>
+<header class="header-bar">
+  <h1 class="brand">
+    <span class="ullr">Ullr</span> <span class="systems">Systems</span>
+  </h1>
+</header>
 
-  <!-- Main content wrapper -->
-  <main class="form-container">
-    
-    <h2>Create Account</h2>
-    
-    <!-- Same form ID and action as existing code -->
-    <form id="SignUpForm" method="POST" action="createUser" class="create-form">
-      <!-- Label for screen readers only -->
-      <label for="userData" class="sr-only">Enter Username and Select role to create an account</label>
+
+  <div class="layout-container">
+<aside class="sidebar">
+  <nav class="main-menu">
+    <ul>
+      <li><a href="MainMenu.html">Inventory</a></li>
+      <li><a href="Order.html">Order</a></li>
+      <li><a href="Alerts.html">Alerts</a></li>
+      <li><a href="#" id="manageAccountsLink">Manage Accounts</a></li>
+      <li><a href="#" id="manageFridgesLink">Manage Fridges</a></li>
+      <li><a href="#" id="reportsLink">Reports</a></li>
+       <li><a href="#" id="logoutLink">Logout</a></li>
       
-      <!-- Username field -->
-      <div class="form-group">
-        <label for="username" class="sr-only">Username</label>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          placeholder="Enter your username here"
-          required
-        />
-      </div>
+    </ul>
+  </nav>
+</aside>
+
+
+    <!-- Main content wrapper -->
+    <main class="form-container">
       
-      <!-- Role dropdown -->
-      <div class="form-group">
-        <label for="role" class="sr-only">Select Role</label>
-        <select id="role" name="role" required>
-          <option value="1">Delivery Driver</option>
-          <option value="2">Head Chef</option>
-          <option value="3">Admin</option>
-          <!-- Add/edit roles if needed, but keep the numeric values your code expects -->
-        </select>
-      </div>
+      <h2>Create Account</h2>
       
-      <!-- Submit button -->
-      <button type="submit" class="btn-submit">Submit</button>
-    </form>
-    
-    <!-- Popup / password script container -->
-    <div id="passwordPopup">
-      <script>
-        function showPassword(password) {
-          alert("New user's generated password is: " + password);
-        }
+      <!-- Same form ID and action as existing code -->
+      <form id="SignUpForm" method="POST" action="createUser" class="create-form">
+        <!-- Label for screen readers only -->
+        <label for="userData" class="sr-only">Enter Username and Select role to create an account</label>
         
-        document.getElementById("SignUpForm").addEventListener("submit", async function (event) {
-          event.preventDefault();
-          const formData = new FormData(document.getElementById("SignUpForm"));
-          try {
-            const response = await fetch('/UllrSystems/createUser', {
-              method: 'POST',
-              body: formData
-            });
-            if (!response.ok) {
-              throw new Error("Failed to submit the form.");
-            }
-            const data = await response.json();
-            if (data.success) {
-              showPassword(data.password);
-            } else {
+        <!-- Username field -->
+        <div class="form-group">
+          <label for="username" class="sr-only">Username</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Enter your username here"
+            required
+          />
+        </div>
+        
+        <!-- Role dropdown -->
+        <div class="form-group">
+          <label for="role" class="sr-only">Select Role</label>
+          <select id="role" name="role" required>
+            <option value="1">Delivery Driver</option>
+            <option value="2">Head Chef</option>
+            <option value="3">Admin</option>
+            <!-- Add/edit roles if needed, but keep the numeric values your code expects -->
+          </select>
+        </div>
+        
+        <!-- Submit button -->
+        <button type="submit" class="btn-submit">Submit</button>
+      </form>
+      
+      <!-- Popup / password script container -->
+      <div id="passwordPopup">
+        <script>
+          function showPassword(password) {
+            alert("New user's generated password is: " + password);
+          }
+          
+          document.getElementById("SignUpForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+            const formData = new FormData(document.getElementById("SignUpForm"));
+            try {
+              const response = await fetch('/UllrSystems/createUser', {
+                method: 'POST',
+                body: formData
+              });
+              if (!response.ok) {
+                throw new Error("Failed to submit the form.");
+              }
+              const data = await response.json();
+              if (data.success) {
+                showPassword(data.password);
+              } else {
+                alert("Username already in use. Please try again with a different username.");
+              }
+            } catch (error) {
+              console.error("Error:", error);
               alert("Username already in use. Please try again with a different username.");
             }
-          } catch (error) {
-            console.error("Error:", error);
-            alert("Username already in use. Please try again with a different username.");
-          }
-        });
-      </script>
-    </div>
-    
-  </main>
+          });
+        </script>
+      </div>
+    </main>
+  </div>
+
+   <!-- Add the script BELOW so it sees your IDs -->
+  <script src="roleCheck.js"></script>
+  <script src="logout.js"></script>
   
 </body>
 </html>

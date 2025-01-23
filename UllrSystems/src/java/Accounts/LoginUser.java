@@ -1,3 +1,4 @@
+
 package Accounts;
 
 import Databasing.SQLInterfacing;
@@ -31,9 +32,12 @@ public class LoginUser extends HttpServlet {
         try {
             boolean isLoggedIn = sql.AuthenticateUserFromDB(username, rawPassword); // runs password check from sql
             if (isLoggedIn) {
-                session.setAttribute("username", User.currentUser.getUsername()); // sets session attribute username to username to allow for unfiltered access to site
-                response.sendRedirect("MainMenu.html"); // if logged in correct send to next page
-            } else {
+    // store username and role in session
+    session.setAttribute("username", User.currentUser.getUsername());
+    session.setAttribute("role", User.currentUser.getRole());   // ADD THIS LINE
+    response.sendRedirect("MainMenu.html");
+}
+            else {
                 try {
                     sql.WriteLog(("User " + username + " attempted to login but password was incorrect"), 1);
                 } catch (SQLException ex) {

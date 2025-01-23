@@ -4,30 +4,40 @@
   <meta charset="UTF-8">
   <title>Reports | Ullr Systems</title>
   <link rel="stylesheet" href="mainmenu.css">
+
 </head>
 <body>
-  <header class="header-bar">
-    <h1 class="brand">Ullr <span>Systems</span></h1>
-  </header>
+<header class="header-bar">
+  <h1 class="brand">
+    <span class="ullr">Ullr</span> <span class="systems">Systems</span>
+  </h1>
+</header>
+
 
   <div class="layout-container">
-    <aside class="sidebar">
-      <nav class="main-menu">
-        <ul>
-          <li><a href="MainMenu.html">Inventory</a></li>
-          <li><a href="Order.html">Order</a></li>
-          <li><a href="Alerts.html">Alerts</a></li>
-          <li><a href="ManageAccounts.html">Manage Accounts</a></li>
-          <li><a href="ManageFridges.html">Manage Fridges</a></li>
-          <li><a href="Reports.html" class="active">Reports</a></li>
-        </ul>
-      </nav>
-    </aside>
+<aside class="sidebar">
+  <nav class="main-menu">
+    <ul>
+      <li><a href="MainMenu.html">Inventory</a></li>
+      <li><a href="Order.html">Order</a></li>
+      <li><a href="Alerts.html">Alerts</a></li>
+      <li><a href="#" id="manageAccountsLink">Manage Accounts</a></li>
+      <li><a href="#" id="manageFridgesLink">Manage Fridges</a></li>
+      <li><a href="#" id="reportsLink">Reports</a></li>
+       <li><a href="#" id="logoutLink">Logout</a></li>
+    </ul>
+  </nav>
+</aside>
+
 
     <main class="content-area">
       <h2>Reports</h2>
       <div>Function not yet implemented.</div>
     </main>
   </div>
+  <!-- Add the script BELOW so it sees your IDs -->
+  <script src="roleCheck.js"></script>
+  <script src="logout.js"></script>
+  
 </body>
 </html>
