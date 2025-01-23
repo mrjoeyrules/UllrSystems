@@ -30,19 +30,6 @@ public class PasswordGenerator {
             password.append(digit); // random digits x 3
         }
         String rawPassword = password.toString();// converts from string builder to string
-        if(User.newUser == null){
-            User.newUser = new User();
-        }
-        User.newUser.setNewPassword(rawPassword); // we need to tell admins what the new password is as they do not enter it!!!!!!
-        return HashPasswords(rawPassword); // encodes the password and return the hashed password
-    }
-
-    private String HashPasswords(String password){
-        try{
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(); // object of password encoder
-            return encoder.encode(password); // encodes the new password
-        } catch (Exception e) {
-            throw new RuntimeException("Password encoding failed: " + e.getMessage(), e);
-        }
+        return rawPassword; // encodes the password and return the hashed password
     }
 }

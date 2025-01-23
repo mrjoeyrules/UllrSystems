@@ -9,8 +9,6 @@ package Accounts;
  * @author mrjoe
  */
 public class User {
-    public static User currentUser; // to allow for the current user to be pulled instead of wiping the data
-    public static User newUser;
     private String username = "";
     private String newPassword = "";
     private Integer role = 0;
