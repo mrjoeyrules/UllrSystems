@@ -31,3 +31,6 @@ public class GetUserRole extends HttpServlet {
         response.getWriter().write(json.toJSONString());
     }
 }
+
+
+

@@ -59,3 +59,6 @@ async function checkRoleAndNavigate(targetUrl) {
     alert("Failed to check user role. Please try again.");
   }
 }
+
+
+
