@@ -17,9 +17,10 @@ body {
   background-color: #ffffff; /* White Background */
   color: #2c3e50; /* Dark Gray Text */
   padding: 1rem;
+  justify-content: center;
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Align to the left */
+  justify-content: flex-center; /* Align to the left */
   border-bottom: 1px solid #bdc3c7; /* Subtle Bottom Border */
 }
 
@@ -62,10 +63,10 @@ body {
   margin: 0;
 }
 
-.main-menu li {
+/* .main-menu li { */
   /* Removed border-bottom to eliminate separator lines */
   /* border-bottom: 1px solid #bdc3c7; */ /* Removed */
-}
+/* } */
 
 .main-menu li:not(:last-child) {
   margin-bottom: 0.5rem; /* Add spacing between items */
@@ -73,8 +74,9 @@ body {
 
 .main-menu a {
   display: block;
+
   padding: 15px 20px;
-  color: #000000; /* Black Text */
+  color: #ffffff; /* Black Text */
   text-decoration: none;
   transition: background 0.3s, color 0.3s;
   border-radius: 4px; /* Slightly Rounded Corners */
@@ -121,7 +123,7 @@ body {
 
 /* Specific Button Styles */
 .btn-danger {
-  background-color: #e74c3c; /* Red */
+  background-color: red; /* Red */
   color: #fff;
 }
 

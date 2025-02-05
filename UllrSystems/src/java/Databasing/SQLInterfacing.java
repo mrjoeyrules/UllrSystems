@@ -119,6 +119,7 @@ public class SQLInterfacing {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            conn.close();
         }
         conn.close();
         return isEntered;
@@ -145,7 +146,10 @@ public class SQLInterfacing {
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
+            conn.close();
+            
         }
+        conn.close();
         return isComplete;
     }
 
@@ -162,12 +166,15 @@ public class SQLInterfacing {
                     isComplete = true;
                 } else {
                     System.out.println("Error deleting");
+                    conn.close();
                 }
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
+                conn.close();
             }
         } else {
             System.out.println("Failed to cache item");
+            conn.close();
         }
         conn.close();
         return isComplete;
@@ -188,6 +195,7 @@ public class SQLInterfacing {
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
+            conn.close();
         }
         conn.close();
         return isComplete;
@@ -211,6 +219,7 @@ public class SQLInterfacing {
             }
         }catch (SQLException e) {
             System.err.println(e.getMessage());
+            conn.close();
         }
         conn.close();
         return fridge;
@@ -229,9 +238,9 @@ public class SQLInterfacing {
         }
     }
     
-     public boolean CreateUser(String database, String newUsername, int role, String newPassword) {
+     public boolean CreateUser(String database, String newUsername, int role, String newPassword) throws SQLException {
         boolean isCreated = false;
-        Connection conn = getConnection(database); // need to change db to use ssl or ssh
+        Connection conn = getConnection(database); 
         String insertSql = "INSERT INTO users (username, role, password) VALUES (?, ?, ?)"; // insert SQL command
         try (PreparedStatement stmt = conn.prepareStatement(insertSql)) {
             stmt.setString(1, newUsername); // binds the ? marks to be these values
@@ -247,6 +256,7 @@ public class SQLInterfacing {
         } catch (SQLException e) {
             System.out.println("Error inserting data: " + e.getMessage());
             e.printStackTrace();
+            conn.close();
         }
         return isCreated;
     }
@@ -275,6 +285,7 @@ public class SQLInterfacing {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            conn.close();
             return isPasswordCorrect;
         }
         conn.close();
@@ -294,6 +305,7 @@ public class SQLInterfacing {
                 System.out.println("User not found"); // should never run at this point do to previous code
             }
         } catch (SQLException e) {
+            conn.close();
             throw new RuntimeException(e);
         }
         conn.close();
@@ -314,6 +326,7 @@ public class SQLInterfacing {
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
+            conn.close();
         }
         conn.close();
         return isComplete;
@@ -335,6 +348,7 @@ public class SQLInterfacing {
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
+            conn.close();
         }
         conn.close();
         return isComplete;
@@ -354,6 +368,7 @@ public class SQLInterfacing {
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
+            conn.close();
         }
         conn.close();
         return users;
@@ -374,6 +389,7 @@ public class SQLInterfacing {
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
+            conn.close();
         }
         conn.close();
         return isComplete;
@@ -391,13 +407,17 @@ public class SQLInterfacing {
             while (rs.next()) {
                 Fridge fridge = new Fridge();
                 fridge.SetFridgeId(rs.getInt("fridgeid"));
+                System.out.println(fridge.GetFridgeId());
                 fridge.SetSerialNumber(rs.getString("serialnumber"));
                 fridge.SetFridgeCapacity(rs.getDouble("size"));
+                fridges.add(fridge);
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
+            conn.close();
         }
         conn.close();
+        
         return fridges;
     }
     
@@ -416,6 +436,7 @@ public class SQLInterfacing {
             }
         } catch (SQLException e){
             System.err.println(e.getMessage());
+            conn.close();
         }
         conn.close();
         return isComplete;
@@ -436,6 +457,7 @@ public class SQLInterfacing {
             }
         }catch (SQLException e){
             System.err.println(e.getMessage());
+            conn.close();
         }
         conn.close();
         return order;
@@ -443,25 +465,47 @@ public class SQLInterfacing {
     
     public ArrayList<FoodItem> GetAllAvailableFoodForOrder() throws SQLException{
         Connection conn = getConnection("FoodSupplier");
-        ArrayList<FoodItem> availableFood = new ArrayList<>();
+        ArrayList<FoodItem> availableFood = new ArrayList();
         String query = "SELECT * FROM AvailableFoods";
         try(PreparedStatement stmt = conn.prepareStatement(query)){
             ResultSet rs = stmt.executeQuery();
-            int foodCount = 0;
             while(rs.next()){
-                foodCount ++;
                 FoodItem food = new FoodItem();
-                food.SetFoodID(foodCount);
+                food.SetFoodID(rs.getInt("foodid"));
                 food.SetFoodName(rs.getString("foodname"));
                 food.SetWeight(rs.getDouble("weight"));
-                food.SetExpirationDate(rs.getObject("expirationdate", LocalDate.class));
+                food.SetExpirationDate(rs.getObject("expirydate", LocalDate.class));
                 availableFood.add(food);
             }
         }catch(SQLException e){
             System.err.println(e.getMessage());
+            e.printStackTrace();
+            conn.close();
         }
         conn.close();
         return availableFood;
+    }
+    
+    public ArrayList<Order> GetAllOrdersForHistory() throws SQLException{
+        Connection conn = getConnection("Fridge");
+        ArrayList<Order> orders = new ArrayList();
+        String query = "SELECT * FROM orders";
+        try(PreparedStatement stmt = conn.prepareStatement(query)){
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+                Order order = new Order();
+                order.SetOrderId(rs.getInt("orderid"));
+                order.SetFood(rs.getObject("food", String[].class));
+                order.SetOrderDate(rs.getObject("orderdate", LocalDate.class));
+                order.SetDeliveryDate(rs.getObject("deliverydate", LocalDate.class));
+                orders.add(order);
+            }
+        }catch(SQLException e){
+            System.err.println(e.getMessage());
+            conn.close();
+        }
+        conn.close();
+        return orders;
     }
     
     

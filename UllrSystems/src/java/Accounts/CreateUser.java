@@ -35,7 +35,12 @@ public class CreateUser extends HttpServlet {
         int roleNum = Integer.valueOf(role);
         String newPassword = pwg.getNewPassword(); // makes a new password for a user
         String hashedPassword = sql.HashPasswords(newPassword);
-        boolean isCreated = sql.CreateUser("Accounts", username, roleNum, hashedPassword);
+        boolean isCreated = false;
+        try {
+            isCreated = sql.CreateUser("Accounts", username, roleNum, hashedPassword);
+        } catch (SQLException ex) {
+            Logger.getLogger(CreateUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (isCreated == false) { // if the user fails either server is down or the username is already in use
             errorMessage = "Username already in use";
             response.sendRedirect("CreateAccount.html?error=" + java.net.URLEncoder.encode(errorMessage, "UTF-8")); // send error is fails

@@ -35,7 +35,7 @@ public class LoginUser extends HttpServlet {
                 session.setAttribute("username", username); // sets session attribute username to username to allow for unfiltered access to site
                 int role = sql.GetRole(username);
                 session.setAttribute("role", role);
-                response.sendRedirect("MainMenu.html"); // if logged in correct send to next page
+                response.sendRedirect("inventory.html"); // if logged in correct send to next page
             } else {
                 try {
                     sql.WriteLog(("User " + username + " attempted to login but password was incorrect"), 1);

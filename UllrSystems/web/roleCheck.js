@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
   // 1) Identify the admin-only links by their IDs
   const manageAccountsLink = document.getElementById("manageAccountsLink");
   const manageFridgesLink  = document.getElementById("manageFridgesLink");
-  const reportsLink        = document.getElementById("reportsLink");
+  const reportsLink = document.getElementById("reportsLink");
   const createAccountLink = document.getElementById("createAccountLink");
 
   // 2) If these elements exist, attach the event handlers
@@ -59,6 +59,3 @@ async function checkRoleAndNavigate(targetUrl) {
     alert("Failed to check user role. Please try again.");
   }
 }
-
-
-
