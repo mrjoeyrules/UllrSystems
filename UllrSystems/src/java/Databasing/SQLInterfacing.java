@@ -19,9 +19,7 @@ import java.util.ArrayList;
  */
 public class SQLInterfacing {
 
-    
     /////// GENERAL SQL FUNCTIONS
-    
     private Connection getConnection(String database) { //creates the connection to server for a specific database
         Connection conn = null;
         String username = "Joseph";
@@ -38,7 +36,7 @@ public class SQLInterfacing {
         }
         return conn;
     }
-    
+
     private int GetRowCount(Connection conn, String tableName) throws SQLException {
         String query = "SELECT COUNT(*) AS totalRows FROM " + tableName;
         int rowCount = 0;
@@ -57,7 +55,7 @@ public class SQLInterfacing {
         LocalDateTime now = LocalDateTime.now();
         return now;
     }
-    
+
     public String SelectQuery(String database, String query) {
         Connection conn = getConnection(database); //Gets the connection from above function
         try (PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) { // does the sql query and stores the results
@@ -68,8 +66,6 @@ public class SQLInterfacing {
             throw new RuntimeException(e);
         }
     }
-
-    
 
     private String ConvertResultSetToJson(ResultSet rs) throws SQLException {
         JSONArray json = new JSONArray(); // creates a new jsonarray
@@ -90,9 +86,8 @@ public class SQLInterfacing {
         resultsObject.put("results", json); // puts the jsonarray into a jsonobject
         return resultsObject.toJSONString(); // returns the json as a string
     }
-    
+
     //////// LOGGING SYSTEM
-    
     public boolean WriteLog(String logMessage, int eventType) throws SQLException {
         Connection conn = getConnection("AdminInfo");
         boolean isEntered = false;
@@ -124,11 +119,8 @@ public class SQLInterfacing {
         conn.close();
         return isEntered;
     }
-    
-    
-    
-    /////// ADDING AND REMOVING FOOD ITEMS
 
+    /////// ADDING AND REMOVING FOOD ITEMS
     private boolean CacheDeletedFoodItem(int itemId, Connection conn) throws SQLException {
         boolean isComplete = false;
         String query = "SELECT * FROM food WHERE itemid = ?";
@@ -147,7 +139,7 @@ public class SQLInterfacing {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
             conn.close();
-            
+
         }
         conn.close();
         return isComplete;
@@ -179,7 +171,7 @@ public class SQLInterfacing {
         conn.close();
         return isComplete;
     }
-    
+
     public boolean AddItemToFridge() throws SQLException {
         boolean isComplete = false;
         Connection conn = getConnection("Fridges");
@@ -200,35 +192,29 @@ public class SQLInterfacing {
         conn.close();
         return isComplete;
     }
-    
-    
+
     ////////// FRIDGE MANAGEMENT
-    
-    
-    public Fridge GetFridgeById(int fridgeId) throws SQLException{
+    public Fridge GetFridgeById(int fridgeId) throws SQLException {
         Connection conn = getConnection("Fridges");
         String query = "SELECT * FROM fridge WHERE fridgeid = ?";
         Fridge fridge = new Fridge();
-        try(PreparedStatement stmt = conn.prepareStatement(query)){
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, fridgeId);
             ResultSet rs = stmt.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 fridge.SetFridgeId(fridgeId);
                 fridge.SetSerialNumber(rs.getString("serialnumber"));
                 fridge.SetFridgeCapacity(rs.getDouble("size"));
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
             conn.close();
         }
         conn.close();
         return fridge;
     }
-    
 
-    
     ////// ACCOUNT SYSTEM FUNCTIONS
-    
     public String HashPasswords(String password) {
         try {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(); // object of password encoder
@@ -237,10 +223,10 @@ public class SQLInterfacing {
             throw new RuntimeException("Password encoding failed: " + e.getMessage(), e);
         }
     }
-    
-     public boolean CreateUser(String database, String newUsername, int role, String newPassword) throws SQLException {
+
+    public boolean CreateUser(String database, String newUsername, int role, String newPassword) throws SQLException {
         boolean isCreated = false;
-        Connection conn = getConnection(database); 
+        Connection conn = getConnection(database);
         String insertSql = "INSERT INTO users (username, role, password) VALUES (?, ?, ?)"; // insert SQL command
         try (PreparedStatement stmt = conn.prepareStatement(insertSql)) {
             stmt.setString(1, newUsername); // binds the ? marks to be these values
@@ -292,16 +278,16 @@ public class SQLInterfacing {
         return isPasswordCorrect; // needed for try statement and function to work should never be called though
     }
 
-    public int GetRole(String username) throws SQLException{
+    public int GetRole(String username) throws SQLException {
         Connection conn = getConnection("Accounts");
-         int role = 0;
+        int role = 0;
         String query = "SELECT role FROM users WHERE username = ?";
-        try(PreparedStatement stmt = conn.prepareStatement(query)){
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 role = rs.getInt("role");
-            }else {
+            } else {
                 System.out.println("User not found"); // should never run at this point do to previous code
             }
         } catch (SQLException e) {
@@ -311,7 +297,7 @@ public class SQLInterfacing {
         conn.close();
         return role;
     }
-    
+
     public boolean DeleteUser(String username) throws SQLException {
         boolean isComplete = false;
         Connection conn = getConnection("Accounts");
@@ -353,8 +339,7 @@ public class SQLInterfacing {
         conn.close();
         return isComplete;
     }
-    
-    
+
     public ArrayList<User> GetAllUsers() throws SQLException {
         Connection conn = getConnection("Accounts");
         ArrayList<User> users = new ArrayList<>();
@@ -394,9 +379,7 @@ public class SQLInterfacing {
         conn.close();
         return isComplete;
     }
-    
-    
-    
+
     ////// ORDER SYSTEM FUNCTIONS
     public ArrayList<Fridge> GetAllFridges() throws SQLException {
         Connection conn = getConnection("Fridges");
@@ -417,59 +400,71 @@ public class SQLInterfacing {
             conn.close();
         }
         conn.close();
-        
+
         return fridges;
     }
-    
-    public boolean AddOrderToDB(Order order) throws SQLException{
+
+    public boolean AddOrderToDB(Order order) throws SQLException {
         boolean isComplete = false;
         Connection conn = getConnection("Fridges");
         String query = "INSERT INTO orders (orderid, food, orderdate, deliverydate) VALUES (?,?,?,?)";
-        try(PreparedStatement stmt = conn.prepareStatement(query)){
-            stmt.setInt(1,order.GetOrderId());
-            stmt.setObject(2, order.GetFood());
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            JSONArray foodArray = new JSONArray();
+            for (FoodItem food : order.GetFood()) {
+                JSONObject foodJson = new JSONObject();
+                foodJson.put("foodName", food.GetFoodName());
+                foodJson.put("expirationDate", food.GetExpirationDate().toString());
+                foodJson.put("weight", food.GetWeight());
+
+                foodArray.add(foodJson);
+            }
+            
+            String foodJsonString = foodArray.toJSONString();
+            int rowCount = GetRowCount(conn, "orders");
+            stmt.setInt(1, rowCount + 1);
+            stmt.setObject(2, foodJsonString, Types.OTHER);
             stmt.setObject(3, order.GetOrderDate());
             stmt.setObject(4, order.GetDeliveryDate());
             int rowsInserted = stmt.executeUpdate();
-            if(rowsInserted > 0){
+            if (rowsInserted > 0) {
                 isComplete = true;
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
             conn.close();
         }
         conn.close();
         return isComplete;
     }
-    
-    public Order GetOrderFromDB(int orderId) throws SQLException{
+
+    public Order GetOrderFromDB(int orderId) throws SQLException {
         Order order = new Order();
         Connection conn = getConnection("Fridges");
         String query = "SELECT * FROM orders WHERE orderid = ?";
-        try(PreparedStatement stmt = conn.prepareStatement(query)){
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, orderId);
             ResultSet rs = stmt.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 order.SetOrderId(rs.getInt("orderid"));
-                order.SetFood(rs.getObject("food", String[].class));
+                order.SetFood(rs.getObject("food", ArrayList.class));
                 order.SetOrderDate(rs.getObject("orderdate", LocalDate.class));
                 order.SetDeliveryDate(rs.getObject("deliverydate", LocalDate.class));
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
             conn.close();
         }
         conn.close();
         return order;
     }
-    
-    public ArrayList<FoodItem> GetAllAvailableFoodForOrder() throws SQLException{
+
+    public ArrayList<FoodItem> GetAllAvailableFoodForOrder() throws SQLException {
         Connection conn = getConnection("FoodSupplier");
         ArrayList<FoodItem> availableFood = new ArrayList();
         String query = "SELECT * FROM AvailableFoods";
-        try(PreparedStatement stmt = conn.prepareStatement(query)){
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
             ResultSet rs = stmt.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 FoodItem food = new FoodItem();
                 food.SetFoodID(rs.getInt("foodid"));
                 food.SetFoodName(rs.getString("foodname"));
@@ -477,7 +472,7 @@ public class SQLInterfacing {
                 food.SetExpirationDate(rs.getObject("expirydate", LocalDate.class));
                 availableFood.add(food);
             }
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
             conn.close();
@@ -485,22 +480,22 @@ public class SQLInterfacing {
         conn.close();
         return availableFood;
     }
-    
-    public ArrayList<Order> GetAllOrdersForHistory() throws SQLException{
+
+    public ArrayList<Order> GetAllOrdersForHistory() throws SQLException {
         Connection conn = getConnection("Fridge");
         ArrayList<Order> orders = new ArrayList();
         String query = "SELECT * FROM orders";
-        try(PreparedStatement stmt = conn.prepareStatement(query)){
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
             ResultSet rs = stmt.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 Order order = new Order();
                 order.SetOrderId(rs.getInt("orderid"));
-                order.SetFood(rs.getObject("food", String[].class));
+                order.SetFood(rs.getObject("food", ArrayList.class));
                 order.SetOrderDate(rs.getObject("orderdate", LocalDate.class));
                 order.SetDeliveryDate(rs.getObject("deliverydate", LocalDate.class));
                 orders.add(order);
             }
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
             conn.close();
         }
@@ -508,7 +503,19 @@ public class SQLInterfacing {
         return orders;
     }
     
-    
-    
-    
+    public void DeleteFoodFromSupplier(int supplierId) throws SQLException{
+        Connection conn = getConnection("FoodSupplier");
+        String query = "DELETE FROM availablefoods WHERE foodid = ?";
+        try(PreparedStatement stmt = conn.prepareStatement(query)){
+            stmt.setInt(1, supplierId);
+            int rowsDeleted = stmt.executeUpdate();
+            if(rowsDeleted < 1){
+                System.err.println("Error deleting food");
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            conn.close();
+        }
+        conn.close();
+    }
 }

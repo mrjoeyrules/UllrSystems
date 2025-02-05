@@ -34,7 +34,6 @@ public class GetAllOrderFoods extends HttpServlet {
         
         try{
             ArrayList<FoodItem> foodList = sql.GetAllAvailableFoodForOrder();
-            System.out.println(foodList);
              
              
              for (FoodItem food : foodList){

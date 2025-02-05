@@ -43,4 +43,9 @@ public class FoodItem {
     public double GetWeight(){
         return weight;
     }
+    
+    @Override
+    public String toString() {
+        return "{ \"foodName\": \"" + foodName + "\", \"expirationDate\": \"" + expirationDate + "\", \"weight\": " + weight + " }";
+    }
 }

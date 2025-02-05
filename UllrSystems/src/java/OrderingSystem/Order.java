@@ -4,7 +4,9 @@
  */
 package OrderingSystem;
 
+import Food.FoodItem;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 /**
  *
@@ -12,7 +14,7 @@ import java.time.LocalDate;
  */
 public class Order {
     private int orderId;
-    private String[] food;
+    private ArrayList<FoodItem> foodList;
     private LocalDate orderDate;
     private LocalDate deliveryDate;
     
@@ -22,12 +24,12 @@ public class Order {
     public int GetOrderId(){
         return orderId;
     }
-    public void SetFood(String[] food){
-        this.food = food;
+    public void SetFood(ArrayList<FoodItem> food){
+        this.foodList = food;
     }
     
-    public String[] GetFood(){
-        return food;
+    public ArrayList<FoodItem> GetFood(){
+        return foodList;
     }
     public void SetOrderDate(LocalDate orderDate){
         this.orderDate = orderDate;
@@ -40,5 +42,14 @@ public class Order {
     }
     public LocalDate GetDeliveryDate(){
         return deliveryDate;
+    }
+    
+    @Override
+    public String toString() {
+        return "{ \"orderId\": " + orderId +
+                ", \"orderDate\": \"" + orderDate +
+                "\", \"deliveryDate\": \"" + deliveryDate +
+                "\", \"foodList\": " + foodList.toString() +
+                " }";
     }
 }

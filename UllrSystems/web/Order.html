@@ -1,411 +1,656 @@
 <!DOCTYPE html>
 <html lang="en">
-  
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-      Order Page
-    </title>
-    <link rel="stylesheet" href="mainmenu.css">
-    <style>
-      /* General Reset */ * { margin: 0; padding: 0; box-sizing: border-box;
-      } /* Body and Layout */ body { font-family: Arial, sans-serif; background-color:
-      #f4f7fa; } .layout-container { display: flex; } /* Header Styling */ .header-bar
-      { display: flex; align-items: center; justify-content: center; background-color:
-      #ffffff; padding: 10px; width: 100%; } .header-logo { height: 50px; margin-right:
-      15px; } .brand { color: white; font-size: 1.5rem; font-weight: bold; }
-      .brand span { color: #ffdd57; } /* Sidebar Styling */ .sidebar { width:
-      200px; background-color: #ffffff; color: rgb(0, 0, 0); padding-top: 20px;
-      } .sidebar nav ul { list-style-type: none; padding: 0; } .sidebar nav ul
-      li { padding: 10px; text-align: center; } .sidebar nav ul li a { color:
-      rgb(0, 0, 0); text-decoration: none; display: block; padding: 12px 0; }
-      .sidebar nav ul li a:hover, .sidebar nav ul li a.active { background-color:
-      #111111; } /* Main Content Area */ .content-area { flex-grow: 1; padding:
-      20px; } h2 { color: #000000; margin-bottom: 20px; } /* Form and Table Styling
-      */ .order-table { width: 100%; border-collapse: collapse; margin-top: 20px;
-      } .order-table th, .order-table td { padding: 10px; border: 1px solid #ffffff;
-      text-align: left; } .order-table th { background-color: #000000; color:
-      white; } .order-table td { background-color: #f9f9f9; } .btn-action { background-color:
-      #0277bd; color: white; font-size: 1rem; font-weight: 600; padding: 0.75rem
-      1rem; border: none; border-radius: 4px; cursor: pointer; } .btn-action:hover
-      { background-color: #0277bd; } .btn-action-place-order { background-color:
-      green; color: white; font-size: 1rem; font-weight: 600; padding: 0.75rem
-      1rem; border: none; border-radius: 4px; cursor: pointer; } .btn-action-place-order:hover
-      { background-color: green; } .filter-form { margin: 20px 0; display: flex;
-      gap: 10px; flex-wrap: wrap; } .filter-form input, .filter-form select {
-      padding: 0.5rem; font-size: 1rem; border: 1px solid #ccc; border-radius:
-      4px; } .filter-form button { padding: 0.75rem 1.5rem; background-color:
-      #0277bd; color: white; border: none; cursor: pointer; border-radius: 4px;
-      } .filter-form button:hover { background-color: #003366; } /* Order Form
-      */ form input, form select { padding: 0.75rem; margin: 8px 0; width: 100%;
-      border-radius: 4px; border: 1px solid #ccc; } form button { width: 100%;
-      padding: 1rem; background-color: #0277bd; color: white; font-size: 1.1rem;
-      border: none; cursor: pointer; border-radius: 4px; } /* form button:hover
-      { background-color: #000000; } */ /* Responsive Design */ @media (max-width:
-      768px) { .layout-container { flex-direction: column; } .sidebar { width:
-      100%; padding: 10px; } } .plus-button { position: relative; top: -5px;
-      /* Moves it just above the fridge dropdown */ right: 5px; /* Moves it slightly
-      to the right */ left: 1150px; padding-bottom: 30px; width: 180px; height:
-      40px; font-size: 18px; font-weight: bold; background-color: #007bff; color:
-      white; border: none; border-radius: 5px; cursor: pointer; } .plus-button:hover
-      { background-color: #0056b3; } /* Container for better positioning */ .form-container
-      { position: relative; padding: 20px; border: 1px solid #ccc; border-radius:
-      10px; max-width: 400px; margin: auto; background-color: #f9f9f9; } /* List
-      Styling */ #orderList { margin-top: 20px; padding: 0; } #orderList li {
-      background: #e9ecef; padding: 10px; margin: 5px 0; border-radius: 5px;
-      } .btn-action { margin: 10px; padding: 10px; border-radius: 5px; cursor:
-      pointer; } .btn-action-place-order { background-color: #4CAF50; color:
-      white; } /* .btn-action-review-order { background-color: crimson; color:
-      rgb(0, 0, 0); width: 20pc; align-content: center; margin-left: 30pc; }
-      */ .btn-action-confirm-order { background-color: green; color: white; font-weight:
-      bold; } .food-item { margin-bottom: 10px; } .food-item label { margin-right:
-      10px; } table { width: 100%; border-collapse: collapse; } table, th, td
-      { border: 1px solid black; padding: 10px; } th { background-color: #f2f2f2;
-      } .remove-item-btn { background-color: red; color: white; cursor: pointer;
-      } /* Modal Styling */ .modal { display: none; /* Hidden by default */ position:
-      fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color:
-      rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; } /*
-      Modal Content */ .modal-content { background: white; padding: 20px; text-align:
-      center; border-radius: 10px; width: 300px; box-shadow: 0px 4px 10px rgba(0,
-      0, 0, 0.2); } /* Close Button */ .modal-content button { margin-top: 10px;
-      padding: 10px 15px; border: none; background-color: green; color: white;
-      border-radius: 5px; cursor: pointer; } input[type="checkbox"]:checked+.checkbox-label::before
-      { content: '✔'; position: absolute; top: 0; left: 0; width: 100%; height:
-      100%; font-size: 14px; text-align: center; line-height: 16px; color: white;
-      } input[type="checkbox"] { appearance: auto; -webkit-appearance: auto;
-      -moz-appearance: auto; width: 16px; height: 16px; margin-right: 5px; }
-    </style>
-  </head>
-  
-  <body>
-    <header class="header-bar">
-      <img src="logo.jpeg" alt="Logo" class="header-logo">
-      <h1 class="header-title" style="color: cadetblue;">
-        Ullr
-        <span style="color: #000000;">
-          Systems
-        </span>
-      </h1>
-    </header>
-    <div class="layout-container">
-      <aside class="sidebar">
-        <nav class="main-menu">
-          <ul id="menu-items">
-            <li>
-              <a href="inventory.html">
-                Inventory
-              </a>
-            </li>
-            <li>
-              <a href="Order.html">
-                Order
-              </a>
-            </li>
-            <li>
-              <a href="Alerts.html">
-                Alerts
-              </a>
-            </li>
-            <li>
-              <a href="ManageAccounts.html" id="manageAccountsLink">
-                Manage Accounts
-              </a>
-            </li>
-            <li>
-              <a href="ManageFridges.html" id="manageFridgesLink">
-                Manage Fridges
-              </a>
-            </li>
-            <li>
-              <a href="Reports.html" id="reportsLink">
-                Reports
-              </a>
-            </li>
-            <li>
-              <a href="CreateAccount.html" id="createAccountLink">
-                Create Account
-              </a>
-            </li>
-            <li>
-              <a href="#" id="logoutLink">
-                Logout
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </aside>
-      <main class="content-area">
-        <h2>
-          Place Your Order
-        </h2>
-        <h3>
-          Complete your order in a few simple steps...
-        </h3>
-        <form id="orderForm" action="orderFood" method="POST">
-          <!-- Fridge Dropdown -->
-          <select id="fridge" onchange="loadFoodItems()" required>
-            <option value="" disabled selected>
-              Select your Fridge
-            </option>
-            <!-- Fridge options will be populated dynamically -->
-          </select>
-          <br>
-          <br>
-          <!-- Food Items -->
-          <h4>
-            Select Food Item
-          </h4>
-          <select id="foodDropdown">
-          </select>
-          <button type="button" onclick="addFoodToOrder()">
-            Add to Order
-          </button>
-          <br>
-          <br>
-          <!-- Delivery Date -->
-          <h4>
-            Delivery Date
-          </h4>
-          <input type="date" id="deliveryDate" required>
-          <br>
-          <br>
-          <center>
-            <button type="button" class="btn-action-review-order" style="height: 3em; width: 8em; background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer;"
-            onclick="reviewOrder()">
-              Review Order
-            </button>
-          </center>
-        </form>
-        <!-- Order Review Table -->
-        <table class="order-table" id="orderTable">
-          <thead>
-            <tr>
-              <th>
-                Food Name
-              </th>
-              <th>
-                Expiry Date
-              </th>
-              <th>
-                Weight
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Orders will be dynamically added here -->
-          </tbody>
-        </table>
-        <!-- Confirm Order -->
-        <button class="btn-action-confirm-order" id="confirmOrderBtn" style="display: none;"
-        onclick="confirmOrder()">
-          Confirm Order
-        </button>
-      </main>
-    </div>
-    <div id="confirmationModal" class="modal">
-      <div class="modal-content">
-        <h2>
-          Order Confirmed ✅
-        </h2>
-        <p>
-          Thank you for your order! Your food will be delivered soon.
-        </p>
-        <button onclick="closeModal()">
-          OK
-        </button>
-      </div>
-    </div>
 
-<script>
-  
-async function loadFridgeList() {
-    try {
-      const response = await fetch('/UllrSystems/getAllFridges'); // Adjust path if needed
-      if (!response.ok) {
-        throw new Error('Failed to fetch fridge list');
-      }
-      const data = await response.json();
-      const fridgeSelect = document.getElementById('fridge'); // where the data from servlet is going to go
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            Order Page
+        </title>
+        <link rel="stylesheet" href="mainmenu.css">
+        <style>
+            /* General Reset */ * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            } /* Body and Layout */
+            body {
+                font-family: Arial, sans-serif;
+                background-color:
+                    #f4f7fa;
+            }
+            .layout-container {
+                display: flex;
+            } /* Header Styling */
+            .header-bar
+            {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color:
+                    #ffffff;
+                padding: 10px;
+                width: 100%;
+            }
+            .header-logo {
+                height: 50px;
+                margin-right:
+                    15px;
+            }
+            .brand {
+                color: white;
+                font-size: 1.5rem;
+                font-weight: bold;
+            }
+            .brand span {
+                color: #ffdd57;
+            } /* Sidebar Styling */
+            .sidebar {
+                width:
+                    200px;
+                background-color: #ffffff;
+                color: rgb(0, 0, 0);
+                padding-top: 20px;
+            }
+            .sidebar nav ul {
+                list-style-type: none;
+                padding: 0;
+            }
+            .sidebar nav ul
+            li {
+                padding: 10px;
+                text-align: center;
+            }
+            .sidebar nav ul li a {
+                color:
+                    rgb(0, 0, 0);
+                text-decoration: none;
+                display: block;
+                padding: 12px 0;
+            }
+            .sidebar nav ul li a:hover, .sidebar nav ul li a.active {
+                background-color:
+                    #111111;
+            } /* Main Content Area */
+            .content-area {
+                flex-grow: 1;
+                padding:
+                    20px;
+            }
+            h2 {
+                color: #000000;
+                margin-bottom: 20px;
+            } /* Form and Table Styling
+            */
+            .order-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+            .order-table th, .order-table td {
+                padding: 10px;
+                border: 1px solid #ffffff;
+                text-align: left;
+            }
+            .order-table th {
+                background-color: #000000;
+                color:
+                    white;
+            }
+            .order-table td {
+                background-color: #f9f9f9;
+            }
+            .btn-action {
+                background-color:
+                    #0277bd;
+                color: white;
+                font-size: 1rem;
+                font-weight: 600;
+                padding: 0.75rem
+                    1rem;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+            .btn-action:hover
+            {
+                background-color: #0277bd;
+            }
+            .btn-action-place-order {
+                background-color:
+                    green;
+                color: white;
+                font-size: 1rem;
+                font-weight: 600;
+                padding: 0.75rem
+                    1rem;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+            .btn-action-place-order:hover
+            {
+                background-color: green;
+            }
+            .filter-form {
+                margin: 20px 0;
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+            .filter-form input, .filter-form select {
+                padding: 0.5rem;
+                font-size: 1rem;
+                border: 1px solid #ccc;
+                border-radius:
+                    4px;
+            }
+            .filter-form button {
+                padding: 0.75rem 1.5rem;
+                background-color:
+                    #0277bd;
+                color: white;
+                border: none;
+                cursor: pointer;
+                border-radius: 4px;
+            }
+            .filter-form button:hover {
+                background-color: #003366;
+            } /* Order Form
+            */
+            form input, form select {
+                padding: 0.75rem;
+                margin: 8px 0;
+                width: 100%;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+            }
+            form button {
+                width: 100%;
+                padding: 1rem;
+                background-color: #0277bd;
+                color: white;
+                font-size: 1.1rem;
+                border: none;
+                cursor: pointer;
+                border-radius: 4px;
+            } /* form button:hover
+                  { background-color: #000000; } */ /* Responsive Design */
+            @media (max-width:
+            768px) {
+                .layout-container {
+                    flex-direction: column;
+                }
+                .sidebar {
+                    width:
+                        100%;
+                    padding: 10px;
+                }
+            }
+            .plus-button {
+                position: relative;
+                top: -5px;
+                /* Moves it just above the fridge dropdown */ right: 5px; /* Moves it slightly
+                to the right */
+                left: 1150px;
+                padding-bottom: 30px;
+                width: 180px;
+                height:
+                    40px;
+                font-size: 18px;
+                font-weight: bold;
+                background-color: #007bff;
+                color:
+                    white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            .plus-button:hover
+            {
+                background-color: #0056b3;
+            } /* Container for better positioning */
+            .form-container
+            {
+                position: relative;
+                padding: 20px;
+                border: 1px solid #ccc;
+                border-radius:
+                    10px;
+                max-width: 400px;
+                margin: auto;
+                background-color: #f9f9f9;
+            } /* List
+                  Styling */
+            #orderList {
+                margin-top: 20px;
+                padding: 0;
+            }
+            #orderList li {
+                background: #e9ecef;
+                padding: 10px;
+                margin: 5px 0;
+                border-radius: 5px;
+            }
+            .btn-action {
+                margin: 10px;
+                padding: 10px;
+                border-radius: 5px;
+                cursor:
+                    pointer;
+            }
+            .btn-action-place-order {
+                background-color: #4CAF50;
+                color:
+                    white;
+            } /* .btn-action-review-order { background-color: crimson; color:
+                  rgb(0, 0, 0); width: 20pc; align-content: center; margin-left: 30pc; }
+            */
+            .btn-action-confirm-order {
+                background-color: green;
+                color: white;
+                font-weight:
+                    bold;
+            }
+            .food-item {
+                margin-bottom: 10px;
+            }
+            .food-item label {
+                margin-right:
+                    10px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            table, th, td
+            {
+                border: 1px solid black;
+                padding: 10px;
+            }
+            th {
+                background-color: #f2f2f2;
+            }
+            /* Modal Styling */
+            .modal {
+                display: none; /* Hidden by default */
+                position:
+                    fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color:
+                    rgba(0, 0, 0, 0.5);
+                justify-content: center;
+                align-items: center;
+            } /*
+                  Modal Content */
+            .modal-content {
+                background: white;
+                padding: 20px;
+                text-align:
+                    center;
+                border-radius: 10px;
+                width: 300px;
+                box-shadow: 0px 4px 10px rgba(0,
+                    0, 0, 0.2);
+            } /* Close Button */
+            .modal-content button {
+                margin-top: 10px;
+                padding: 10px 15px;
+                border: none;
+                background-color: green;
+                color: white;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            input[type="checkbox"]:checked+.checkbox-label::before
+            {
+                content: '✔';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height:
+                    100%;
+                font-size: 14px;
+                text-align: center;
+                line-height: 16px;
+                color: white;
+            }
+            input[type="checkbox"] {
+                appearance: auto;
+                -webkit-appearance: auto;
+                -moz-appearance: auto;
+                width: 16px;
+                height: 16px;
+                margin-right: 5px;
+            }
+            .orderbtn {
+                width: 100%;
+                padding: 1rem;
+                background-color: #0277bd;
+                color: white;
+                font-size: 1.1rem;
+                border: none;
+                cursor: pointer;
+                border-radius: 4px;
+            }
+             .remove-item-btn {
+                width: 100%;
+                padding: 1rem;
+                color: white;
+                font-size: 1.1rem;
+                border: none;
+                border-radius: 4px;
+                background-color: red;
+                cursor: pointer;
+            }
+            
+        </style>
+    </head>
 
-      // Clear any existing options
-      fridgeSelect.innerHTML = '';
+    <body>
+        <header class="header-bar">
+            <img src="logo.jpeg" alt="Logo" class="header-logo">
+            <h1 class="header-title" style="color: cadetblue;">
+                Ullr
+                <span style="color: #000000;">
+                    Systems
+                </span>
+            </h1>
+        </header>
+        <div class="layout-container">
+            <aside class="sidebar">
+                <nav class="main-menu">
+                    <ul id="menu-items">
+                        <li>
+                            <a href="inventory.html">
+                                Inventory
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Order.html">
+                                Order
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Alerts.html">
+                                Alerts
+                            </a>
+                        </li>
+                        <li>
+                            <a href="ManageAccounts.html" id="manageAccountsLink">
+                                Manage Accounts
+                            </a>
+                        </li>
+                        <li>
+                            <a href="ManageFridges.html" id="manageFridgesLink">
+                                Manage Fridges
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Reports.html" id="reportsLink">
+                                Reports
+                            </a>
+                        </li>
+                        <li>
+                            <a href="CreateAccount.html" id="createAccountLink">
+                                Create Account
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" id="logoutLink">
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+            <main class="content-area">
+                <h2>
+                    Place Your Order
+                </h2>
+                <h3>
+                    Complete your order in a few simple steps...
+                </h3>
+                <form id="orderForm">
+                    <!-- Fridge Dropdown -->
+                    <select id="fridge" onchange="loadFoodItems()" required>
+                        <option value="" disabled selected>
+                            Select your Fridge
+                        </option>
+                        <!-- Fridge options will be populated dynamically -->
+                    </select>
+                    <br>
+                    <br>
+                    <!-- Food Items -->
+                    <h4>
+                        Select Food Item
+                    </h4>
+                    <select id="foodDropdown">
+                    </select>
+                    <button type="button" onclick="addFoodToOrder()">
+                        Add to Order
+                    </button>
+                    <br>
+                    <br>
+                    <!-- Delivery Date -->
+                    <h4>
+                        Delivery Date
+                    </h4>
+                    <input type="date" id="deliveryDate" required>
+                    <br>
+                    <br>
+                    </form>
+                    <!-- Order Review Table -->
+                    <table class="order-table" id="orderTable">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Food Name
+                                </th>
+                                <th>
+                                    Item Number
+                                </th>
+                                <th>
+                                    Expiry Date
+                                </th>
+                                <th>
+                                    Weight
+                                </th>
+                                <th>
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderTableBody"></tbody> 
+                    </table>
+                
 
-      // data.fridges is the array we expect from the servlet
-      data.fridges.forEach(u =>{
-        const option = document.createElement('option');
-        option.value = u;
-        option.textContent = u;
-        fridgeSelect.appendChild(option);
-      });
-    } catch(error) {
-      console.error(error);
-      const messageDiv = document.getElementById('message');
-      messageDiv.textContent = 'Error loading fridges';
-      messageDiv.classList.add('error');
-    }
-  }
-  ////////////////// Done and working ^^^^^^^^^^^^^
+                <!--  submit order button  -->
+                <br>
+                <br>
+                <button class="orderbtn" id="btn-action-review-order" onclick="submitOrder()">Submit Order</button>
+                <script>
 
-let availableFoods = [];
-let orderedFoods = [];
+                    async function loadFridgeList() {
+                        try {
+                            const response = await fetch('/UllrSystems/getAllFridges'); // Adjust path if needed
+                            if (!response.ok) {
+                                throw new Error('Failed to fetch fridge list');
+                            }
+                            const data = await response.json();
+                            const fridgeSelect = document.getElementById('fridge'); // where the data from servlet is going to go
 
-async function loadFoodItems(){
-    const foodDropdown = document.getElementById("foodDropdown");
-    try{
-        const response = await fetch('/UllrSystems/getAllOrderFoods');
-        if(!response.ok){
-            throw new Error('Server responded with status: ${response.status}');
-        }
-        const data = await response.json();
-        if(!Array.isArray(data.foods) || data.foods.length === 0){
-            foodDropdown.innerHTML = "<option disabled>No food items available</option>";
-            return
-        }
-        availableFoods = data.foods;
-        
-        // actually put data into html
-        foodDropdown.innerHTML = "<option value='' disabled selected>Select Food Item</option>";
-        data.foods.forEach(food => {
-            const option = document.createElement('option');
-            option.value = food.foodId;
-            option.textContent = `Supplier ID: ${food.foodId} ${food.foodName} (Exp: ${food.expirationDate} Weight: ${food.weight})`;
-            foodDropdown.appendChild(option);
-        });
-    }catch(error){
-        console.error("Error loading food items:", error);
-        foodDropdown.innerHtml = "<option disabled>Error fetching foods</option>";
-    }
-}
+                            // Clear any existing options
+                            fridgeSelect.innerHTML = '';
 
+                            // data.fridges is the array we expect from the servlet
+                            data.fridges.forEach(u => {
+                                const option = document.createElement('option');
+                                option.value = u;
+                                option.textContent = u;
+                                fridgeSelect.appendChild(option);
+                            });
+                        } catch (error) {
+                            console.error(error);
+                            const messageDiv = document.getElementById('message');
+                            messageDiv.textContent = 'Error loading fridges';
+                            messageDiv.classList.add('error');
+                        }
+                    }
+                    ////////////////// Done and working ^^^^^^^^^^^^^
 
+                    let availableFoods = [];
+                    let orderedFoods = [];
 
+                    async function loadFoodItems() {
+                        const foodDropdown = document.getElementById("foodDropdown");
+                        try {
+                            const response = await fetch('/UllrSystems/getAllOrderFoods');
+                            if (!response.ok) {
+                                throw new Error('Server responded with status: ${response.status}');
+                            }
+                            const data = await response.json();
+                            if (!Array.isArray(data.foods) || data.foods.length === 0) {
+                                foodDropdown.innerHTML = "<option disabled>No food items available</option>";
+                                return;
+                            }
+                            availableFoods = data.foods;
 
+                            // actually put data into html
+                            foodDropdown.innerHTML = "<option value='' disabled selected>Select Food Item</option>";
+                            data.foods.forEach(food => {
+                                const option = document.createElement('option');
+                                option.value = food.foodId;
+                                option.textContent = `Supplier ID: ${food.foodId} ${food.foodName} (Exp: ${food.expirationDate} Weight: ${food.weight})`;
+                                foodDropdown.appendChild(option);
+                            });
+                        } catch (error) {
+                            console.error("Error loading food items:", error);
+                            foodDropdown.innerHtml = "<option disabled>Error fetching foods</option>";
+                        }
+                    }
 
+                    function addFoodToOrder() {
+                        const foodDropdown = document.getElementById("foodDropdown");
+                        const selectedFoodId = foodDropdown.value;
 
+                        if (!selectedFoodId) {
+                            alert("Please select a food");
+                            return;
+                        }
 
+                        const selectedFood = availableFoods.find(food => food.foodId == selectedFoodId);
+                        if (!selectedFood) {
+                            alert("Food item not found");
+                            return;
+                        }
 
-
-function handleFoodSelection(checkbox, food) {
-  const quantityInput = document.getElementById(`quantity - $ {
-    food.id
-  }`);
-
-  if (checkbox.checked) {
-    // Add the food item to selectedFoods if it's not already there
-    if (!selectedFoods.find(item =>item.food === food.name)) {
-      selectedFoods.push({
-        food: food.name,
-        quantity: parseInt(quantityInput.value)
-      });
-    }
-  } else {
-    // Remove the food item from selectedFoods
-    selectedFoods = selectedFoods.filter(item =>item.food !== food.name);
-  }
-}
-selectedFoods = [];
-
-
-// Function to review the order
-function reviewOrder() {
-  const orderTableBody = document.getElementById("orderTable").getElementsByTagName('tbody')[0];
-  orderTableBody.innerHTML = '';
-
-  selectedFoods = [];
-
-  const checkedBoxes = document.querySelectorAll('.food-item input[type="checkbox"]:checked');
-
-  if (checkedBoxes.length === 0) {
-    alert("Please select at least one food item!");
-    return;
-  }
-
-  checkedBoxes.forEach(checkbox =>{
-    const foodId = checkbox.id.replace('food-', '');
-    const quantityInput = document.getElementById(`quantity - $ {
-      foodId
-    }`);
-
-    const fridge = fridges.find(f =>f.id == selectedFridge);
-    const food = fridge.foods.find(f =>f.id == foodId);
-
-    selectedFoods.push({
-      food: food.name,
-      quantity: parseInt(quantityInput.value)
-    });
-  });
-
-  selectedFoods.forEach(foodItem =>{
-    const row = orderTableBody.insertRow();
-    row.innerHTML = ` < td > $ {
-      foodItem.food
-    } < /td>
-      <td>
-        <input type="number" value="${foodItem.quantity}" min="1" onchange="updateQuantity(this, '${foodItem.food}')">
-      </td > <td > Price from database < /td>
-      <td>
-        <button type="button" class="remove-item-btn" onclick="removeFoodItem('${foodItem.food}')">Remove</button > </td>
-    `;
-      });
-
-      document.getElementById('confirmOrderBtn').style.display = 'inline-block';
-    }
+                        const foodItem = {
+                            foodId: selectedFood.foodId,
+                            foodName: selectedFood.foodName,
+                            expirationDate: selectedFood.expirationDate,
+                            weight: selectedFood.weight
+                        };
 
 
-    // Update quantity of a food item
-    function updateQuantity(input, foodName) {
-      selectedFoods = selectedFoods.map(foodItem =>{
-        if (foodItem.food === foodName) {
-          foodItem.quantity = input.value;
-        }
-        return foodItem;
-      });
-    }
+                        orderedFoods.push(foodItem);
 
-    // Remove a food item from the review
-    function removeFoodItem(foodName) {
-      selectedFoods = selectedFoods.filter(item =>item.food !== foodName);
-      // Also uncheck the checkbox
-      const fridge = fridges.find(f =>f.id == selectedFridge);
-      const food = fridge.foods.find(f =>f.name === foodName);
-      if (food) {
-        const checkbox = document.getElementById(`food - $ {
-          food.id
-        }`);
-        if (checkbox) checkbox.checked = false;
-      }
-      reviewOrder();
-    }
+                        foodDropdown.querySelector(`option[value="${selectedFoodId}"]`).remove();
 
-    function confirmOrder() {
-      const modal = document.getElementById("confirmationModal");
-      modal.style.display = "flex"; // Show the modal
-      // selectedFoods = [] resetForm()
-    }
+                        updateOrderTable();
+                    }
 
-    // Function to close the modal
-    function closeModal() {
-      const modal = document.getElementById("confirmationModal");
-      modal.style.display = "none"; // Hide the modal
-    }
+                    function updateOrderTable() {
+                        const orderTableBody = document.getElementById("orderTableBody");
+                        orderTableBody.innerHTML = ""; // clear if existing
 
-    // Reset the form and order details
-    function resetForm() {
-      document.getElementById("orderForm").reset();
-      document.getElementById("foodItemsContainer").innerHTML = '';
-      document.getElementById("orderTable").getElementsByTagName('tbody')[0].innerHTML = '';
-      document.getElementById('confirmOrderBtn').style.display = 'none';
-      selectedFoods = [];
-    }
+                        orderedFoods.forEach((food, index) => {
+                            const row = orderTableBody.insertRow();
+                            row.innerHTML = `
+                            <td>${food.foodName}</td>
+                            <td>${index + 1}</td>
+                            <td>${food.weight} kg</td>
+                            <td>${food.expirationDate}</td>
+                            <td><button onclick="removeFoodFromOrder(${index})" class="remove-item-btn">Remove</button></td>
+                        `;
+                        });
+                    }
 
-    // Initialize
-    window.onload = function() {
-      console.log("page loaded , running load fridgelist");
-      loadFridgeList();
-      loadFoodItems();
-    };
-</script>
-</body>
+                    function removeFoodFromOrder(index) {
+                        const removedFood = orderedFoods.splice(index, 1)[0]; // removing from order list
+                        console.log(removedFood);
+                        if(!removedFood) return;
+                        const foodDropdown = document.getElementById("foodDropdown");
+                        const option = document.createElement("option");
+                        option.value = removedFood.foodId;
+                        option.textContent = `Supplier ID: ${removedFood.foodId} ${removedFood.foodName} (Exp: ${removedFood.expirationDate} Weight: ${removedFood.weight})`;
+                        foodDropdown.appendChild(option);
 
-</html>
+                        updateOrderTable();
+                    }
+
+                    async function submitOrder() {
+                        if (orderedFoods.length === 0) {
+                            alert("Your order is empty!");
+                            return;
+                        }
+                        
+                        const deliveryDate = document.getElementById("deliveryDate");
+                        if(deliveryDate.value.length !== 10){
+                            alert("Enter a valid date");
+                            return;
+                        }
+                        
+                        
+                        const orderData = {
+                            orderDate: new Date().toISOString().split('T')[0],
+                            deliveryDate: deliveryDate.value,
+                            food: orderedFoods.map(food => ({
+                                    foodId: food.foodId,
+                                    foodName: food.foodName,
+                                    expirationDate: food.expirationDate,
+                                    weight: food.weight
+                                }))
+                        };
+
+                        try {
+                            const response = await fetch("/UllrSystems/orderFood", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify(orderData)
+                            });
+
+                            const result = await response.json();
+                            console.log("order response: ", result);
+                            if (result.success) {
+                                alert("Order Placed!");
+                                orderedFoods = [];
+                                updateOrderTable();
+                            } else {
+                                alert("Error placing order: " + result.error);
+                            }
+                        } catch (error) {
+                            console.error("Error submitting error:", error);
+                            alert("Failed to send order");
+                        }
+                    }
+
+
+
+                    // Initialize
+                    window.onload = function () {
+                        console.log("page loaded , running load fridgelist");
+                        loadFridgeList();
+                        loadFoodItems();
+                    };
+                </script>
+                </body>
+
+                </html>
