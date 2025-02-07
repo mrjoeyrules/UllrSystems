@@ -518,4 +518,52 @@ public class SQLInterfacing {
         }
         conn.close();
     }
+    public boolean addFridge(String serialNumber, double fridgeCapacity) throws SQLException {
+        Connection conn = getConnection("Fridges");
+        String query = "INSERT INTO fridge (serialNumber, fridgeCapacity) VALUES (?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, serialNumber);
+            stmt.setDouble(2, fridgeCapacity);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            conn.close();
+            return false;
+        } finally {
+            conn.close();
+        }
+    }
+    
+    public boolean modifyFridge(int fridgeId, String serialNumber, double fridgeCapacity) throws SQLException {
+        Connection conn = getConnection("Fridges");
+        String query = "UPDATE fridge SET serialNumber = ?, fridgeCapacity = ? WHERE fridgeId = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, serialNumber);
+            stmt.setDouble(2, fridgeCapacity);
+            stmt.setInt(3, fridgeId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            conn.close();
+            return false;
+        } finally {
+            conn.close();
+        }
+    }
+    
+    public boolean deleteFridge(int fridgeId) throws SQLException {
+        Connection conn = getConnection("Fridges");
+        String query = "DELETE FROM fridge WHERE fridgeId = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, fridgeId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            conn.close();
+            return false;
+        } finally {
+            conn.close();
+        }
+    }
+}
 }
