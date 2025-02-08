@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Update Role | Ullr Systems</title>
+  <link rel="stylesheet" href="mainmenu.css">
+  <style>
+    /* General Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Body and Layout */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f7fa;
+    }
+
+    .layout-container {
+      display: flex;
+    }
+
+      /* Header Styling */
+      .header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #ffffff;
+      padding: 10px;
+      width: 100%;
+    }
+
+    .header-logo {
+      height: 50px;
+      margin-right: 15px;
+    }
+
+    .brand {
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .brand span {
+      color: #ffdd57;
+    }
+
+    /* Sidebar Styling */
+    .sidebar {
+      width: 200px;
+      background-color: #ffffff;
+      color: rgb(0, 0, 0);
+      padding-top: 20px;
+    }
+
+    .sidebar nav ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    
+    .sidebar nav ul li {
+      padding: 10px;
+      text-align: center;
+    }
+
+    .sidebar nav ul li a {
+      color: rgb(0, 0, 0);
+      text-decoration: none;
+      display: block;
+      padding: 12px 0;
+    }
+
+    .sidebar nav ul li a:hover,
+    .sidebar nav ul li a.active {
+      background-color: #111111;
+    }
+
+    /* Main Content Area */
+    .content-area {
+      flex-grow: 1;
+      padding: 20px;
+    }
+
+    h2 {
+      color: #0277bd;
+      margin-bottom: 20px;
+    }
+
+    /* Form and Table Styling */
+    .order-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .order-table th, .order-table td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    .order-table th {
+      background-color: #0277bd;
+      color: white;
+    }
+
+    .order-table td {
+      background-color: #f9f9f9;
+    }
+
+    .btn-action {
+      background-color:#0277bd;
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 0.75rem 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn-action:hover {
+      background-color:#0277bd;
+    }
+
+    .btn-action-place-order {
+      background-color:green;
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 0.75rem 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn-action-place-order:hover {
+      background-color: green;
+    }
+
+    .filter-form {
+      margin: 20px 0;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .filter-form input,
+    .filter-form select {
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .filter-form button {
+      padding: 0.75rem 1.5rem;
+      background-color: #0277bd;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .filter-form button:hover {
+      background-color: #003366;
+    }
+
+    /* Order Form */
+    form input,
+    form select {
+      padding: 0.75rem;
+      margin: 8px 0;
+      width: 100%;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    form button {
+      width: 100%;
+      padding: 1rem;
+      background-color: #0277bd;
+      color: white;
+      font-size: 1.1rem;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    form button:hover {
+      background-color: #003366;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .layout-container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        padding: 10px;
+      }
+    }
+
+    .plus-button {
+      position: relative;
+        top:-5px;  /* Moves it just above the fridge dropdown */
+        right: 5px;   /* Moves it slightly to the right */
+        left: 1150px;
+        padding-bottom: 30px ;
+        width: 180px;
+        height: 40px;
+        font-size: 18px;
+        font-weight: bold;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .plus-button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Container for better positioning */
+    .form-container {
+        position: relative;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        max-width: 400px;
+        margin: auto;
+        background-color: #f9f9f9;
+    }
+
+    /* List Styling */
+    #orderList {
+        margin-top: 20px;
+        padding: 0;
+    }
+
+    #orderList li {
+        background: #e9ecef;
+        padding: 10px;
+        margin: 5px 0;
+        border-radius: 5px;
+    }
+    .btn-action { margin: 10px; padding: 10px; border-radius: 5px; cursor: pointer; }
+    .btn-action-place-order { background-color: #4CAF50; color: white; }
+    .btn-action-review-order { background-color: #0277bd; color: white;  width: 400px; align-content: center; margin-left: 450px;}
+    .btn-action-confirm-order { background-color: green; color: white; font-weight: bold; }
+    .food-item { margin-bottom: 10px; }
+    .food-item label { margin-right: 10px; }
+    table { width: 100%; border-collapse: collapse; }
+    table, th, td { border: 1px solid black; padding: 10px; }
+    th { background-color: #f2f2f2; }
+    .remove-item-btn { background-color: red; color: white; cursor: pointer; }
+
+    /* Modal Styling */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+/* Modal Content */
+.modal-content {
+  background: white;
+  padding: 20px;
+  text-align: center;
+  border-radius: 10px;
+  width: 300px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Close Button */
+.modal-content button {
+  margin-top: 10px;
+  padding: 10px 15px;
+  border: none;
+  background-color: green;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+input[type="checkbox"]:checked + .checkbox-label::before {
+      content: '✔';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      font-size: 14px;
+      text-align: center;
+      line-height: 16px;
+      color: white;
+    }
+
+input[type="checkbox"] {
+  appearance: auto;
+  -webkit-appearance: auto;
+  -moz-appearance: auto;
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+}
+
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header-bar">
+    <img src="logo.jpeg" alt="Logo" class="header-logo">
+    <h1 class="header-title" style="color: cadetblue;">Ullr <span style="color: #000000;"> Systems</span></h1>
+</header>
+  <!-- Layout Container -->
+  <div class="layout-container">
+    <!-- Sidebar -->
+<aside class="sidebar">
+  <nav class="main-menu">
+    <ul id="menu-items">
+      <li><a href="inventory.html">Inventory</a></li>
+      <li><a href="Order.html">Order</a></li>
+      <li><a href="Alerts.html">Alerts</a></li>
+      <li><a href="ManageAccounts.html" id="manageAccountsLink">Manage Accounts</a></li>
+      <li><a href="ManageFridges.html" id="manageFridgesLink">Manage Fridges</a></li>
+      <li><a href="Reports.html" id="reportsLink">Reports</a></li>
+      <li><a href="CreateAccount.html" id="createAccountLink">Create Account</a></li>
+      <li><a href="#" id="logoutLink">Logout</a></li>
+      
+    </ul>
+  </nav>
+</aside>
+
+
+    <!-- Main Content -->
+    <main class="content-area">
+      <h2 style="color: #000000;">Update Role</h2>
+      <form id="updateRoleForm" method="POST" action="updateRole" class="update-form">
+        <div class="form-group">
+          <label for="username">Select User:</label>
+          <select id="username" name="username" class="form-select">
+            <!-- Populated by JS -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="role">New Role:</label>
+          <select id="role" name="role" class="form-select">
+            <option value="1">Delivery Driver</option>
+            <option value="2">Head Chef</option>
+            <option value="3">Admin</option>
+          </select>
+        </div>
+
+        <button type="submit"  style="color: white; background-color: #000000;"  class="btn btn-success">Update Role</button>
+      </form>
+      <div id="message" class="message"></div>
+    </main>
+  </div>
+
+  <script>
+    // Load user list for the drop-down
+    async function loadUserList() {
+      try {
+        const response = await fetch('/UllrSystems/getAllUsers');
+        if (!response.ok) {
+          throw new Error('Failed to fetch user list');
+        }
+        const data = await response.json();
+        const userSelect = document.getElementById('username');
+
+        userSelect.innerHTML = '';
+        data.users.forEach(u => {
+          const option = document.createElement('option');
+          option.value = u;
+          option.textContent = u;
+          userSelect.appendChild(option);
+        });
+      } catch (error) {
+        console.error(error);
+        const messageDiv = document.getElementById('message');
+        messageDiv.textContent = 'Error loading users';
+        messageDiv.classList.add('error');
+      }
+    }
+
+    // Handle form submission
+    document.getElementById('updateRoleForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const form = this;
+      const username = form.username.value;
+      const role = form.role.value;
+
+      const urlEncodedData = new URLSearchParams();
+      urlEncodedData.append('username', username);
+      urlEncodedData.append('role', role);
+
+      try {
+        const response = await fetch('/UllrSystems/updateRole', {
+          method: 'POST',
+          body: urlEncodedData,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to update role.');
+        }
+
+        const result = await response.json();
+        const messageDiv = document.getElementById('message');
+
+        if (result.success) {
+          messageDiv.classList.remove('error');
+          messageDiv.classList.add('success');
+          messageDiv.textContent = result.message;
+          form.reset();
+        } else {
+          messageDiv.classList.remove('success');
+          messageDiv.classList.add('error');
+          messageDiv.textContent = result.message;
+        }
+      } catch (error) {
+        console.error(error);
+        const messageDiv = document.getElementById('message');
+        messageDiv.classList.remove('success');
+        messageDiv.classList.add('error');
+        messageDiv.textContent = 'Error updating role.';
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', loadUserList);
+  </script>
+    <!-- Add the script BELOW so it sees your IDs -->
+  <script src="roleCheck.js"></script>
+  <script src="logout.js"></script>
+</body>
+</html>
+
+
+

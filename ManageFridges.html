@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Fridges | Ullr Systems</title>
+  <link rel="stylesheet" href="mainmenu.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
+  rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
+  crossorigin="anonymous">
+  <style>
+    /* General Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Body and Layout */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f7fa;
+    }
+
+    .layout-container {
+      display: flex;
+    }
+
+    /* Header Styling */
+    .header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #ffffff;
+      padding: 10px;
+      width: 100%;
+    }
+
+    .header-logo {
+      height: 50px;
+      margin-right: 15px;
+    }
+
+    .brand {
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .brand span {
+      color: #ffdd57;
+    }
+
+    /* Sidebar Styling */
+    .sidebar {
+      width: 200px;
+      background-color: #ffffff;
+      color: rgb(0, 0, 0);
+      padding-top: 20px;
+    }
+
+    .sidebar nav ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    
+    .sidebar nav ul li {
+      padding: 10px;
+      text-align: center;
+    }
+
+    .sidebar nav ul li a {
+      color: rgb(0, 0, 0);
+      text-decoration: none;
+      display: block;
+      padding: 12px 0;
+    }
+
+    .sidebar nav ul li a:hover,
+    .sidebar nav ul li a.active {
+      background-color: #111111;
+    }
+
+    /* Main Content Area */
+    .content-area {
+      flex-grow: 1;
+      padding: 20px;
+    }
+
+    h2 {
+      color: #0277bd;
+      margin-bottom: 20px;
+    }
+
+    .btn-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .btn-container button {
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    .table {
+      width: 50%;
+      margin-top: 20px;
+    }
+
+    .table th, .table td {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header class="header-bar">
+    <img src="logo.jpeg" alt="Logo" class="header-logo">
+    <h1 class="header-title" style="color: cadetblue; display: flex; font-weight: bold ; font-size:xx-large;">
+        <span>Ullr</span><span style="color: #000000; margin-left: 5px;">Systems</span>
+    </h1>
+  </header>
+
+  <div class="layout-container">
+    <aside class="sidebar">
+      <nav class="main-menu" style="color: white;background-color: #ffffff;">
+        <ul id="menu-items">
+          <li><a href="inventory.html">Inventory</a></li>
+          <li><a href="Order.html">Order</a></li>
+          <li><a href="Alerts.html">Alerts</a></li>
+          <li><a href="ManageAccounts.html" id="manageAccountsLink">Manage Accounts</a></li>
+          <li><a href="ManageFridges.html" id="manageFridgesLink">Manage Fridges</a></li>
+          <li><a href="Reports.html" id="reportsLink">Reports</a></li>
+          <li><a href="CreateAccount.html" id="createAccountLink">Create Account</a></li>
+          <li><a href="#" id="logoutLink">Logout</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="content-area">
+      <h2 class="text-center" style="color: #000000; display: flex; font-weight: bold ; font-size:xx-large;">Manage Fridges</h2>
+
+      <!-- Buttons in the same row -->
+      <div class="btn-container">
+
+        <button  class="btn btn-primary"  style="background-color: red;"  onclick="deleteFridge()"> Delete Fridge</button>
+      
+        <!-- Update Password Button -->
+        <button  class="btn btn-primary" style="background-color: #4CAF50;"  onclick="updateFridgeNumber()">Update Fridge Number </button>
+        
+      
+        <!-- Update Role Button -->
+        <button class="btn btn-primary" style="background-color: #4CAF50;"   onclick="createFridge()">Create Fridge</button>
+      </div>
+
+      <!-- Table to display fridges -->
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Fridge ID</th>
+            <th>Fridge Number</th>
+          </tr>
+        </thead>
+        <tbody id="fridge-table">
+          <!-- Fridge data will be populated here dynamically -->
+        </tbody>
+      </table>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+  integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
+  crossorigin="anonymous"></script>
+
+  <script>
+    // Simulated fridge data
+    let fridges = [
+      { id: 1, number: "Fridge 1" },
+      { id: 2, number: "Fridge 2" },
+    ];
+
+    // Function to populate the fridge table
+    function populateFridgeTable() {
+      const fridgeTable = document.getElementById("fridge-table");
+      fridgeTable.innerHTML = ""; // Clear existing rows
+
+      fridges.forEach(fridge => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${fridge.id}</td>
+          <td>${fridge.number}</td>
+        `;
+        fridgeTable.appendChild(row);
+      });
+    }
+
+    // Function to delete a fridge
+    function deleteFridge() {
+      const fridgeNumber = prompt("Enter the fridge number to delete:");
+      if (fridgeNumber) {
+        const index = fridges.findIndex(f => f.number === fridgeNumber);
+        if (index !== -1) {
+          fridges.splice(index, 1);
+          populateFridgeTable(); // Refresh the table
+          alert(`Fridge ${fridgeNumber} deleted successfully.`);
+        } else {
+          alert("Fridge not found.");
+        }
+      }
+    }
+
+    // Function to update a fridge number
+    function updateFridgeNumber() {
+      const oldNumber = prompt("Enter the current fridge number:");
+      if (oldNumber) {
+        const index = fridges.findIndex(f => f.number === oldNumber);
+        if (index !== -1) {
+          const newNumber = prompt("Enter the new fridge number:");
+          if (newNumber) {
+            fridges[index].number = newNumber;
+            populateFridgeTable(); // Refresh the table
+            alert(`Fridge number updated to ${newNumber} successfully.`);
+          }
+        } else {
+          alert("Fridge not found.");
+        }
+      }
+    }
+
+    // Function to create a new fridge
+    function createFridge() {
+      const fridgeNumber = prompt("Enter the new fridge number:");
+      if (fridgeNumber) {
+        const newFridge = { id: fridges.length + 1, number: fridgeNumber };
+        fridges.push(newFridge);
+        populateFridgeTable(); // Refresh the table
+        alert(`Fridge ${fridgeNumber} created successfully.`);
+      }
+    }
+
+    // Initialize the table on page load
+    populateFridgeTable();
+  </script>
+</body>
+</html>
