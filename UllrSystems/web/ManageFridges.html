@@ -25,8 +25,8 @@
       display: flex;
     }
 
-      /* Header Styling */
-      .header-bar {
+    /* Header Styling */
+    .header-bar {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -91,7 +91,25 @@
       margin-bottom: 20px;
     }
 
+    .btn-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
 
+    .btn-container button {
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    .table {
+      width: 50%;
+      margin-top: 20px;
+    }
+
+    .table th, .table td {
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -100,8 +118,7 @@
     <h1 class="header-title" style="color: cadetblue; display: flex; font-weight: bold ; font-size:xx-large;">
         <span>Ullr</span><span style="color: #000000; margin-left: 5px;">Systems</span>
     </h1>
-</header>
-
+  </header>
 
   <div class="layout-container">
     <aside class="sidebar">
@@ -115,80 +132,38 @@
           <li><a href="Reports.html" id="reportsLink">Reports</a></li>
           <li><a href="CreateAccount.html" id="createAccountLink">Create Account</a></li>
           <li><a href="#" id="logoutLink">Logout</a></li>
-          
         </ul>
       </nav>
     </aside>
 
     <main class="content-area">
-      <h2 class="text-center" style="color: #000000;       display:  flex; font-weight: bold ; font-size:xx-large;">Manage Fridge</h2>
+      <h2 class="text-center" style="color: #000000; display: flex; font-weight: bold ; font-size:xx-large;">Manage Fridges</h2>
 
+      <!-- Buttons in the same row -->
+      <div class="btn-container">
+
+        <button  class="btn btn-primary"  style="background-color: red;"  onclick="deleteFridge()"> Delete Fridge</button>
       
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <button style="color: #f4f7fa; background-color: #000000;"    class="btn btn-primary" onclick="openAddItemModal()">Add Item</button>
+        <!-- Update Password Button -->
+        <button  class="btn btn-primary" style="background-color: #4CAF50;"  onclick="updateFridgeNumber()">Update Fridge Number </button>
+        
+      
+        <!-- Update Role Button -->
+        <button class="btn btn-primary" style="background-color: #4CAF50;"   onclick="createFridge()">Create Fridge</button>
       </div>
 
-      <!-- Table for Managing Fridge Items -->
+      <!-- Table to display fridges -->
       <table class="table table-striped">
-        <thead class="table-secondary">
+        <thead>
           <tr>
-            <th>Item Name</th>
-            <th>Quantity</th>
-            <th>Expiry Date</th>
-            <th>Action</th>
+            <th>Fridge ID</th>
+            <th>Fridge Number</th>
           </tr>
         </thead>
-        <tbody id="fridge-items-table">
-          <!-- Dynamic content from foodItems array -->
+        <tbody id="fridge-table">
+          <!-- Fridge data will be populated here dynamically -->
         </tbody>
       </table>
-
-      <!-- Table for Items Added by Current User -->
-      <h3 class="text-center mt-5">Items Added by You</h3>
-      <table class="table table-striped">
-        <thead class="table-secondary">
-          <tr>
-            <th>Item Name</th>
-            <th>Quantity</th>
-            <th>Expiry Date</th>
-          </tr>
-        </thead>
-        <tbody id="user-items-table">
-          <tr>
-            <td colspan="3" class="text-center">No items to show.</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <!-- Modals for Adding Items -->
-      <div id="addItemModal" class="modal fade" tabindex="-1" aria-labelledby="addItemModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="addItemModalLabel">Add Item</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <div class="mb-3">
-                <label for="addItemName" class="form-label">Item Name:</label>
-                <input type="text" id="addItemName" class="form-control">
-              </div>
-              <div class="mb-3">
-                <label for="addItemQuantity" class="form-label">Quantity:</label>
-                <input type="number" id="addItemQuantity" class="form-control" min="1">
-              </div>
-              <div class="mb-3">
-                <label for="addItemExpiry" class="form-label">Expiry Date:</label>
-                <input type="date" id="addItemExpiry" class="form-control">
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button style="color: #f4f7fa; background-color: #000000;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <button style="color: #f4f7fa; background-color:red;" type="button" class="btn btn-primary" onclick="addItem()">Add Item</button>
-            </div>
-          </div>
-        </div>
-      </div>
     </main>
   </div>
 
@@ -197,162 +172,66 @@
   crossorigin="anonymous"></script>
 
   <script>
-    // Roles: 1 = Delivery Personnel, 2 = Chef, 3 = Admin
-    const currentUser = { username: "john_doe", role: 2 }; // Simulated current user for this example
-
-    // Sidebar menu items and their required roles
-    const menuItems = [
-      // { label: "Inventory", href: "inventory.html", roles: [3] },
-      // { label: "Order", href: "Order.html", roles: [3] },
-      // { label: "Alerts", href: "Alerts.html", roles: [2, 3] },
-      // { label: "Manage Accounts", href: "ManageAccounts.html", roles: [3] },
-      // { label: "Manage Fridge", href: "ManageFridges.html", roles: [2, 3] },
-      // { label: "Reports", href: "Reports.html", roles: [3] },
-    ];
-
-    const menuContainer = document.getElementById("menu-items");
-
-    // Dynamically populate the menu based on the current user's role
-    menuItems.forEach(item => {
-      if (item.roles.includes(currentUser.role)) {
-        const li = document.createElement("li");
-        if(item.label=="Manage Fridge")
-        {
-          li.innerHTML = `<a href="${item.href}" class="active">${item.label}</a>`;
-
-        } 
-        else
-        {
-          li.innerHTML = `<a href="${item.href}">${item.label}</a>`;
-        }
-        menuContainer.appendChild(li);
-      }
-    });
-    // Dummy current user
-
-    // Sample data for items in fridge
-    const foodItems = [
-      { foodId: 1, foodName: "Chicken Breast", expirationDate: "2025-01-25", quantity: 10, addedBy: "JohnDoe" },
-      { foodId: 2, foodName: "Lettuce", expirationDate: "2025-01-22", quantity: 3, addedBy: "JaneSmith" },
-      { foodId: 3, foodName: "Mozzarella Cheese", expirationDate: "2025-01-20", quantity: 1, addedBy: "JohnDoe" },
-      { foodId: 4, foodName: "Tomatoes", expirationDate: "2025-01-28", quantity: 8, addedBy: "AliceBrown" },
-      { foodId: 5, foodName: "Pasta Sauce", expirationDate: "2025-01-27", quantity: 2, addedBy: "JohnDoe" },
-    ];
-
-    const fridgeItemsTable = document.getElementById("fridge-items-table");
-    const userItemsTable = document.getElementById("user-items-table");
-
-    // Populate Fridge Items Table dynamically
-    function populateTable(items) {
-      fridgeItemsTable.innerHTML = "";
-      items.forEach((item) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${item.foodName}</td>
-          <td>${item.quantity}</td>
-          <td>${new Date(item.expirationDate).toLocaleDateString()}</td>
-          <td>
-            <button style = "color : white ;   background-color: red;"  class="btn btn-danger btn-sm" onclick="removeItem(${item.foodId})">Remove</button>
-            <button style = "color : white  ; background-color: #2ecc71;" class="btn btn-warning btn-sm" onclick="changeQuantity(${item.foodId})">Change Quantity</button>
-          </td>
-        `;
-        fridgeItemsTable.appendChild(row);
-      });
+    function fetchFridges() {
+      fetch("/getAllFridges")
+        .then(response => response.json())
+        .then(data => {
+          const fridgeTable = document.getElementById("fridge-table");
+          fridgeTable.innerHTML = "";
+          data.fridges.forEach(fridge => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${fridge.fridgeId}</td>
+              <td>${fridge.serialNumber}</td>
+              <td>${fridge.fridgeCapacity}</td>
+            `;
+            fridgeTable.appendChild(row);
+          });
+        })
+        .catch(error => console.error("Error fetching fridges:", error));
     }
 
-    // Populate User Items Table dynamically
-    function populateUserItems() {
-      const userItems = foodItems.filter(item => item.addedBy === currentUser.username);
-      userItemsTable.innerHTML = "";
-      if (userItems.length === 0) {
-        userItemsTable.innerHTML = `<tr><td colspan="3" class="text-center">No items to show.</td></tr>`;
-      } else {
-        userItems.forEach(item => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${item.foodName}</td>
-            <td>${item.quantity}</td>
-            <td>${new Date(item.expirationDate).toLocaleDateString()}</td>
-          `;
-          userItemsTable.appendChild(row);
-        });
+    function createFridge() {
+      const serialNumber = prompt("Enter the new fridge serial number:");
+      const fridgeCapacity = prompt("Enter the fridge capacity:");
+      if (serialNumber && fridgeCapacity) {
+        fetch("/addFridge", {
+          method: "POST",
+          body: new URLSearchParams({ serialNumber, fridgeCapacity })
+        })
+        .then(response => response.json())
+        .then(() => fetchFridges());
       }
     }
 
-    // Add Item Functionality
-    function openAddItemModal() {
-      let addItemModal = new bootstrap.Modal(document.getElementById('addItemModal'));
-      addItemModal.show();
-    }
-
-    function addItem() {
-      const itemName = document.getElementById('addItemName').value.trim();
-      const itemQuantity = parseInt(document.getElementById('addItemQuantity').value.trim());
-      const itemExpiry = document.getElementById('addItemExpiry').value;
-
-      if (!itemName || !itemQuantity || !itemExpiry) {
-        alert("All fields are required!");
-        return;
-      }
-      if (itemQuantity <= 0) {
-        alert("Invalid quantity! Please enter a positive number.");
-        return;
-      }
-
-      const newItem = {
-        foodId: foodItems.length + 1,
-        foodName: itemName,
-        quantity: itemQuantity,
-        expirationDate: itemExpiry,
-        addedBy: currentUser.username,
-      };
-
-      foodItems.push(newItem);
-      populateTable(foodItems);
-      populateUserItems();
-
-      let addItemModal = bootstrap.Modal.getInstance(document.getElementById('addItemModal'));
-      addItemModal.hide();
-
-      alert("Item added successfully!");
-    }
-
-    // Delete Item Functionality
-    function removeItem(foodId) {
-      const itemIndex = foodItems.findIndex(item => item.foodId === foodId);
-      if (itemIndex !== -1) {
-        const confirmation = confirm(`Are you sure you want to remove "${foodItems[itemIndex].foodName}"?`);
-        if (confirmation) {
-          foodItems.splice(itemIndex, 1);
-          populateTable(foodItems);
-          populateUserItems();
-          alert("Item removed successfully!");
-        }
+    function updateFridgeNumber() {
+      const fridgeId = prompt("Enter the fridge ID to update:");
+      const serialNumber = prompt("Enter the new fridge serial number:");
+      const fridgeCapacity = prompt("Enter the new fridge capacity:");
+      if (fridgeId && serialNumber && fridgeCapacity) {
+        fetch("/modifyFridge", {
+          method: "POST",
+          body: new URLSearchParams({ fridgeId, serialNumber, fridgeCapacity })
+        })
+        .then(response => response.json())
+        .then(() => fetchFridges());
       }
     }
 
-    // Change Quantity Functionality
-    function changeQuantity(foodId) {
-      const item = foodItems.find(item => item.foodId === foodId);
-      if (item) {
-        const newQuantity = prompt(`Enter new quantity for "${item.foodName}":`, item.quantity);
-        if (newQuantity !== null) {
-          const parsedQuantity = parseInt(newQuantity.trim());
-          if (!isNaN(parsedQuantity) && parsedQuantity > 0) {
-            item.quantity = parsedQuantity;
-            populateTable(foodItems);
-            populateUserItems();
-            alert("Quantity updated successfully!");
-          } else {
-            alert("Invalid quantity! Please enter a positive number.");
-          }
-        }
+    function deleteFridge() {
+      const fridgeId = prompt("Enter the fridge ID to delete:");
+      if (fridgeId) {
+        fetch("/deleteFridge", {
+          method: "POST",
+          body: new URLSearchParams({ fridgeId })
+        })
+        .then(response => response.json())
+        .then(() => fetchFridges());
       }
     }
 
-    // Initialize tables
-    populateTable(foodItems);
-    populateUserItems();
+
+    document.addEventListener("DOMContentLoaded", fetchFridges);
   </script>
 </body>
 </html>
