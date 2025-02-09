@@ -172,66 +172,73 @@
   crossorigin="anonymous"></script>
 
   <script>
-    function fetchFridges() {
-      fetch("/getAllFridges")
-        .then(response => response.json())
-        .then(data => {
-          const fridgeTable = document.getElementById("fridge-table");
-          fridgeTable.innerHTML = "";
-          data.fridges.forEach(fridge => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-              <td>${fridge.fridgeId}</td>
-              <td>${fridge.serialNumber}</td>
-              <td>${fridge.fridgeCapacity}</td>
-            `;
-            fridgeTable.appendChild(row);
-          });
-        })
-        .catch(error => console.error("Error fetching fridges:", error));
+    // Simulated fridge data
+    let fridges = [
+      { id: 1, number: "Fridge 1" },
+      { id: 2, number: "Fridge 2" },
+    ];
+
+    // Function to populate the fridge table
+    function populateFridgeTable() {
+      const fridgeTable = document.getElementById("fridge-table");
+      fridgeTable.innerHTML = ""; // Clear existing rows
+
+      fridges.forEach(fridge => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${fridge.id}</td>
+          <td>${fridge.number}</td>
+        `;
+        fridgeTable.appendChild(row);
+      });
     }
 
-    function createFridge() {
-      const serialNumber = prompt("Enter the new fridge serial number:");
-      const fridgeCapacity = prompt("Enter the fridge capacity:");
-      if (serialNumber && fridgeCapacity) {
-        fetch("/addFridge", {
-          method: "POST",
-          body: new URLSearchParams({ serialNumber, fridgeCapacity })
-        })
-        .then(response => response.json())
-        .then(() => fetchFridges());
-      }
-    }
-
-    function updateFridgeNumber() {
-      const fridgeId = prompt("Enter the fridge ID to update:");
-      const serialNumber = prompt("Enter the new fridge serial number:");
-      const fridgeCapacity = prompt("Enter the new fridge capacity:");
-      if (fridgeId && serialNumber && fridgeCapacity) {
-        fetch("/modifyFridge", {
-          method: "POST",
-          body: new URLSearchParams({ fridgeId, serialNumber, fridgeCapacity })
-        })
-        .then(response => response.json())
-        .then(() => fetchFridges());
-      }
-    }
-
+    // Function to delete a fridge
     function deleteFridge() {
-      const fridgeId = prompt("Enter the fridge ID to delete:");
-      if (fridgeId) {
-        fetch("/deleteFridge", {
-          method: "POST",
-          body: new URLSearchParams({ fridgeId })
-        })
-        .then(response => response.json())
-        .then(() => fetchFridges());
+      const fridgeNumber = prompt("Enter the fridge number to delete:");
+      if (fridgeNumber) {
+        const index = fridges.findIndex(f => f.number === fridgeNumber);
+        if (index !== -1) {
+          fridges.splice(index, 1);
+          populateFridgeTable(); // Refresh the table
+          alert(`Fridge ${fridgeNumber} deleted successfully.`);
+        } else {
+          alert("Fridge not found.");
+        }
       }
     }
 
+    // Function to update a fridge number
+    function updateFridgeNumber() {
+      const oldNumber = prompt("Enter the current fridge number:");
+      if (oldNumber) {
+        const index = fridges.findIndex(f => f.number === oldNumber);
+        if (index !== -1) {
+          const newNumber = prompt("Enter the new fridge number:");
+          if (newNumber) {
+            fridges[index].number = newNumber;
+            populateFridgeTable(); // Refresh the table
+            alert(`Fridge number updated to ${newNumber} successfully.`);
+          }
+        } else {
+          alert("Fridge not found.");
+        }
+      }
+    }
 
-    document.addEventListener("DOMContentLoaded", fetchFridges);
+    // Function to create a new fridge
+    function createFridge() {
+      const fridgeNumber = prompt("Enter the new fridge number:");
+      if (fridgeNumber) {
+        const newFridge = { id: fridges.length + 1, number: fridgeNumber };
+        fridges.push(newFridge);
+        populateFridgeTable(); // Refresh the table
+        alert(`Fridge ${fridgeNumber} created successfully.`);
+      }
+    }
+
+    // Initialize the table on page load
+    populateFridgeTable();
   </script>
 </body>
 </html>
