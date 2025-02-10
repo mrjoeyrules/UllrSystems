@@ -338,7 +338,7 @@
                 cursor: pointer;
                 border-radius: 4px;
             }
-             .remove-item-btn {
+            .remove-item-btn {
                 width: 100%;
                 padding: 1rem;
                 color: white;
@@ -348,7 +348,7 @@
                 background-color: red;
                 cursor: pointer;
             }
-            
+
         </style>
     </head>
 
@@ -366,46 +366,14 @@
             <aside class="sidebar">
                 <nav class="main-menu">
                     <ul id="menu-items">
-                        <li>
-                            <a href="inventory.html">
-                                Inventory
-                            </a>
-                        </li>
-                        <li>
-                            <a href="Order.html">
-                                Order
-                            </a>
-                        </li>
-                        <li>
-                            <a href="Alerts.html">
-                                Alerts
-                            </a>
-                        </li>
-                        <li>
-                            <a href="ManageAccounts.html" id="manageAccountsLink">
-                                Manage Accounts
-                            </a>
-                        </li>
-                        <li>
-                            <a href="ManageFridges.html" id="manageFridgesLink">
-                                Manage Fridges
-                            </a>
-                        </li>
-                        <li>
-                            <a href="Reports.html" id="reportsLink">
-                                Reports
-                            </a>
-                        </li>
-                        <li>
-                            <a href="CreateAccount.html" id="createAccountLink">
-                                Create Account
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" id="logoutLink">
-                                Logout
-                            </a>
-                        </li>
+                        <li><a href="inventory.html">Inventory</a></li>
+                        <li><a href="Order.html">Order</a></li>
+                        <li><a href="Alerts.html">Alerts</a></li>
+                        <li><a href="ManageAccounts.html" id="manageAccountsLink">Manage Accounts</a></li>
+                        <li><a href="ManageFridges.html" id="manageFridgesLink">Manage Fridges</a></li>
+                        <li><a href="Reports.html" id="reportsLink">Reports</a></li>
+                        <li><a href="#" id="logoutLink">Logout</a></li>
+
                     </ul>
                 </nav>
             </aside>
@@ -444,31 +412,31 @@
                     <input type="date" id="deliveryDate" required>
                     <br>
                     <br>
-                    </form>
-                    <!-- Order Review Table -->
-                    <table class="order-table" id="orderTable">
-                        <thead>
-                            <tr>
-                                <th>
-                                    Food Name
-                                </th>
-                                <th>
-                                    Item Number
-                                </th>
-                                <th>
-                                    Expiry Date
-                                </th>
-                                <th>
-                                    Weight
-                                </th>
-                                <th>
-                                    Action
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody id="orderTableBody"></tbody> 
-                    </table>
-                
+                </form>
+                <!-- Order Review Table -->
+                <table class="order-table" id="orderTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                Food Name
+                            </th>
+                            <th>
+                                Item Number
+                            </th>
+                            <th>
+                                Expiry Date
+                            </th>
+                            <th>
+                                Weight
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="orderTableBody"></tbody> 
+                </table>
+
 
                 <!--  submit order button  -->
                 <br>
@@ -584,7 +552,8 @@
                     function removeFoodFromOrder(index) {
                         const removedFood = orderedFoods.splice(index, 1)[0]; // removing from order list
                         console.log(removedFood);
-                        if(!removedFood) return;
+                        if (!removedFood)
+                            return;
                         const foodDropdown = document.getElementById("foodDropdown");
                         const option = document.createElement("option");
                         option.value = removedFood.foodId;
@@ -599,14 +568,14 @@
                             alert("Your order is empty!");
                             return;
                         }
-                        
+
                         const deliveryDate = document.getElementById("deliveryDate");
-                        if(deliveryDate.value.length !== 10){
+                        if (deliveryDate.value.length !== 10) {
                             alert("Enter a valid date");
                             return;
                         }
-                        
-                        
+
+
                         const orderData = {
                             orderDate: new Date().toISOString().split('T')[0],
                             deliveryDate: deliveryDate.value,
