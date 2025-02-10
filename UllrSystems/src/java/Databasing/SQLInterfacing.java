@@ -4,6 +4,7 @@ import Accounts.User;
 import Food.FoodItem;
 import Fridge.Fridge;
 import OrderingSystem.Order;
+import Reports.Report;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -119,6 +120,38 @@ public class SQLInterfacing {
         conn.close();
         return isEntered;
     }
+    
+    public ArrayList<Report> GetAllReportsOfType(int eventType) throws SQLException {
+        String table = "";
+        ArrayList<Report> reports = new ArrayList<Report>();
+        if(eventType == 1){
+            table = "adminlogs";
+        }else if(eventType == 2){
+            table = "hselogs";
+        }else{
+            System.out.println("Somehome you got here, should be impossible");
+            return null;
+        }
+        String query = "SELECT * FROM " + table; 
+        Connection conn = getConnection("AdminInfo");
+        try(PreparedStatement stmt = conn.prepareStatement(query)){
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Report report = new Report();
+                report.SetEventId(rs.getInt("eventid"));
+                report.SetEventText(rs.getString("eventtext"));
+                report.SetEventType(rs.getInt("eventtype"));
+                report.SetEventTime(rs.getObject("eventtime", LocalDateTime.class));
+                reports.add(report);
+            } 
+        }catch(SQLException e){
+            e.printStackTrace();
+            conn.close();
+        }
+        conn.close();
+        return reports;
+    }
+    
 
     /////// ADDING AND REMOVING FOOD ITEMS
     private boolean CacheDeletedFoodItem(int itemId, Connection conn) throws SQLException {
