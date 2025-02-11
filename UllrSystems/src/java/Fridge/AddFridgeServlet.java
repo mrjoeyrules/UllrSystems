@@ -33,9 +33,11 @@ public class AddFridgeServlet extends HttpServlet {
 
         try {
             String serialNumber = request.getParameter("serialNumber");
-            double fridgeCapacity = Double.parseDouble(request.getParameter("fridgeCapacity"));
+double maxCapacity = Double.parseDouble(request.getParameter("maxCapacity"));
+double currentCapacity = Double.parseDouble(request.getParameter("currentCapacity"));
 
-            boolean success = sql.addFridge(serialNumber, fridgeCapacity);
+boolean success = sql.addFridge(serialNumber, maxCapacity, currentCapacity);
+
 
             if (success) {
                 responseJson.put("success", true);
