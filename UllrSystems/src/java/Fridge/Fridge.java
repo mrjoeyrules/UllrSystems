@@ -10,7 +10,8 @@ package Fridge;
  */
 public class Fridge {
     private int fridgeId;
-    private double fridgeCapacity;
+    private double fridgeMaxCapacity;
+    private double fridgeCurrentCapacity;
     private String serialNumber;
     
     public void SetFridgeId(int fridgeId){
@@ -20,13 +21,20 @@ public class Fridge {
         return fridgeId;
     }
     
-    public void SetFridgeCapacity(double fridgeCapacity){
-        this.fridgeCapacity = fridgeCapacity;
+    public void SetFridgeMaxCapacity(double fridgeMaxCapacity){
+        this.fridgeMaxCapacity = fridgeMaxCapacity;
     }
     
-    public double GetFridgeCapacity(){
-        return fridgeCapacity;
+    public double GetFridgeMaxCapacity(){
+        return fridgeMaxCapacity;
     }
+    public void SetFridgeCurrentCapacity(double fridgeCurrentCapacity){
+        this.fridgeCurrentCapacity = fridgeCurrentCapacity;
+    }
+    public double GetFridgeCurrentCapacity(){
+        return fridgeCurrentCapacity;
+    }
+    
     public void SetSerialNumber(String serialNumber){
         this.serialNumber = serialNumber;
     }

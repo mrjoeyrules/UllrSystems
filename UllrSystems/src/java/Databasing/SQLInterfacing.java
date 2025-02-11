@@ -3,6 +3,7 @@ package Databasing;
 import Accounts.User;
 import Food.FoodItem;
 import Fridge.Fridge;
+import Inventory.Shelf;
 import OrderingSystem.Order;
 import Reports.Report;
 import org.json.simple.JSONArray;
@@ -237,7 +238,8 @@ public class SQLInterfacing {
             if (rs.next()) {
                 fridge.SetFridgeId(fridgeId);
                 fridge.SetSerialNumber(rs.getString("serialnumber"));
-                fridge.SetFridgeCapacity(rs.getDouble("size"));
+                fridge.SetFridgeMaxCapacity(rs.getDouble("maxcapacity"));
+                fridge.SetFridgeCurrentCapacity(rs.getDouble("currentcapacity"));
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -412,9 +414,60 @@ public class SQLInterfacing {
         conn.close();
         return isComplete;
     }
+    //////////////// INVENTORY SYSTEM
+    
+    public ArrayList<Shelf> GetShelvesByFridge(int fridgeId) throws SQLException{
+        ArrayList<Shelf> shelves = new ArrayList<Shelf>();
+        String query = "SELECT * FROM shelves WHERE fridgeid = ?";
+        Connection conn = getConnection("Fridges");
+        try(PreparedStatement stmt = conn.prepareStatement(query)){
+            stmt.setInt(1, fridgeId);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+                Shelf shelf = new Shelf();
+                shelf.SetShelfId(rs.getInt("shelfid"));
+                shelf.SetFridgeId(rs.getInt("fridgeid"));
+                shelf.SetShelfName(rs.getString("shelfname"));
+                shelves.add(shelf);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+            conn.close();
+        }
+        conn.close();
+        return shelves;
+    }
+    
+    public ArrayList<FoodItem> GetFoodByShelf(int shelfId) throws SQLException{
+        ArrayList<FoodItem> foodItems = new ArrayList<FoodItem>();
+        Connection conn = getConnection("Fridges");
+        String query = "SELECT * FROM food WHERE shelfid = ?";
+        try(PreparedStatement stmt = conn.prepareStatement(query)){
+            stmt.setInt(1, shelfId);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+                FoodItem food = new FoodItem();
+                food.SetFoodID(rs.getInt("itemid"));
+                food.SetFoodName(rs.getString("foodname"));
+                food.SetExpirationDate(rs.getObject("expirationdate", LocalDate.class));
+                food.SetWeight(rs.getDouble("weight"));
+                food.SetShelfId(rs.getInt("shelfid"));
+                food.SetFridgeId(rs.getInt("fridgeid"));
+                foodItems.add(food);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+            conn.close();
+        }
+        conn.close();
+        return foodItems;
+    }
+    
+    
+    
 
     ////// ORDER SYSTEM FUNCTIONS
-    public ArrayList<Fridge> GetAllFridges() throws SQLException {
+    public ArrayList<Fridge> GetAllFridges() throws SQLException { // also used in inventory
         Connection conn = getConnection("Fridges");
         ArrayList<Fridge> fridges = new ArrayList<>();
         String query = "SELECT * FROM fridge";
@@ -423,9 +476,9 @@ public class SQLInterfacing {
             while (rs.next()) {
                 Fridge fridge = new Fridge();
                 fridge.SetFridgeId(rs.getInt("fridgeid"));
-                System.out.println(fridge.GetFridgeId());
                 fridge.SetSerialNumber(rs.getString("serialnumber"));
-                fridge.SetFridgeCapacity(rs.getDouble("size"));
+                fridge.SetFridgeMaxCapacity(rs.getDouble("maxcapacity"));
+                fridge.SetFridgeCurrentCapacity(rs.getDouble("currentcapacity"));
                 fridges.add(fridge);
             }
         } catch (SQLException e) {

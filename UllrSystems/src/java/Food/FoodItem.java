@@ -18,6 +18,8 @@ public class FoodItem {
     private String foodName;
     private LocalDate expirationDate;
     private double weight;
+    private int shelfId;
+    private int fridgeId;
     
     public void SetFoodID(int foodId){
         this.foodId = foodId;
@@ -43,9 +45,16 @@ public class FoodItem {
     public double GetWeight(){
         return weight;
     }
-    
-    @Override
-    public String toString() {
-        return "{ \"foodName\": \"" + foodName + "\", \"expirationDate\": \"" + expirationDate + "\", \"weight\": " + weight + " }";
+    public void SetShelfId(int shelfId){
+        this.shelfId = shelfId;
+    }
+    public int GetShelfId(){
+        return shelfId;
+    }
+    public void SetFridgeId(int fridgeId){
+        this.fridgeId = fridgeId;
+    }
+    public int GetFridgeId(){
+        return fridgeId;
     }
 }
