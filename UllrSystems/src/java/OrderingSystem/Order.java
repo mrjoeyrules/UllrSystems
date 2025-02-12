@@ -17,6 +17,7 @@ public class Order {
     private ArrayList<FoodItem> foodList;
     private LocalDate orderDate;
     private LocalDate deliveryDate;
+    private String status;
     
     public void SetOrderId(int orderId){
         this.orderId = orderId;
@@ -42,6 +43,12 @@ public class Order {
     }
     public LocalDate GetDeliveryDate(){
         return deliveryDate;
+    }
+    public void SetStatus(String status){
+        this.status = status;
+    }
+    public String GetStatus(){
+        return status;
     }
     
     @Override

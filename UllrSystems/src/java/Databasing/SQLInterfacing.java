@@ -227,7 +227,6 @@ public class SQLInterfacing {
         return isComplete;
     }
 
-    ////////// FRIDGE MANAGEMENT
     public Fridge GetFridgeById(int fridgeId) throws SQLException {
         Connection conn = getConnection("Fridges");
         String query = "SELECT * FROM fridge WHERE fridgeid = ?";
@@ -414,6 +413,9 @@ public class SQLInterfacing {
         conn.close();
         return isComplete;
     }
+    
+    
+    
     //////////////// INVENTORY SYSTEM
     
     public ArrayList<Shelf> GetShelvesByFridge(int fridgeId) throws SQLException{
@@ -467,6 +469,9 @@ public class SQLInterfacing {
     
 
     ////// ORDER SYSTEM FUNCTIONS
+    
+    
+    
     public ArrayList<Fridge> GetAllFridges() throws SQLException { // also used in inventory
         Connection conn = getConnection("Fridges");
         ArrayList<Fridge> fridges = new ArrayList<>();
@@ -493,7 +498,7 @@ public class SQLInterfacing {
     public boolean AddOrderToDB(Order order) throws SQLException {
         boolean isComplete = false;
         Connection conn = getConnection("Fridges");
-        String query = "INSERT INTO orders (orderid, food, orderdate, deliverydate) VALUES (?,?,?,?)";
+        String query = "INSERT INTO orders (orderid, food, orderdate, deliverydate. status) VALUES (?,?,?,?,?)";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             JSONArray foodArray = new JSONArray();
             for (FoodItem food : order.GetFood()) {
@@ -511,6 +516,7 @@ public class SQLInterfacing {
             stmt.setObject(2, foodJsonString, Types.OTHER);
             stmt.setObject(3, order.GetOrderDate());
             stmt.setObject(4, order.GetDeliveryDate());
+            stmt.setString(5, "In-Progress");
             int rowsInserted = stmt.executeUpdate();
             if (rowsInserted > 0) {
                 isComplete = true;
@@ -579,6 +585,7 @@ public class SQLInterfacing {
                 order.SetFood(rs.getObject("food", ArrayList.class));
                 order.SetOrderDate(rs.getObject("orderdate", LocalDate.class));
                 order.SetDeliveryDate(rs.getObject("deliverydate", LocalDate.class));
+                order.SetStatus(rs.getString("status"));
                 orders.add(order);
             }
         } catch (SQLException e) {
@@ -604,6 +611,12 @@ public class SQLInterfacing {
         }
         conn.close();
     }
+    
+    
+    ////////////// Fridge management ////////////////
+    
+    
+    
     public boolean addFridge(int serialNumber, double maxCapacity) throws SQLException {
         Connection conn = getConnection("Fridges");
          double currentCapacity = 0;
