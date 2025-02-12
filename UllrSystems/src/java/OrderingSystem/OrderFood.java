@@ -41,6 +41,8 @@ public class OrderFood extends HttpServlet {
             while ((line = reader.readLine()) != null) {
                 requestBody.append(line);
             }
+            
+            System.out.println("Raw request body: " + requestBody.toString());
 
             JSONParser parser = new JSONParser();
             JSONObject orderData = (JSONObject) parser.parse(requestBody.toString());
@@ -49,7 +51,6 @@ public class OrderFood extends HttpServlet {
             int fridgeId = Integer.parseInt(orderData.get("fridgeId").toString());
             order.SetOrderDate(LocalDate.parse(orderDate));
             order.SetDeliveryDate(LocalDate.parse(deliveryDate));
-            order.SetFridgeId(fridgeId);
 
             JSONArray foodArray = (JSONArray) orderData.get("food");
             ArrayList<FoodItem> foodList = new ArrayList<>();
@@ -69,6 +70,7 @@ public class OrderFood extends HttpServlet {
             }
 
             order.SetFood(foodList);
+            order.SetFridgeId(fridgeId);
 
             boolean success = sql.AddOrderToDB(order);
             if (success) {

@@ -573,7 +573,17 @@
                         }
 
                         const deliveryDate = document.getElementById("deliveryDate");
-                        const fridgeId = document.getElementById("fridge");
+                        const fridgeElement = document.getElementById("fridge");
+                        const fridgeId = fridgeElement.value;
+
+                        console.log("Fridge Element:", fridgeElement);  // Debugging: Check element
+                        console.log("Fridge Selected Value:", fridgeId);  // Debugging: Check value
+
+                        if (!fridgeId) {
+                            alert("Please select a fridge.");
+                            return;
+                        }
+
                         if (deliveryDate.value.length !== 10) {
                             alert("Enter a valid date");
                             return;

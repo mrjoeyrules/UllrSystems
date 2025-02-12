@@ -121,21 +121,21 @@ public class SQLInterfacing {
         conn.close();
         return isEntered;
     }
-    
+
     public ArrayList<Report> GetAllReportsOfType(int eventType) throws SQLException {
         String table = "";
         ArrayList<Report> reports = new ArrayList<Report>();
-        if(eventType == 1){
+        if (eventType == 1) {
             table = "adminlogs";
-        }else if(eventType == 2){
+        } else if (eventType == 2) {
             table = "hselogs";
-        }else{
+        } else {
             System.out.println("Somehome you got here, should be impossible");
             return null;
         }
-        String query = "SELECT * FROM " + table; 
+        String query = "SELECT * FROM " + table;
         Connection conn = getConnection("AdminInfo");
-        try(PreparedStatement stmt = conn.prepareStatement(query)){
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Report report = new Report();
@@ -144,15 +144,14 @@ public class SQLInterfacing {
                 report.SetEventType(rs.getInt("eventtype"));
                 report.SetEventTime(rs.getObject("eventtime", LocalDateTime.class));
                 reports.add(report);
-            } 
-        }catch(SQLException e){
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
             conn.close();
         }
         conn.close();
         return reports;
     }
-    
 
     /////// ADDING AND REMOVING FOOD ITEMS
     private boolean CacheDeletedFoodItem(int itemId, Connection conn) throws SQLException {
@@ -413,41 +412,38 @@ public class SQLInterfacing {
         conn.close();
         return isComplete;
     }
-    
-    
-    
+
     //////////////// INVENTORY SYSTEM
-    
-    public ArrayList<Shelf> GetShelvesByFridge(int fridgeId) throws SQLException{
+    public ArrayList<Shelf> GetShelvesByFridge(int fridgeId) throws SQLException {
         ArrayList<Shelf> shelves = new ArrayList<Shelf>();
         String query = "SELECT * FROM shelves WHERE fridgeid = ?";
         Connection conn = getConnection("Fridges");
-        try(PreparedStatement stmt = conn.prepareStatement(query)){
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, fridgeId);
             ResultSet rs = stmt.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 Shelf shelf = new Shelf();
                 shelf.SetShelfId(rs.getInt("shelfid"));
                 shelf.SetFridgeId(rs.getInt("fridgeid"));
                 shelf.SetShelfName(rs.getString("shelfname"));
                 shelves.add(shelf);
             }
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             conn.close();
         }
         conn.close();
         return shelves;
     }
-    
-    public ArrayList<FoodItem> GetFoodByShelf(int shelfId) throws SQLException{
+
+    public ArrayList<FoodItem> GetFoodByShelf(int shelfId) throws SQLException {
         ArrayList<FoodItem> foodItems = new ArrayList<FoodItem>();
         Connection conn = getConnection("Fridges");
         String query = "SELECT * FROM food WHERE shelfid = ?";
-        try(PreparedStatement stmt = conn.prepareStatement(query)){
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, shelfId);
             ResultSet rs = stmt.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 FoodItem food = new FoodItem();
                 food.SetFoodID(rs.getInt("itemid"));
                 food.SetFoodName(rs.getString("foodname"));
@@ -457,21 +453,15 @@ public class SQLInterfacing {
                 food.SetFridgeId(rs.getInt("fridgeid"));
                 foodItems.add(food);
             }
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             conn.close();
         }
         conn.close();
         return foodItems;
     }
-    
-    
-    
 
     ////// ORDER SYSTEM FUNCTIONS
-    
-    
-    
     public ArrayList<Fridge> GetAllFridges() throws SQLException { // also used in inventory
         Connection conn = getConnection("Fridges");
         ArrayList<Fridge> fridges = new ArrayList<>();
@@ -498,7 +488,7 @@ public class SQLInterfacing {
     public boolean AddOrderToDB(Order order) throws SQLException {
         boolean isComplete = false;
         Connection conn = getConnection("Fridges");
-        String query = "INSERT INTO orders (orderid, food, orderdate, deliverydate. status, fridgeid) VALUES (?,?,?,?,?,?)";
+        String query = "INSERT INTO orders (orderid, food, orderdate, deliverydate, status, fridgeid) VALUES (?,?,?,?,?,?)";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             JSONArray foodArray = new JSONArray();
             for (FoodItem food : order.GetFood()) {
@@ -509,7 +499,7 @@ public class SQLInterfacing {
 
                 foodArray.add(foodJson);
             }
-            
+
             String foodJsonString = foodArray.toJSONString();
             int rowCount = GetRowCount(conn, "orders");
             stmt.setInt(1, rowCount + 1);
@@ -589,6 +579,7 @@ public class SQLInterfacing {
                 order.SetOrderDate(rs.getObject("orderdate", LocalDate.class));
                 order.SetDeliveryDate(rs.getObject("deliverydate", LocalDate.class));
                 order.SetStatus(rs.getString("status"));
+                order.SetFridgeId(rs.getInt("fridgeid"));
                 orders.add(order);
             }
         } catch (SQLException e) {
@@ -598,14 +589,14 @@ public class SQLInterfacing {
         conn.close();
         return orders;
     }
-    
-    public void DeleteFoodFromSupplier(int supplierId) throws SQLException{
+
+    public void DeleteFoodFromSupplier(int supplierId) throws SQLException {
         Connection conn = getConnection("FoodSupplier");
         String query = "DELETE FROM availablefoods WHERE foodid = ?";
-        try(PreparedStatement stmt = conn.prepareStatement(query)){
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, supplierId);
             int rowsDeleted = stmt.executeUpdate();
-            if(rowsDeleted < 1){
+            if (rowsDeleted < 1) {
                 System.err.println("Error deleting food");
             }
         } catch (SQLException e) {
@@ -614,16 +605,14 @@ public class SQLInterfacing {
         }
         conn.close();
     }
-    
-    
+
     ////////////// Fridge management ////////////////
-    
-    
-    
     public boolean addFridge(int serialNumber, double maxCapacity) throws SQLException {
         Connection conn = getConnection("Fridges");
-         double currentCapacity = 0;
+        double currentCapacity = 0;
+        boolean isComplete = false;
         String query = "INSERT INTO fridge (fridgeid, serialnumber, maxcapacity, currentcapacity) VALUES (?,?,?,?)"; // sql query to add a row into fridge table
+
         int rowCount = GetRowCount(conn, "fridge"); // get fridge id dynamically
         int fridgeId = rowCount + 1; // row count+1 is the fridgeid
         try (PreparedStatement stmt = conn.prepareStatement(query)) { // prepare statement
@@ -631,7 +620,9 @@ public class SQLInterfacing {
             stmt.setInt(2, serialNumber);
             stmt.setDouble(3, maxCapacity);
             stmt.setDouble(4, currentCapacity);
-            return stmt.executeUpdate() > 0;
+            if(stmt.executeUpdate() > 0){
+                isComplete =  addShelvesForFridge(fridgeId, conn);
+            }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
             conn.close();
@@ -639,8 +630,43 @@ public class SQLInterfacing {
         } finally {
             conn.close(); // always close conn for resources
         }
+        conn.close();
+        return isComplete;
     }
-    
+
+    public boolean addShelvesForFridge(int fridgeId, Connection conn) throws SQLException {
+        String query = "INSERT INTO shelves (shelfid, fridgeid, shelfname, maxcapacity, currentcapacity) VALUES (?,?,?,?,?)";
+        int rowCount = GetRowCount(conn, "shelves");
+        boolean isComplete = false;
+        int newShelfCount = 5;
+        double maxCapacity = 440 / newShelfCount;
+        double currentCapacity = 0.0;
+        String shelfNames[] = new String[newShelfCount];
+        shelfNames[0] = "Cooked Meat";
+        shelfNames[1] = " Veg";
+        shelfNames[2] = "Raw Meat";
+        shelfNames[3] = "Dairy";
+        shelfNames[4] = "Baked Goods";
+        for (int i = 0; i < newShelfCount; i++) {
+            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setInt(1, rowCount + i);
+                stmt.setInt(2, fridgeId);
+                stmt.setString(3, shelfNames[i]);
+                stmt.setDouble(4, maxCapacity);
+                stmt.setDouble(5, currentCapacity);
+                if(stmt.executeUpdate() > 0){
+                    isComplete = true;
+                }
+                else{
+                    isComplete = false;
+                }
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+        return isComplete;
+    }
+
     public boolean modifyFridge(int fridgeId, int serialNumber, double fridgeMaxCapacity, double currentCapacity) throws SQLException {
         Connection conn = getConnection("Fridges");
         String query = "UPDATE fridge SET serialnumber = ?, maxcapacity = ?, currentcapacity = ? WHERE fridgeId = ?";
@@ -658,7 +684,7 @@ public class SQLInterfacing {
             conn.close();
         }
     }
-    
+
     public boolean deleteFridge(int fridgeId) throws SQLException {
         Connection conn = getConnection("Fridges");
         String query = "DELETE FROM fridge WHERE fridgeId = ?";
