@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Order Selection | Ullr Systems</title>
+        <link rel="stylesheet" href="mainmenu.css">
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f7fa;
+            }
+            .layout-container {
+                display: flex;
+            }
+            .header-bar {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #ffffff;
+                padding: 10px;
+                width: 100%;
+            }
+            .header-logo {
+                height: 50px;
+                margin-right: 15px;
+            }
+            .sidebar {
+                width: 200px;
+                background-color: #ffffff;
+                padding-top: 20px;
+            }
+            .sidebar nav ul {
+                list-style-type: none;
+                padding: 0;
+            }
+            .sidebar nav ul li {
+                padding: 10px;
+                text-align: center;
+            }
+            .sidebar nav ul li a {
+                color: black;
+                text-decoration: none;
+                display: block;
+                padding: 12px 0;
+            }
+            .sidebar nav ul li a:hover, .sidebar nav ul li a.active {
+                background-color: #111111;
+            }
+            .content-area {
+                flex-grow: 1;
+                padding: 20px;
+            }
+            h2 {
+                color: #0277bd;
+                margin-bottom: 20px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+            th, td {
+                padding: 10px;
+                border: 1px solid #ddd;
+                text-align: left;
+            }
+            th {
+                background-color: #000000;
+                color: white;
+            }
+            .btn-action {
+                background-color:#0277bd;
+                color: white;
+                padding: 10px;
+                border: none;
+                cursor: pointer;
+            }
+            .btn-action:hover {
+                background-color:#0056b3;
+            }
+        </style>
+    </head>
+    <body>
+        <header class="header-bar">
+            <img src="logo.jpeg" alt="Logo" class="header-logo">
+            <h1 class="header-title" style="color: cadetblue;">Ullr <span style="color: #000000;">Systems</span></h1>
+        </header>
+        <div class="layout-container">
+            <aside class="sidebar">
+                <nav class="main-menu">
+                    <ul id="menu-items">
+                        <li><a href="SelectOrder.html">Orders</a></li>
+                        <li><a href="#" id="logoutLink">Logout</a></li>
+                    </ul>
+                </nav>
+            </aside>
+            <main class="content-area">
+                <h2 style="color: #000000;">Orders In-Progress</h2>
+                <table id="orderTable">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Order Date</th>
+                            <th>Delivery Date</th>
+                            <th>Food</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orderTableBody">
+                        <!-- Dynamic orders here -->
+                    </tbody>
+                </table>
+            </main>
+        </div>
+        <script>
+
+
+            function showNoDataMessage(tableBody) {
+                let row = document.createElement("tr");
+                let cell = document.createElement("td");
+                cell.colSpan = 5;
+                cell.textContent = "No Orders found.";
+                cell.style.textAlign = "center";
+                row.appendChild(cell);
+                tableBody.appendChild(row);
+            }
+
+            function fetchDeliverableOrders() {
+                let tableBody = document.getElementById("orderTableBody");
+                tableBody.innerHTML = "";
+                fetch("/UllrSystemsDelivery/getAllDeliverableOrders")
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.orders && data.orders.length > 0) {
+                                data.orders.forEach(order => {
+                                    let row = document.createElement("tr");
+
+                                    let cellId = document.createElement("td");
+                                    let orderLink = document.createElement("a");
+                                    orderLink.href = `DisplayOrder.html?orderid=${order.orderid}`;
+                                    orderLink.textContent = order.orderid;
+                                    orderLink.style.color = "#0277bd";
+                                    cellId.appendChild(orderLink);
+                                    row.appendChild(cellId);
+
+                                    let cellOrderDate = document.createElement("td");
+                                    cellOrderDate.textContent = order.orderdate;
+                                    row.appendChild(cellOrderDate);
+
+                                    let cellDelDate = document.createElement("td");
+                                    cellDelDate.textContent = order.deliverydate;
+                                    row.appendChild(cellDelDate);
+
+                                    let cellFood = document.createElement("td");
+                                    let foodArray = JSON.parse(order.food);
+                                    let itemCount = foodArray.length;
+                                    let formattedFood = foodArray.map(food => ` ${food.foodName} (Expires: ${food.expirationDate})`).join(", ");
+                                    cellFood.textContent = `Items: ${itemCount} - ${formattedFood}`;
+                                    row.appendChild(cellFood);
+                                    
+                                    let cellStatus = document.createElement("td");
+                                    cellStatus.textContent = order.status;
+                                    row.appendChild(cellStatus);
+
+                                    tableBody.appendChild(row);
+                                });
+                            } else {
+                                showNoDataMessage(tableBody);
+                                }
+                        })
+                        .catch(error => {
+                            console.error("Error fetching orders", error);
+                        });
+            }
+            window.onload = function () {
+                        fetchDeliverableOrders();
+                    }
+        </script>
+    </body>
+</html>

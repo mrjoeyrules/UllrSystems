@@ -24,15 +24,19 @@ public class LoginUser extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
+
         SQLInterfacing sql = new SQLInterfacing();
         String username = request.getParameter("username"); // gets username from form
         String rawPassword = request.getParameter("password"); // gets password from form
+
         try {
             boolean isLoggedIn = sql.AuthenticateUserFromDB(username, rawPassword); // runs password check from sql
             if (isLoggedIn) {
-                session.setAttribute("username", User.currentUser.getUsername()); // sets session attribute username to username to allow for unfiltered access to site
-                response.sendRedirect("MainMenu.html"); // if logged in correct send to next page
+                HttpSession session = request.getSession();
+                session.setAttribute("username", username); // sets session attribute username to username to allow for unfiltered access to site
+                int role = sql.GetRole(username);
+                session.setAttribute("role", role);
+                response.sendRedirect("SelectOrder.html"); // if logged in correct send to next page
             } else {
                 try {
                     sql.WriteLog(("User " + username + " attempted to login but password was incorrect"), 1);
@@ -41,11 +45,9 @@ public class LoginUser extends HttpServlet {
                 }
                 response.sendRedirect("index.html?error=Username+or+Password+is+incorrect."); // if incorrect send error to page
             }
-
         } catch (SQLException ex) {
             Logger.getLogger(LoginUser.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
 }

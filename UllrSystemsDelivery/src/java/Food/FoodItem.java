@@ -4,6 +4,7 @@
  */
 package Food;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -15,8 +16,10 @@ public class FoodItem {
     public static FoodItem addFoodItem;
     private int foodId;
     private String foodName;
-    private LocalDateTime expirationDate;
+    private LocalDate expirationDate;
     private double weight;
+    private int shelfId;
+    private int fridgeId;
     
     public void SetFoodID(int foodId){
         this.foodId = foodId;
@@ -30,10 +33,10 @@ public class FoodItem {
     public String GetFoodName(){
         return foodName;
     }
-    public void SetExpirationDate(LocalDateTime expirationDate){
+    public void SetExpirationDate(LocalDate expirationDate){
         this.expirationDate = expirationDate;
     }
-    public LocalDateTime GetExpirationDate(){
+    public LocalDate GetExpirationDate(){
         return expirationDate;
     }
     public void SetWeight(double weight){
@@ -41,5 +44,17 @@ public class FoodItem {
     }
     public double GetWeight(){
         return weight;
+    }
+    public void SetShelfId(int shelfId){
+        this.shelfId = shelfId;
+    }
+    public int GetShelfId(){
+        return shelfId;
+    }
+    public void SetFridgeId(int fridgeId){
+        this.fridgeId = fridgeId;
+    }
+    public int GetFridgeId(){
+        return fridgeId;
     }
 }

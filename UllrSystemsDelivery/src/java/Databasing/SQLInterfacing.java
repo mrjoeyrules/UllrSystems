@@ -1,19 +1,24 @@
 package Databasing;
 import Accounts.User;
 import Food.FoodItem;
-import Placement.Order;
+import Order.Order;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 /**
  *
  * @author mrjoe
  */
 public class SQLInterfacing {
+    
+    //////////////// GENERAL SQL ///////////////
     private Connection getConnection(String database) { //creates the connection to server for a specific database
         Connection conn = null;
         String username = "Joseph";
@@ -23,109 +28,115 @@ public class SQLInterfacing {
             try {
                 // Connect to PostgreSQL database
                 conn = DriverManager.getConnection(url, username, password); // actually connects using the url above and username and password for admin acc
-                System.out.println("Connected to the PostgreSQL server successfully."); // console test to prove connection succeded
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }
         }
         return conn;
     }
+    private int GetRowCount(Connection conn, String tableName) throws SQLException {
+        String query = "SELECT COUNT(*) AS totalRows FROM " + tableName;
+        int rowCount = 0;
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                rowCount = rs.getInt("totalRows");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rowCount;
+    }
 
+    private LocalDateTime GetTimestamp() {
+        LocalDateTime now = LocalDateTime.now();
+        return now;
+    }
+
+    
+    ///////// Account System
     public boolean AuthenticateUserFromDB(String username, String rawPassword) throws SQLException {
         Connection conn = getConnection("Accounts"); // connect to db
         String query = "SELECT password, role FROM users WHERE username = ?"; // selects the stored password from users table where the username equals what user specifies
         boolean isPasswordCorrect = false;
-        try (PreparedStatement stmt = conn.prepareStatement(query)){ // prepars the query
+        boolean isUserCorrectRole = false;
+        try (PreparedStatement stmt = conn.prepareStatement(query)) { // prepars the query
             stmt.setString(1, username); // inputs the username into the ? in query
             ResultSet rs = stmt.executeQuery(); // runs the query
 
             if (rs.next()) {
                 String storedPassword = rs.getString("password");
                 int role = rs.getInt("role");
-                System.out.println(storedPassword);
                 BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
                 isPasswordCorrect = encoder.matches(rawPassword, storedPassword);// returns a bool if rawpassword matches the stored hashed password
-                if(isPasswordCorrect && role == 1){
-                    UserInfo(conn, username);// sets user info
-                    return isPasswordCorrect; // returns that a user has entered users name and password correctly.
+                if (isPasswordCorrect && (role == 1)) {
+                    conn.close();
+                    isUserCorrectRole = true;
                 }
             } else {
                 System.out.println("User not found");
-                return isPasswordCorrect;
+                conn.close();
+                return false;
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-            return isPasswordCorrect;
+            conn.close();
+            return false;
         }
         conn.close();
-        return isPasswordCorrect; // needed for try statement and function to work should never be called though
+        return isUserCorrectRole; // needed for try statement and function to work should never be called though
     }
-
-    private void UserInfo(Connection conn, String username){
-        String query = "SELECT role FROM users WHERE username = ?"; // selects the role from user table where the username is entered username
-        try(PreparedStatement stmt = conn.prepareStatement(query)){
+    
+    public int GetRole(String username) throws SQLException {
+        Connection conn = getConnection("Accounts");
+        int role = 0;
+        String query = "SELECT role FROM users WHERE username = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                int role = rs.getInt("role"); // sets users role and username in user class.
-                User.currentUser = new User(username, role);
-            }
-            else{
+                role = rs.getInt("role");
+            } else {
                 System.out.println("User not found"); // should never run at this point do to previous code
             }
         } catch (SQLException e) {
+            conn.close();
             throw new RuntimeException(e);
         }
+        conn.close();
+        return role;
     }
-
-    public boolean GetOrderById(int orderId) throws SQLException{
+    
+    /////////// ORDERS /////////////
+    public ArrayList<Order> GetAllInProgressOrders() throws SQLException, ParseException{
         Connection conn = getConnection("Fridges");
-        boolean isComplete = false;
-        ArrayList<String> foods = new ArrayList<>();
-        String query = "SELECT * FROM Orders WHERE orderid = ?";
+        ArrayList<Order> orders = new ArrayList<Order>();
+        String query = "SELECT * FROM orders WHERE status = ?";
+        JSONParser parser = new JSONParser();
         try(PreparedStatement stmt = conn.prepareStatement(query)){
-            stmt.setString(1, String.valueOf(orderId));
+            stmt.setString(1, "In-Progress");
             ResultSet rs = stmt.executeQuery();
-            if(rs.next()){
-                if(Order.currentOrder == null){
-                    Order.currentOrder = new Order();
-                }
-                Order.currentOrder.SetOrderId(rs.getInt("orderid"));
-                Order.currentOrder.SetFood((String[]) rs.getArray("food").getArray());
-                Order.currentOrder.SetOrderDate(rs.getString("orderdate"));
-                Order.currentOrder.SetDeliveryDate(rs.getString("deliverydate"));
-                isComplete = true;
-            }else{
-                System.out.print("Order not found");
-            }
-        } catch(SQLException e){
-            throw new RuntimeException(e);
-        }
-        return isComplete;
-    }
-    
-    
-    
-    private int GetRowCount(Connection conn, String tableName ) throws SQLException{
-        String query = "SELECT COUNT(*) AS totalRows FROM " + tableName;
-        int rowCount = 0;
-        try(PreparedStatement stmt = conn.prepareStatement(query)){
-            ResultSet rs = stmt.executeQuery();
-            if(rs.next()){
-                rowCount = rs.getInt("totalRows");
+            while(rs.next()){
+                Order order = new Order();
+                order.SetOrderId(rs.getInt("orderid"));
+                JSONArray foodArray = (JSONArray) parser.parse(rs.getString("food"));
+                order.SetFood(foodArray);
+                order.SetOrderDate(rs.getObject("orderdate", LocalDate.class));
+                order.SetDeliveryDate(rs.getObject("deliverydate", LocalDate.class));
+                order.SetStatus(rs.getString("status"));
+                orders.add(order);
             }
         }catch(SQLException e){
             e.printStackTrace();
+            conn.close();
         }
-        return rowCount;
+        conn.close();
+        return orders;
     }
-    private LocalDateTime GetTimestamp(){
-        LocalDateTime now = LocalDateTime.now();
-        return now;
-    }
+    
+    
             
-            
+     //////////////// LOGGING SYSTEM ///////////////    
             
     public boolean WriteLog(String logMessage, int eventType) throws SQLException{
         Connection conn = getConnection("AdminInfo");
@@ -158,6 +169,9 @@ public class SQLInterfacing {
         return isEntered;
     }
     
+
+    //////////// ADDING FOOD TO FRIDGE
+    
     private boolean CacheDeletedFoodItem(int itemId, Connection conn) throws SQLException{
         boolean isComplete = false;
         String query = "SELECT * FROM food WHERE itemid = ?";
@@ -168,7 +182,7 @@ public class SQLInterfacing {
                 FoodItem.cachedFoodItem = new FoodItem();
                 FoodItem.cachedFoodItem.SetFoodName(rs.getString("foodname"));
                 FoodItem.cachedFoodItem.SetFoodID(rs.getInt("foodid"));
-                FoodItem.cachedFoodItem.SetExpirationDate(rs.getTimestamp("expirationdate").toLocalDateTime());
+                FoodItem.cachedFoodItem.SetExpirationDate(rs.getObject("expirationdate", LocalDate.class));
                 FoodItem.cachedFoodItem.SetWeight(rs.getDouble("weight"));
                 isComplete = true;
             }
@@ -220,44 +234,5 @@ public class SQLInterfacing {
         }
         conn.close();
         return isComplete;
-    }
-    
-    
-    
-    
-    
-    
-    
-
-    public String SelectQuery(String database, String query) {
-        Connection conn = getConnection(database); //Gets the connection from above function
-        try(PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()){ // does the sql query and stores the results
-            String results = ConvertResultSetToJson(rs); // converts results to a string json
-            conn.close(); // closes the connection to save resources
-            return results; // returns string results
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
-    private String ConvertResultSetToJson(ResultSet rs) throws SQLException {
-        JSONArray json = new JSONArray(); // creates a new jsonarray
-        ResultSetMetaData metadata = rs.getMetaData(); // gets meta data from the resultset
-        int numColumns = metadata.getColumnCount(); // gets the number of columns in the resultset
-
-        //iterate rows
-        while (rs.next())  { // while there is a next row in result set
-            JSONObject obj = new JSONObject();      //extends HashMap
-            //iterate columns
-            for (int i = 1; i <= numColumns; ++i) {
-                String column_name = metadata.getColumnName(i); // get column name of this column
-                obj.put(column_name, rs.getObject(column_name).toString()); // convert item in the column name to string from the resultset
-            }
-            json.add(obj); // add the object above to the json
-        }
-        JSONObject resultsObject = new JSONObject();
-        resultsObject.put("results", json); // puts the jsonarray into a jsonobject
-        return resultsObject.toJSONString(); // returns the json as a string
     }
 }
