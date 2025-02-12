@@ -31,7 +31,6 @@ public class SQLInterfacing {
             try {
                 // Connect to PostgreSQL database
                 conn = DriverManager.getConnection(url, username, password); // actually connects using the url above and username and password for admin acc
-                System.out.println("Connected to the PostgreSQL server successfully."); // console test to prove connection succeded
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }
