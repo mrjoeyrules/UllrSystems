@@ -29,6 +29,11 @@ public class SQLInterfacing {
         String url = "jdbc:postgresql://81.110.173.250:5432/" + database; // url of server, postgresql is the server type, IP is the server ip with the port its on and adds on the database specified
         while (conn == null) {
             try {
+                try {
+                    Class.forName("org.postgresql.Driver");
+                } catch (ClassNotFoundException e) {
+                     e.printStackTrace();
+                }
                 // Connect to PostgreSQL database
                 conn = DriverManager.getConnection(url, username, password); // actually connects using the url above and username and password for admin acc
                 System.out.println("Connected to the PostgreSQL server successfully."); // console test to prove connection succeded
@@ -699,4 +704,56 @@ public class SQLInterfacing {
             conn.close();
         }
     }
+    //Alerts
+     public boolean writeAlert(int alerttype, String alertmsg) throws SQLException {
+        Connection conn = getConnection("AdminInfo");
+        boolean iscomplete = false;
+        String query = "INSERT INTO alerts (alertid, alertmsg, timestamp, markedasread, alerttype) VALUES (?,?,?,?,?) ";
+        int rowcount = GetRowCount(conn, "alerts");
+        try(PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, rowcount + 1);
+            stmt.setString(2, alertmsg);
+            stmt.setObject(3, GetTimestamp());
+            stmt.setBoolean(4, false);
+            stmt.setInt(5, alerttype);
+            int rowsInserted = stmt.executeUpdate();
+
+
+            if (rowsInserted > 0) {
+                iscomplete = true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            conn.close();
+
+        }
+        conn.close();
+
+        return iscomplete;
+    }
+    public ArrayList<Alerts> GetAllAlerts() throws SQLException {
+        Connection conn = getConnection("AdminInfo");
+        ArrayList<Alerts> alerts = new ArrayList<Alerts>();
+        String query = "SELECT * FROM alerts";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Alerts alert = new Alerts();
+                alert.setAlertId(rs.getInt("alertid"));
+                alert.setAlertMsg(rs.getString ("alertmsg"));
+                alert.setTimestamp(rs.getObject("timestamp", LocalDateTime.class));
+                alert.setAlertType(rs.getInt("alerttype"));
+                alert.setMarkedAsRead(rs.getBoolean("markedasread"));
+                alerts.add(alert);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            conn.close();
+        }
+        conn.close();
+        return alerts;
+    }
+    
+    
 }
