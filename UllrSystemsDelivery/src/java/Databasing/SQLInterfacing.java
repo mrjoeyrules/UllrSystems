@@ -1,7 +1,8 @@
 package Databasing;
-import Accounts.User;
+
 import Food.FoodItem;
 import Order.Order;
+import Order.Shelf;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -12,12 +13,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
 /**
  *
  * @author mrjoe
  */
 public class SQLInterfacing {
-    
+
     //////////////// GENERAL SQL ///////////////
     private Connection getConnection(String database) { //creates the connection to server for a specific database
         Connection conn = null;
@@ -34,6 +36,7 @@ public class SQLInterfacing {
         }
         return conn;
     }
+
     private int GetRowCount(Connection conn, String tableName) throws SQLException {
         String query = "SELECT COUNT(*) AS totalRows FROM " + tableName;
         int rowCount = 0;
@@ -53,7 +56,6 @@ public class SQLInterfacing {
         return now;
     }
 
-    
     ///////// Account System
     public boolean AuthenticateUserFromDB(String username, String rawPassword) throws SQLException {
         Connection conn = getConnection("Accounts"); // connect to db
@@ -86,7 +88,7 @@ public class SQLInterfacing {
         conn.close();
         return isUserCorrectRole; // needed for try statement and function to work should never be called though
     }
-    
+
     public int GetRole(String username) throws SQLException {
         Connection conn = getConnection("Accounts");
         int role = 0;
@@ -106,17 +108,17 @@ public class SQLInterfacing {
         conn.close();
         return role;
     }
-    
+
     /////////// ORDERS /////////////
-    public ArrayList<Order> GetAllInProgressOrders() throws SQLException, ParseException{
+    public ArrayList<Order> GetAllInProgressOrders() throws SQLException, ParseException {
         Connection conn = getConnection("Fridges");
         ArrayList<Order> orders = new ArrayList<Order>();
         String query = "SELECT * FROM orders WHERE status = ?";
         JSONParser parser = new JSONParser();
-        try(PreparedStatement stmt = conn.prepareStatement(query)){
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, "In-Progress");
             ResultSet rs = stmt.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 Order order = new Order();
                 order.SetOrderId(rs.getInt("orderid"));
                 JSONArray foodArray = (JSONArray) parser.parse(rs.getString("food"));
@@ -127,81 +129,227 @@ public class SQLInterfacing {
                 order.SetFridgeId(rs.getInt("fridgeid"));
                 orders.add(order);
             }
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             conn.close();
         }
         conn.close();
         return orders;
     }
-    
-    public boolean UpdateStatusOfOrder(Order order) throws SQLException{
+
+    public boolean UpdateStatusOfOrder(int orderId) throws SQLException {
         Connection conn = getConnection("Fridges");
         boolean isComplete = false;
         String query = "UPDATE orders SET status = ? WHERE orderid = ?";
-        try(PreparedStatement stmt = conn.prepareStatement(query)){
-            stmt.setString(1, order.GetStatus());
-            stmt.setInt(2, order.GetOrderId());
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, "Complete");
+            stmt.setInt(2, orderId);
             int rowsUpdated = stmt.executeUpdate();
-            if(rowsUpdated >0){
+            if (rowsUpdated > 0) {
                 isComplete = true;
-            }else{
+            } else {
                 conn.close();
                 System.out.println("Error updating SQL");
             }
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             conn.close();
         }
         conn.close();
         return isComplete;
     }
+
+    public Order GetOrderById(int orderId) throws SQLException, ParseException {
+        Connection conn = getConnection("Fridges");
+        Order order = new Order();
+        JSONParser parser = new JSONParser();
+        String query = "SELECT * FROM orders WHERE orderid = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, orderId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                order.SetOrderId(rs.getInt("orderid"));
+                JSONArray foodArray = (JSONArray) parser.parse(rs.getString("food"));
+                order.SetFood(foodArray);
+                order.SetOrderDate(rs.getObject("orderdate", LocalDate.class));
+                order.SetDeliveryDate(rs.getObject("deliverydate", LocalDate.class));
+                order.SetStatus(rs.getString("status"));
+                order.SetFridgeId(rs.getInt("fridgeid"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            conn.close();
+        }
+        conn.close();
+        return order;
+    }
+
+    public double getFridgeMaxCapacity(int fridgeId) throws SQLException {
+        Connection conn = getConnection("Fridges");
+        double maxCapacity = 0;
+        String query = "SELECT maxcapacity FROM fridge WHERE fridgeid = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, fridgeId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                maxCapacity = rs.getDouble("maxcapacity");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            conn.close();
+        }
+        conn.close();
+        return maxCapacity;
+    }
+
+    public double getFridgeCurrentCapacity(int fridgeId) throws SQLException {
+        Connection conn = getConnection("Fridges");
+        double currentCapacity = 0;
+        String query = "SELECT currentcapacity FROM fridge WHERE fridgeid = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, fridgeId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                currentCapacity = rs.getDouble("currentcapacity");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            conn.close();
+        }
+        conn.close();
+        return currentCapacity;
+    }
+
+    public double getShelfMaxCapacity(int shelfId) throws SQLException {
+        Connection conn = getConnection("Fridges");
+        double maxCapacity = 0;
+        String query = "SELECT maxcapacity FROM shelves WHERE shelfid = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, shelfId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                maxCapacity = rs.getDouble("maxcapacity");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            conn.close();
+        }
+        conn.close();
+        return maxCapacity;
+    }
+
+    public double getShelfCurrentCapacity(int shelfId) throws SQLException {
+        Connection conn = getConnection("Fridges");
+        double currentCapacity = 0;
+        String query = "SELECT currentcapacity FROM shelves WHERE shelfid = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, shelfId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                currentCapacity = rs.getDouble("currentcapacity");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            conn.close();
+        }
+        conn.close();
+        return currentCapacity;
+    }
+
+    public void updateFridgeCapacity(int fridgeId, double newCapacity) throws SQLException {
+        Connection conn = getConnection("Fridges");
+        String query = "UPDATE fridge SET currentcapacity = ? WHERE fridgeid = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setDouble(1, newCapacity);
+            stmt.setInt(2, fridgeId);
+            stmt.executeUpdate();
+            conn.close();
+        }catch(SQLException e){
+            e.printStackTrace();
+            conn.close();
+        }
+        conn.close();
+    }
     
+    public void updateShelfCapacity(int shelfId, double newCapacity) throws SQLException {
+        Connection conn = getConnection("Fridges");
+        String query = "UPDATE shelves SET currentcapacity = ? WHERE shelfid = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setDouble(1, newCapacity);
+            stmt.setInt(2, shelfId);
+            stmt.executeUpdate();
+            conn.close();
+        }catch(SQLException e){
+            e.printStackTrace();
+            conn.close();
+        }
+        conn.close();
+    }
     
-            
-     //////////////// LOGGING SYSTEM ///////////////    
-            
-    public boolean WriteLog(String logMessage, int eventType) throws SQLException{
+    public ArrayList<Shelf> GetShelvesByFridge(int fridgeId) throws SQLException{
+        Connection conn = getConnection("Fridges");
+        ArrayList<Shelf> shelves = new ArrayList<Shelf>();
+        String query = "SELECT * FROM shelves WHERE fridgeid = ?";
+        try(PreparedStatement stmt = conn.prepareStatement(query)){
+            stmt.setInt(1, fridgeId);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+                Shelf shelf = new Shelf();
+                shelf.SetShelfId(rs.getInt("shelfid"));
+                shelf.SetFridgeId(rs.getInt("fridgeid"));
+                shelf.SetShelfName(rs.getString("shelfname"));
+                shelf.SetMaxCapacity(rs.getDouble("maxcapacity"));
+                shelf.SetCurrentCapacity(rs.getDouble("currentcapacity"));
+                shelves.add(shelf);
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+            conn.close();
+        }
+        conn.close();
+        return shelves;
+    }
+
+    //////////////// LOGGING SYSTEM ///////////////    
+    public boolean WriteLog(String logMessage, int eventType) throws SQLException {
         Connection conn = getConnection("AdminInfo");
         boolean isEntered = false;
         String table = "";
-        if(eventType == 1){
+        if (eventType == 1) {
             table = "adminlogs";
-        } else if(eventType == 2){
+        } else if (eventType == 2) {
             table = "hselogs";
-        }else{
+        } else {
             System.out.println("You didnt enter a correct event type");
             return isEntered; // stops code from running and crashing
         }
-        String query = "INSERT INTO "+ table + " (eventid, eventype, eventtext, eventtime) VALUES (?,?,?,?)";
-        int eventid = GetRowCount(conn, table)  + 1;
-        try(PreparedStatement stmt = conn.prepareStatement(query)){
+        String query = "INSERT INTO " + table + " (eventid, eventype, eventtext, eventtime) VALUES (?,?,?,?)";
+        int eventid = GetRowCount(conn, table) + 1;
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, eventid);
             stmt.setInt(2, eventType);
             stmt.setString(3, logMessage);
             stmt.setObject(4, GetTimestamp());
             int rowsInserted = stmt.executeUpdate();
-            if(rowsInserted > 0){
+            if (rowsInserted > 0) {
                 System.out.println("Rows inserted");
                 isEntered = true;
             }
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         conn.close();
         return isEntered;
     }
-    
 
     //////////// ADDING FOOD TO FRIDGE
-    
-    private boolean CacheDeletedFoodItem(int itemId, Connection conn) throws SQLException{
+    private boolean CacheDeletedFoodItem(int itemId, Connection conn) throws SQLException {
         boolean isComplete = false;
         String query = "SELECT * FROM food WHERE itemid = ?";
-        try(PreparedStatement stmt = conn.prepareStatement(query)){
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, itemId);
             ResultSet rs = stmt.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 FoodItem.cachedFoodItem = new FoodItem();
                 FoodItem.cachedFoodItem.SetFoodName(rs.getString("foodname"));
                 FoodItem.cachedFoodItem.SetFoodID(rs.getInt("foodid"));
@@ -209,12 +357,12 @@ public class SQLInterfacing {
                 FoodItem.cachedFoodItem.SetWeight(rs.getDouble("weight"));
                 isComplete = true;
             }
-        } catch(SQLException e){
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
         return isComplete;
     }
-    
+
     public boolean RemoveItemFromFridge(int itemId) throws SQLException {
         boolean isComplete = false;
         Connection conn = getConnection("Fridges");
@@ -232,30 +380,52 @@ public class SQLInterfacing {
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
-        }else{
+        } else {
             System.out.println("Failed to cache item");
         }
         conn.close();
         return isComplete;
     }
-    
-    public boolean AddItemToFridge() throws SQLException{
-        boolean isComplete = false;
+
+    public void insertFoodItem(FoodItem food) throws SQLException{
         Connection conn = getConnection("Fridges");
-        String query = "INSERT INTO food (foodname, itemid, expirationdate, weight) VALUES (?,?,?,?)";
+        int foodId = GetRowCount(conn, "food")  + 1;
+        String query = "INSERT INTO food (foodname, itemid, expirationdate, weight, shelfid, fridgeid) VALUES (?,?,?,?,?,?)";
         try(PreparedStatement stmt = conn.prepareStatement(query)){
-            stmt.setString(1, FoodItem.addFoodItem.GetFoodName());
-            stmt.setInt(2, FoodItem.addFoodItem.GetFoodID());
-            stmt.setObject(3, FoodItem.addFoodItem.GetExpirationDate());
-            stmt.setDouble(4, FoodItem.addFoodItem.GetWeight());
-            int rowsInserted = stmt.executeUpdate();
-            if(rowsInserted > 0){
-                isComplete = true;
-            }
+            stmt.setString(1, food.GetFoodName());
+            stmt.setInt(2, foodId);
+            stmt.setObject(3, food.GetExpirationDate());
+            stmt.setDouble(4, food.GetWeight());
+            stmt.setInt(5, food.GetShelfId());
+            stmt.setInt(6, food.GetFridgeId());
+            stmt.executeUpdate();
         }catch(SQLException e){
-            System.err.println(e.getMessage());
+            e.printStackTrace();
+            conn.close();
         }
         conn.close();
-        return isComplete;
+    }
+    
+    public ArrayList<FoodItem> GetDeliveredFood(int fridgeId) throws SQLException{
+        ArrayList<FoodItem> deliveredFood = new ArrayList<>();
+        Connection conn = getConnection("Fridges");
+        String query = "SELECT itemid, foodname, weight, expirationdate FROM food WHERE fridgeid = ?";
+        try(PreparedStatement stmt = conn.prepareStatement(query)){
+            stmt.setInt(1, fridgeId);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+                FoodItem food = new FoodItem();
+                food.SetFoodID(rs.getInt("itemid"));
+                food.SetFoodName(rs.getString("foodname"));
+                food.SetWeight(rs.getDouble("weight"));
+                food.SetExpirationDate(rs.getObject("expirationdate", LocalDate.class));
+                deliveredFood.add(food);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+            conn.close();
+        }
+        conn.close();
+        return deliveredFood;
     }
 }
