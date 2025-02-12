@@ -498,7 +498,7 @@ public class SQLInterfacing {
     public boolean AddOrderToDB(Order order) throws SQLException {
         boolean isComplete = false;
         Connection conn = getConnection("Fridges");
-        String query = "INSERT INTO orders (orderid, food, orderdate, deliverydate. status) VALUES (?,?,?,?,?)";
+        String query = "INSERT INTO orders (orderid, food, orderdate, deliverydate. status, fridgeid) VALUES (?,?,?,?,?,?)";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             JSONArray foodArray = new JSONArray();
             for (FoodItem food : order.GetFood()) {
@@ -517,6 +517,7 @@ public class SQLInterfacing {
             stmt.setObject(3, order.GetOrderDate());
             stmt.setObject(4, order.GetDeliveryDate());
             stmt.setString(5, "In-Progress");
+            stmt.setInt(6, order.GetFridgeId());
             int rowsInserted = stmt.executeUpdate();
             if (rowsInserted > 0) {
                 isComplete = true;
@@ -541,6 +542,8 @@ public class SQLInterfacing {
                 order.SetFood(rs.getObject("food", ArrayList.class));
                 order.SetOrderDate(rs.getObject("orderdate", LocalDate.class));
                 order.SetDeliveryDate(rs.getObject("deliverydate", LocalDate.class));
+                order.SetStatus(rs.getString("status"));
+                order.SetFridgeId(rs.getInt("fridgeid"));
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());

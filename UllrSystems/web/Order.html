@@ -386,6 +386,9 @@
                 </h3>
                 <form id="orderForm">
                     <!-- Fridge Dropdown -->
+                    <h4>
+                        Select Delivery Fridge
+                    </h4>
                     <select id="fridge" onchange="loadFoodItems()" required>
                         <option value="" disabled selected>
                             Select your Fridge
@@ -570,6 +573,7 @@
                         }
 
                         const deliveryDate = document.getElementById("deliveryDate");
+                        const fridgeId = document.getElementById("fridge");
                         if (deliveryDate.value.length !== 10) {
                             alert("Enter a valid date");
                             return;
@@ -579,6 +583,7 @@
                         const orderData = {
                             orderDate: new Date().toISOString().split('T')[0],
                             deliveryDate: deliveryDate.value,
+                            fridgeId: fridgeId,
                             food: orderedFoods.map(food => ({
                                     foodId: food.foodId,
                                     foodName: food.foodName,

@@ -18,6 +18,7 @@ public class Order {
     private LocalDate orderDate;
     private LocalDate deliveryDate;
     private String status;
+    private int fridgeId;
     
     public void SetOrderId(int orderId){
         this.orderId = orderId;
@@ -49,6 +50,12 @@ public class Order {
     }
     public String GetStatus(){
         return status;
+    }
+    public void SetFridgeId(int fridgeId){
+        this.fridgeId = fridgeId;
+    }
+    public int GetFridgeId(){
+        return fridgeId;
     }
     
     @Override

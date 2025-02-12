@@ -46,8 +46,10 @@ public class OrderFood extends HttpServlet {
             JSONObject orderData = (JSONObject) parser.parse(requestBody.toString());
             String orderDate = (String) orderData.get("orderDate");
             String deliveryDate = (String) orderData.get("deliveryDate");
+            int fridgeId = Integer.parseInt(orderData.get("fridgeId").toString());
             order.SetOrderDate(LocalDate.parse(orderDate));
             order.SetDeliveryDate(LocalDate.parse(deliveryDate));
+            order.SetFridgeId(fridgeId);
 
             JSONArray foodArray = (JSONArray) orderData.get("food");
             ArrayList<FoodItem> foodList = new ArrayList<>();
