@@ -358,6 +358,7 @@
                     <div id="capacity"></div>
                     <div id="inventory"></div>
                 </div>
+                <button style="background-color: #000000;"  class="btn-action" onclick="exportToCSV()">Export as CSV</button>
             </main>
         </div>
 
@@ -419,6 +420,50 @@
                     inventoryDiv.innerHTML += table;
                 });
             }
+
+            function exportToCSV() {
+                let inventoryDiv = document.getElementById("inventory");
+                let tables = inventoryDiv.querySelectorAll("table");
+                let csvContent = "data:text/csv;charset=utf-8,";
+
+                // Get Fridge ID
+                let fridgeInfo = document.getElementById("capacity");
+                if (fridgeInfo) {
+                    let fridgeIdMatch = fridgeInfo.innerText.match(/Fridge ID:\s*(\d+)/);
+                    if (fridgeIdMatch) {
+                        csvContent += `Fridge ID,${fridgeIdMatch[1]}\n\n`;
+                    }
+                }
+
+                tables.forEach(table => {
+                    let shelfName = table.previousElementSibling; // Gets the shelf name (h3 tag)
+                    if (shelfName && shelfName.tagName === "H3") {
+                        csvContent += `Shelf Name,${shelfName.innerText}\n`; // Add Shelf Name
+                    }
+
+                    let rows = table.querySelectorAll("tr");
+
+                    rows.forEach(row => {
+                        if (row.style.display !== "none") { // Only include visible rows
+                            let cols = row.querySelectorAll("th, td");
+                            let rowData = [];
+                            cols.forEach(col => rowData.push(col.innerText.trim()));
+                            csvContent += rowData.join(",") + "\n";
+                        }
+                    });
+
+                    csvContent += "\n"; // Separate tables with a newline
+                });
+
+                let encodedUri = encodeURI(csvContent);
+                let link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "Inventory.csv");
+                document.body.appendChild(link);
+                link.click();
+            }
+
+
 
 
 

@@ -102,7 +102,7 @@ public class SQLInterfacing {
             System.out.println("You didnt enter a correct event type");
             return isEntered; // stops code from running and crashing
         }
-        String query = "INSERT INTO " + table + " (eventid, eventype, eventtext, eventtime) VALUES (?,?,?,?)";
+        String query = "INSERT INTO " + table + " (eventid, eventtype, eventtext, eventtime) VALUES (?,?,?,?)";
         int eventid = GetRowCount(conn, table) + 1;
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, eventid);
