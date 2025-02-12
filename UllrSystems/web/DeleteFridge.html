@@ -147,7 +147,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
           <li><a href="ManageAccounts.html" id="manageAccountsLink">Manage Accounts</a></li>
           <li><a href="ManageFridges.html" id="manageFridgesLink">Manage Fridges</a></li>
           <li><a href="Reports.html" id="reportsLink">Reports</a></li>
-          <li><a href="CreateAccount.html" id="createAccountLink">Create Account</a></li>
           <li><a href="#" id="logoutLink">Logout</a></li>
         </ul>
       </nav>
@@ -156,8 +155,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
       <h2 class="text-center" style="color: #000000; font-weight: bold; font-size:xx-large;">Delete Fridge</h2>
 
       <form id="deleteFridgeForm" class="form-group">
-        <label for="fridgeId">Fridge ID:</label>
-        <input type="number" id="fridgeId" class="form-control" required>
+          <select id="fridgeId" onchange="loadFoodItems()" required>
+              <option value="" disabled selected>
+                  Select your Fridge
+              </option>
+              <!-- Fridge options will be populated dynamically -->
+          </select>
         
         <button type="submit" class="btn btn-danger mt-3">Delete Fridge</button>
       </form>
@@ -180,6 +183,37 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
       })
       .catch(error => console.error("Error deleting fridge:", error));
     });
+    
+    
+    async function loadFridgeList() {
+                        try {
+                            const response = await fetch('/UllrSystems/GetAllFridgesManagementVer'); // Adjust path if needed
+                            if (!response.ok) {
+                                throw new Error('Failed to fetch fridge list');
+                            }
+                            const data = await response.json();
+                            const fridgeSelect = document.getElementById('fridgeId'); // where the data from servlet is going to go
+
+                            // Clear any existing options
+                            fridgeSelect.innerHTML = '';
+
+                            // data.fridges is the array we expect from the servlet
+                            data.fridges.forEach(fridge => {
+                                const option = document.createElement('option');
+                                option.value = fridge.fridgeId;
+                                option.textContent = `Fridge ID: ${fridge.fridgeId}, Serial Number: ${fridge.serialNumber}`;
+                                fridgeSelect.appendChild(option);
+                            });
+                        } catch (error) {
+                            console.error(error);
+                            const messageDiv = document.getElementById('message');
+                            messageDiv.textContent = 'Error loading fridges';
+                            messageDiv.classList.add('error');
+                        }
+                    }
+               window.onload = function () {
+                        loadFridgeList();
+                    }
   </script>
 </body>
 </html>

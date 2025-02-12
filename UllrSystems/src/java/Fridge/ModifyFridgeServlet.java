@@ -32,24 +32,25 @@ public class ModifyFridgeServlet extends HttpServlet {
         SQLInterfacing sql = new SQLInterfacing();
 
         try {
-            int fridgeId = Integer.parseInt(request.getParameter("fridgeId"));
-            String serialNumber = request.getParameter("serialNumber");
+            int fridgeId = Integer.parseInt(request.getParameter("fridgeId")); // get all info from url sent from JS
+            String serialNumberRaw = request.getParameter("serialNumber");
+            int serialNumber = Integer.parseInt(serialNumberRaw); // convert url value to int
             double maxCapacity = Double.parseDouble(request.getParameter("maxCapacity"));
-double currentCapacity = Double.parseDouble(request.getParameter("currentCapacity"));
+            double currentCapacity = Double.parseDouble(request.getParameter("currentCapacity"));
 
-boolean success = sql.addFridge(serialNumber, maxCapacity, currentCapacity);
+            boolean success = sql.modifyFridge(fridgeId, serialNumber, maxCapacity, currentCapacity); // run command in db either true for completion or false for error
 
             if (success) {
                 responseJson.put("success", true);
-                responseJson.put("message", "Fridge modified successfully!");
+                responseJson.put("message", "Fridge modified successfully!"); // display message for correct to user in frontend
             } else {
                 responseJson.put("success", false);
-                responseJson.put("error", "Failed to modify fridge.");
+                responseJson.put("error", "Failed to modify fridge."); // reverse for error
             }
 
         } catch (SQLException | NumberFormatException e) {
             e.printStackTrace();
-            responseJson.put("success", false);
+            responseJson.put("success", false); // if error do this instead
             responseJson.put("error", e.getMessage());
         }
 

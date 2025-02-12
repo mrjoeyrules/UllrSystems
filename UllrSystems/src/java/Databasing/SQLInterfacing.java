@@ -604,29 +604,35 @@ public class SQLInterfacing {
         }
         conn.close();
     }
-    public boolean addFridge(String serialNumber, double fridgeCapacity) throws SQLException {
+    public boolean addFridge(int serialNumber, double maxCapacity) throws SQLException {
         Connection conn = getConnection("Fridges");
-        String query = "INSERT INTO fridge (serialNumber, fridgeCapacity) VALUES (?, ?)";
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, serialNumber);
-            stmt.setDouble(2, fridgeCapacity);
+         double currentCapacity = 0;
+        String query = "INSERT INTO fridge (fridgeid, serialnumber, maxcapacity, currentcapacity) VALUES (?,?,?,?)"; // sql query to add a row into fridge table
+        int rowCount = GetRowCount(conn, "fridge"); // get fridge id dynamically
+        int fridgeId = rowCount + 1; // row count+1 is the fridgeid
+        try (PreparedStatement stmt = conn.prepareStatement(query)) { // prepare statement
+            stmt.setInt(1, fridgeId); // set questionmarks in query
+            stmt.setInt(2, serialNumber);
+            stmt.setDouble(3, maxCapacity);
+            stmt.setDouble(4, currentCapacity);
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println(e.getMessage());
             conn.close();
             return false;
         } finally {
-            conn.close();
+            conn.close(); // always close conn for resources
         }
     }
     
-    public boolean modifyFridge(int fridgeId, String serialNumber, double fridgeCapacity) throws SQLException {
+    public boolean modifyFridge(int fridgeId, int serialNumber, double fridgeMaxCapacity, double currentCapacity) throws SQLException {
         Connection conn = getConnection("Fridges");
-        String query = "UPDATE fridge SET serialNumber = ?, fridgeCapacity = ? WHERE fridgeId = ?";
+        String query = "UPDATE fridge SET serialnumber = ?, maxcapacity = ?, currentcapacity = ? WHERE fridgeId = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, serialNumber);
-            stmt.setDouble(2, fridgeCapacity);
-            stmt.setInt(3, fridgeId);
+            stmt.setInt(1, serialNumber);
+            stmt.setDouble(2, fridgeMaxCapacity);
+            stmt.setDouble(3, currentCapacity);
+            stmt.setInt(4, fridgeId);
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println(e.getMessage());

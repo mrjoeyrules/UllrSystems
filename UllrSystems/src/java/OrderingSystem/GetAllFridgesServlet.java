@@ -34,11 +34,9 @@ public class GetAllFridgesServlet extends HttpServlet {
         
         try{
             ArrayList<Fridge> fridgeList = sql.GetAllFridges();
-            System.out.println("fridge list: " + fridgeList);
             JSONArray fridgeArray = new JSONArray();
              
              for (Fridge fridge : fridgeList){
-                 System.out.println(fridge.GetFridgeId());
                  fridgeArray.add(fridge.GetFridgeId());
              }
              

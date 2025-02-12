@@ -130,7 +130,6 @@
           <li><a href="ManageAccounts.html" id="manageAccountsLink">Manage Accounts</a></li>
           <li><a href="ManageFridges.html" id="manageFridgesLink">Manage Fridges</a></li>
           <li><a href="Reports.html" id="reportsLink">Reports</a></li>
-          <li><a href="CreateAccount.html" id="createAccountLink">Create Account</a></li>
           <li><a href="#" id="logoutLink">Logout</a></li>
         </ul>
       </nav>
@@ -150,7 +149,8 @@
           <tr>
             <th>Fridge ID</th>
             <th>Serial Number</th>
-            <th>Capacity</th>
+            <th>Max Capacity</th>
+            <th>Current Capacity</th>
           </tr>
         </thead>
         <tbody id="fridge-table">
@@ -163,7 +163,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
   <script>
     function fetchFridges() {
-      fetch("/getAllFridges")
+      fetch("/UllrSystems/GetAllFridgesManagementVer")
         .then(response => response.json())
         .then(data => {
           const fridgeTable = document.getElementById("fridge-table");
@@ -173,7 +173,8 @@
             row.innerHTML = `
               <td>${fridge.fridgeId}</td>
               <td>${fridge.serialNumber}</td>
-              <td>${fridge.fridgeCapacity}</td>
+              <td>${fridge.maxCapacity}</td>
+              <td>${fridge.currentCapacity}</td>
             `;
             fridgeTable.appendChild(row);
           });

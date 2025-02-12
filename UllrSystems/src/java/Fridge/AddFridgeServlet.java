@@ -32,11 +32,11 @@ public class AddFridgeServlet extends HttpServlet {
         SQLInterfacing sql = new SQLInterfacing();
 
         try {
-            String serialNumber = request.getParameter("serialNumber");
-double maxCapacity = Double.parseDouble(request.getParameter("maxCapacity"));
-double currentCapacity = Double.parseDouble(request.getParameter("currentCapacity"));
+            String serialNumberRaw = request.getParameter("serialNumber");
+            int serialNumber = Integer.parseInt(serialNumberRaw);
+            double maxCapacity = Double.parseDouble(request.getParameter("maxCapacity"));
 
-boolean success = sql.addFridge(serialNumber, maxCapacity, currentCapacity);
+            boolean success = sql.addFridge(serialNumber, maxCapacity);
 
 
             if (success) {
