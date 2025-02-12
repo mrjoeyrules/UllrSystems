@@ -124,6 +124,7 @@ public class SQLInterfacing {
                 order.SetOrderDate(rs.getObject("orderdate", LocalDate.class));
                 order.SetDeliveryDate(rs.getObject("deliverydate", LocalDate.class));
                 order.SetStatus(rs.getString("status"));
+                order.SetFridgeId(rs.getInt("fridgeid"));
                 orders.add(order);
             }
         }catch(SQLException e){
@@ -132,6 +133,28 @@ public class SQLInterfacing {
         }
         conn.close();
         return orders;
+    }
+    
+    public boolean UpdateStatusOfOrder(Order order) throws SQLException{
+        Connection conn = getConnection("Fridges");
+        boolean isComplete = false;
+        String query = "UPDATE orders SET status = ? WHERE orderid = ?";
+        try(PreparedStatement stmt = conn.prepareStatement(query)){
+            stmt.setString(1, order.GetStatus());
+            stmt.setInt(2, order.GetOrderId());
+            int rowsUpdated = stmt.executeUpdate();
+            if(rowsUpdated >0){
+                isComplete = true;
+            }else{
+                conn.close();
+                System.out.println("Error updating SQL");
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+            conn.close();
+        }
+        conn.close();
+        return isComplete;
     }
     
     

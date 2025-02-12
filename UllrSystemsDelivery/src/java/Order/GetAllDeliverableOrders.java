@@ -39,6 +39,7 @@ public class GetAllDeliverableOrders extends HttpServlet {
                 orderJson.put("deliverydate", order.GetDeliveryDate().toString());
                 orderJson.put("food", order.GetFood().toString());
                 orderJson.put("status", order.GetStatus());
+                orderJson.put("fridgeid", order.GetFridgeId());
                 orderArray.add(orderJson);
             }
             responseJson.put("orders", orderArray);

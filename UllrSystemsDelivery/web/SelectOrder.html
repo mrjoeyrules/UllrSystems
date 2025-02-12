@@ -105,6 +105,7 @@
                     <thead>
                         <tr>
                             <th>Order ID</th>
+                            <th>Fridge ID</th>
                             <th>Order Date</th>
                             <th>Delivery Date</th>
                             <th>Food</th>
@@ -147,6 +148,10 @@
                                     orderLink.style.color = "#0277bd";
                                     cellId.appendChild(orderLink);
                                     row.appendChild(cellId);
+                                    
+                                    let cellFridgeId = document.createElement("td");
+                                    cellFridgeId.textContent = order.fridgeid;
+                                    row.appendChild(cellFridgeId);
 
                                     let cellOrderDate = document.createElement("td");
                                     cellOrderDate.textContent = order.orderdate;
