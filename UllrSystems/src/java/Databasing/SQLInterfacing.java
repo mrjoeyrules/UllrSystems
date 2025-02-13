@@ -700,7 +700,35 @@ public class SQLInterfacing {
             conn.close();
         }
     }
+
+    //////////CLEAN UP/////
+    public boolean cleanupTestUsers() throws SQLException {
+        Connection conn = getConnection("Accounts");
+        String sql = "DELETE FROM users WHERE username LIKE 'testUser%'";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            int rows = stmt.executeUpdate();
+            return rows > 0; // true if at least 1 row was removed
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            conn.close();
+        }
+    }
     
+    public boolean cleanupTestFridges() throws SQLException {
+        Connection conn = getConnection("Fridges");
+        String sql = "DELETE FROM fridge WHERE serialnumber >= 5000";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            int rows = stmt.executeUpdate();
+            return rows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            conn.close();
+        }
+    }
     //////////ALERTS//////
     
     public void checkExpiringFood() throws SQLException {
