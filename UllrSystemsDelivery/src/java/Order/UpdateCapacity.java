@@ -13,6 +13,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -33,6 +34,7 @@ public class UpdateCapacity extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        HttpSession session = req.getSession();
         resp.setContentType("application/json");
         SQLInterfacing sql = new SQLInterfacing();
         JSONObject responseJson = new JSONObject();
@@ -61,8 +63,10 @@ public class UpdateCapacity extends HttpServlet {
             
             if(fridgeCurrent + foodWeight > fridgeMax){
                 responseJson.put("error", "Fridge is full! Cannot add food");
+                sql.WriteLog("User " + session.getAttribute("username") + " attempted to place item " + foodName + " in fridgeID: " + fridgeId + " on shelfId: " + shelfId +  " but the fridge was full." , 1);
             }else if (shelfCurrent + foodWeight > shelfMax) {
                 responseJson.put("error", "Shelf is full! Cannot add food.");
+                sql.WriteLog("User " + session.getAttribute("username") + " attempted to place item " + foodName + " in fridgeID: " + fridgeId + " on shelfId: " + shelfId +  " but the shelf was full." , 1);
             } else {
                 FoodItem food = new FoodItem();
                 food.SetFoodName(foodName);
@@ -76,6 +80,7 @@ public class UpdateCapacity extends HttpServlet {
                 sql.updateFridgeCapacity(fridgeId, fridgeCurrent + foodWeight);
                 sql.updateShelfCapacity(shelfId, shelfCurrent + foodWeight);
                 responseJson.put("success", "Food successfully placed on shelf.");
+                sql.WriteLog("User " + session.getAttribute("username") + " placed item " + foodName + " in fridgeID: " + fridgeId + " on shelfId: " + shelfId +  "." , 1);
             }
         } catch (ParseException ex) {
             Logger.getLogger(UpdateCapacity.class.getName()).log(Level.SEVERE, null, ex);

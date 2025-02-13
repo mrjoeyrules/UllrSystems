@@ -311,9 +311,8 @@ public class SQLInterfacing {
     }
 
     //////////////// LOGGING SYSTEM ///////////////    
-    public boolean WriteLog(String logMessage, int eventType) throws SQLException {
+    public void WriteLog(String logMessage, int eventType) throws SQLException {
         Connection conn = getConnection("AdminInfo");
-        boolean isEntered = false;
         String table = "";
         if (eventType == 1) {
             table = "adminlogs";
@@ -321,7 +320,7 @@ public class SQLInterfacing {
             table = "hselogs";
         } else {
             System.out.println("You didnt enter a correct event type");
-            return isEntered; // stops code from running and crashing
+            return;
         }
         String query = "INSERT INTO " + table + " (eventid, eventtype, eventtext, eventtime) VALUES (?,?,?,?)";
         int eventid = GetRowCount(conn, table) + 1;
@@ -332,14 +331,12 @@ public class SQLInterfacing {
             stmt.setObject(4, GetTimestamp());
             int rowsInserted = stmt.executeUpdate();
             if (rowsInserted > 0) {
-                System.out.println("Rows inserted");
-                isEntered = true;
+                conn.close();
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         conn.close();
-        return isEntered;
     }
 
     //////////// ADDING FOOD TO FRIDGE
