@@ -6,6 +6,7 @@ import Fridge.ModifyFridgeServlet;
 import Inventory.InventoryServlet;
 import OrderingSystem.GetAllOrderFoods;
 import OrderingSystem.GetAllOrdersServlet;
+import Databasing.AlertsServlet;
 import OrderingSystem.OrderFood;
 import Reports.GetAllReportsServlet;
 import OrderingSystem.GetAllFridgesServlet;
@@ -391,6 +392,25 @@ public class AllServletTestsReflection {
         // Expect JSON with "foods"
         assertTrue("Should contain 'foods' JSON array.", result.contains("\"foods\""));
     }
+    
+    @Test(timeout = 5000)
+    public void testAlertsServlet() throws Exception {
+    FakeHttpServletRequest request = new FakeHttpServletRequest();
+    FakeHttpServletResponse response = new FakeHttpServletResponse();
+
+    request.setMethod("GET");
+
+    AlertsServlet servlet = new AlertsServlet();
+    invokeDoGet(servlet, request, response);
+
+    String result = response.getOutput();
+    System.out.println("AlertsServlet response: " + result);
+    assertNotNull("AlertsServlet output should not be null.", result);
+
+    // If it returns JSON array, you can check whether it's empty or not.
+    assertTrue("Should contain [ or { in the JSON response.", result.contains("[") || result.contains("{"));
+    }
+
 
 
 
