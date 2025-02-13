@@ -449,7 +449,7 @@
 
                     async function loadFridgeList() {
                         try {
-                            const response = await fetch('/UllrSystems/getAllFridges'); // Adjust path if needed
+                            const response = await fetch('/getAllFridges'); // Adjust path if needed
                             if (!response.ok) {
                                 throw new Error('Failed to fetch fridge list');
                             }
@@ -481,7 +481,7 @@
                     async function loadFoodItems() {
                         const foodDropdown = document.getElementById("foodDropdown");
                         try {
-                            const response = await fetch('/UllrSystems/getAllOrderFoods');
+                            const response = await fetch('/getAllOrderFoods');
                             if (!response.ok) {
                                 throw new Error('Server responded with status: ${response.status}');
                             }
@@ -603,7 +603,7 @@
                         };
 
                         try {
-                            const response = await fetch("/UllrSystems/orderFood", {
+                            const response = await fetch("/orderFood", {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/json"
@@ -629,7 +629,7 @@
                     document.addEventListener("DOMContentLoaded", async function () {
                         // Retrieve the user's role
                         try {
-                            const response = await fetch('/UllrSystems/getUserRole');
+                            const response = await fetch('/getUserRole');
                             if (!response.ok)
                                 throw new Error("Not Authed");
                             const data = await response.json();

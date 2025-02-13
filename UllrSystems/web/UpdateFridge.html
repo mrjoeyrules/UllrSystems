@@ -186,7 +186,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                 const maxCapacity = document.getElementById("maxCapacity").value;
                 const currentCapacity = document.getElementById("currentCapacity").value;
 
-                fetch("/UllrSystems/modifyFridge", {
+                fetch("/modifyFridge", {
                     method: "POST",
                     body: new URLSearchParams({fridgeId, serialNumber, maxCapacity, currentCapacity})
                 })
@@ -202,7 +202,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
 
             async function loadFridgeList() {
                 try {
-                    const response = await fetch('/UllrSystems/GetAllFridgesManagementVer'); // Adjust path if needed
+                    const response = await fetch('/GetAllFridgesManagementVer'); // Adjust path if needed
                     if (!response.ok) {
                         throw new Error('Failed to fetch fridge list');
                     }
@@ -231,7 +231,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
             document.addEventListener("DOMContentLoaded", async function () {
                 // Retrieve the user's role
                 try {
-                    const response = await fetch('/UllrSystems/getUserRole');
+                    const response = await fetch('/getUserRole');
                     if (!response.ok)
                         throw new Error("Not Authed");
                     const data = await response.json();

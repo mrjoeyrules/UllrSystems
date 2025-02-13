@@ -170,7 +170,7 @@
             // Fetch list of users on page load
             async function loadUserList() {
                 try {
-                    const response = await fetch('/UllrSystems/getAllUsers'); // Adjust path if needed
+                    const response = await fetch('/getAllUsers'); // Adjust path if needed
                     if (!response.ok) {
                         throw new Error('Failed to fetch user list');
                     }
@@ -205,7 +205,7 @@
                 urlEncodedData.append('username', username);
 
                 try {
-                    const response = await fetch('/UllrSystems/deleteUser', {
+                    const response = await fetch('/deleteUser', {
                         method: 'POST',
                         body: urlEncodedData,
                         headers: {
@@ -249,7 +249,7 @@
             document.addEventListener("DOMContentLoaded", async function () {
                 // Retrieve the user's role
                 try {
-                    const response = await fetch('/UllrSystems/getUserRole');
+                    const response = await fetch('/getUserRole');
                     if (!response.ok)
                         throw new Error("Not Authed");
                     const data = await response.json();

@@ -163,7 +163,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script>
             function fetchFridges() {
-                fetch("/UllrSystems/GetAllFridgesManagementVer")
+                fetch("/GetAllFridgesManagementVer")
                         .then(response => response.json())
                         .then(data => {
                             const fridgeTable = document.getElementById("fridge-table");
@@ -185,7 +185,7 @@
             document.addEventListener("DOMContentLoaded", async function () {
                 // Retrieve the user's role
                 try {
-                    const response = await fetch('/UllrSystems/getUserRole');
+                    const response = await fetch('/getUserRole');
                     if (!response.ok)
                         throw new Error("Not Authed");
                     const data = await response.json();

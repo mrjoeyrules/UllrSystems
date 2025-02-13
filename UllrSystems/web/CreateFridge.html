@@ -168,7 +168,7 @@
                 const serialNumber = document.getElementById("serialNumber").value;
                 const maxCapacity = document.getElementById("fridgeCapacity").value;
 
-                fetch("/UllrSystems/addFridge", {
+                fetch("/addFridge", {
                     method: "POST",
                     headers: {"Content-Type": "application/x-www-form-urlencoded"},
                     body: new URLSearchParams({serialNumber, maxCapacity})
@@ -184,7 +184,7 @@
             document.addEventListener("DOMContentLoaded", async function () {
                 // Retrieve the user's role
                 try {
-                    const response = await fetch('/UllrSystems/getUserRole');
+                    const response = await fetch('/getUserRole');
                     if (!response.ok)
                         throw new Error("Not Authed");
                     const data = await response.json();

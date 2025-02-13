@@ -408,7 +408,7 @@
             // Load user list for the drop-down
             async function loadUserList() {
                 try {
-                    const response = await fetch('/UllrSystems/getAllUsers');
+                    const response = await fetch('/getAllUsers');
                     if (!response.ok) {
                         throw new Error('Failed to fetch user list');
                     }
@@ -442,7 +442,7 @@
                 urlEncodedData.append('role', role);
 
                 try {
-                    const response = await fetch('/UllrSystems/updateRole', {
+                    const response = await fetch('/updateRole', {
                         method: 'POST',
                         body: urlEncodedData,
                         headers: {
@@ -479,7 +479,7 @@
             document.addEventListener("DOMContentLoaded", async function () {
                 // Retrieve the user's role
                 try {
-                    const response = await fetch('/UllrSystems/getUserRole');
+                    const response = await fetch('/getUserRole');
                     if (!response.ok)
                         throw new Error("Not Authed");
                     const data = await response.json();

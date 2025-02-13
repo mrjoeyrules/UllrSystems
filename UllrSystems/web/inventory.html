@@ -365,7 +365,7 @@
         <script>
 
             async function loadFridges() {
-                const response = await fetch('/UllrSystems/inventoryServlet');
+                const response = await fetch('/inventoryServlet');
                 if (!response.ok) {
                     console.error("Error fetching data:", response.statusText);
                     return;
@@ -391,7 +391,7 @@
                 let fridgeId = document.getElementById("fridgeSelect").value;
                 if (!fridgeId)
                     return;
-                const response = await fetch(`/UllrSystems/inventoryServlet?fridgeId=${fridgeId}`);
+                const response = await fetch(`inventoryServlet?fridgeId=${fridgeId}`);
                 const data = await response.json();
 
                 let capacityDiv = document.getElementById("capacity");
@@ -422,7 +422,7 @@
             }
 
             function exportToCSV() {
-                let inventoryDiv = document.getElementById("/UllrSystems/inventory");
+                let inventoryDiv = document.getElementById("inventory");
                 let tables = inventoryDiv.querySelectorAll("table");
                 let csvContent = "data:text/csv;charset=utf-8,";
 
@@ -466,14 +466,15 @@
             document.addEventListener("DOMContentLoaded", async function () {
                 // Retrieve the user's role
                 try {
-                    const response = await fetch('/UllrSystems/getUserRole');
+                    const response = await fetch('/getUserRole');
                     if (!response.ok)
                         throw new Error("Not Authed");
                     const data = await response.json();
                     const userRole = data.role;
 
-                    if (userRole !== 3 && userRole !== 2) {
-                        window.location.href = "inventory.html";
+                    if (userRole !==3 && userRole !== 2) {
+                        alert("No perms for page");
+                       // window.location.href = "inventory.html";
                     }
 
                     const menuItems = {
@@ -508,8 +509,9 @@
             });
 
             function removeElement(element) {
-                if (element)
+                if (element && element.parentNode) {
                     element.remove();
+                }
             }
 
 

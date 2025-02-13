@@ -217,7 +217,7 @@
                             event.preventDefault();
                             const formData = new FormData(document.getElementById("SignUpForm"));
                             try {
-                                const response = await fetch('/UllrSystems/createUser', {
+                                const response = await fetch('/createUser', {
                                     method: 'POST',
                                     body: formData
                                 });
@@ -239,7 +239,7 @@
                         document.addEventListener("DOMContentLoaded", async function () {
                             // Retrieve the user's role
                             try {
-                                const response = await fetch('/UllrSystems/getUserRole');
+                                const response = await fetch('/getUserRole');
                                 if (!response.ok)
                                     throw new Error("Not Authed");
                                 const data = await response.json();
@@ -294,7 +294,6 @@
         </div>
 
         <!-- Add the script BELOW so it sees your IDs -->
-        <script src="roleCheck.js"></script>
         <script src="logout.js"></script>
 
     </body>

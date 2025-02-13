@@ -188,7 +188,7 @@
                 tableBody.innerHTML = "";
 
                 // Fetch data from servlet with event type and (optional) date filter
-                fetch(`/UllrSystems/getAllReports?eventType=${eventType}&date=${selectedDate}`)
+                fetch(`getAllReports?eventType=${eventType}&date=${selectedDate}`)
                         .then(response => response.json())
                         .then(data => {
                             if (data.events && data.events.length > 0) {
@@ -239,7 +239,7 @@
             document.addEventListener("DOMContentLoaded", async function () {
                 // Retrieve the user's role
                 try {
-                    const response = await fetch('/UllrSystems/getUserRole');
+                    const response = await fetch('/getUserRole');
                     if (!response.ok)
                         throw new Error("Not Authed");
                     const data = await response.json();
