@@ -273,79 +273,47 @@
 
             document.addEventListener("DOMContentLoaded", async function () {
                 // Retrieve the user's role
-            try{
-                const response = await fetch('/UllrSystems/getUserRole');
-                if(!response.ok) throw new Error("Not Authed");
-                const data = await response.json();
-                const userRole = data.role;
-                
-                if(userRole !== 3 && userRole !== 2){
-                    window.location.href = "inventory.html";
-                }
-                
-                const manageAccountsLink = document.getElementById("manageAccountsLink");
-                const manageFridgesLink = document.getElementById("manageFridgesLink");
-                const reportsLink = document.getElementById("reportsLink");
-                const ordersLink = document.getElementById("orderLink");
-                const alertsLink = document.getElementById("alertsLink");
-                const inventoryLink = document.getElementById("inventoryLink");
-                const logoutLink = document.getElementById("logoutLink");
-                
-                if(userRole !== 3){
-                    ordersLink.style.display = "none";
-                    manageAccountsLink.style.display = "none";
-                    reportsLink.style.display = "none";
-                    manageFridgesLink.style.display = "none";
-                }
-                if(userRole !==3 && userRole !== 2){
-                    ordersLink.style.display = "none";
-                    manageAccountsLink.style.display = "none";
-                    reportsLink.style.display = "none";
-                    manageFridgesLink.style.display = "none";
-                    inventoryLink.style.display = "none";
-                    alertsLink.style.display = "none";
-                }
-            }catch(error){
-                console.error("Error fetching user role: ", error);
-                window.location.href="index.html";
-            }
-        });
-            
-
-            function applyRoleBasedMenu(role) {
-                
-
-                // Define which roles can access which sections
-                const rolePermissions = {
-                    "3": ["Manage Accounts", "Manage Fridges", "Reports", "Inventory", "Order", "Logout", "Alerts"],
-                    "2": ["Inventory", "Alerts", "Logout"],
-                };
-
-                // Hide menu items not available for the user's role
-                if (!rolePermissions[role].includes("Manage Accounts")) {
-                    manageAccountsLink.style.display = "none";
-                }
-                if (!rolePermissions[role].includes("Manage Fridges")) {
-                    manageFridgesLink.style.display = "none";
-                }
-                if (!rolePermissions[role].includes("Reports")) {
-                    reportsLink.style.display = "none";
-                }
-            }
-
-            async function GetUserRole() {
                 try {
-                    const response = await fetch(`/UllrSystems/getUserRole`);
+                    const response = await fetch('/UllrSystems/getUserRole');
+                    if (!response.ok)
+                        throw new Error("Not Authed");
                     const data = await response.json();
-                    return data.role;
+                    const userRole = data.role;
+
+                    if (userRole !== 3 && userRole !== 2) {
+                        window.location.href = "inventory.html";
+                    }
+
+                    const menuItems = {
+                        manageAccounts: document.getElementById("manageAccountsLink"),
+                        manageFridges: document.getElementById("manageFridgesLink"),
+                        reports: document.getElementById("reportsLink"),
+                        orders: document.getElementById("orderLink"),
+                        alerts: document.getElementById("alertsLink"),
+                        inventory: document.getElementById("inventoryLink"),
+                        logout: document.getElementById("logoutLink")
+                    };
+
+
+                    if (userRole !== 3) {
+                        removeElement(menuItems.orders);
+                        removeElement(menuItems.manageAccounts);
+                        removeElement(menuItems.reports);
+                        removeElement(menuItems.manageFridges);
+                    }
+                    if (userRole !== 3 && userRole !== 2) {
+                        removeElement(menuItems.orders);
+                        removeElement(menuItems.manageAccounts);
+                        removeElement(menuItems.reports);
+                        removeElement(menuItems.manageFridges);
+                        removeElement(menuItems.inventory);
+                        removeElement(menuItems.alerts);
+                    }
                 } catch (error) {
-                    console.error("Failed to fetch user role:", error);
-                    return null;
+                    console.error("Error fetching user role: ", error);
+                    window.location.href = "index.html";
                 }
-            }
-
-
-
+            });
             function refreshPage() {
                 location.reload();
             }
@@ -353,6 +321,12 @@
             window.onload = function () {
                 CheckForNewAlert();
             }
+
+            function removeElement(element) {
+                if (element)
+                    element.remove();
+            }
+
         </script>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 

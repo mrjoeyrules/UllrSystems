@@ -249,33 +249,41 @@
                                     window.location.href = "inventory.html";
                                 }
 
-                                const manageAccountsLink = document.getElementById("manageAccountsLink");
-                                const manageFridgesLink = document.getElementById("manageFridgesLink");
-                                const reportsLink = document.getElementById("reportsLink");
-                                const ordersLink = document.getElementById("orderLink");
-                                const alertsLink = document.getElementById("alertsLink");
-                                const inventoryLink = document.getElementById("inventoryLink");
-                                const logoutLink = document.getElementById("logoutLink");
+                                const menuItems = {
+                                    manageAccounts: document.getElementById("manageAccountsLink"),
+                                    manageFridges: document.getElementById("manageFridgesLink"),
+                                    reports: document.getElementById("reportsLink"),
+                                    orders: document.getElementById("orderLink"),
+                                    alerts: document.getElementById("alertsLink"),
+                                    inventory: document.getElementById("inventoryLink"),
+                                    logout: document.getElementById("logoutLink")
+                                };
+
 
                                 if (userRole !== 3) {
-                                    ordersLink.style.display = "none";
-                                    manageAccountsLink.style.display = "none";
-                                    reportsLink.style.display = "none";
-                                    manageFridgesLink.style.display = "none";
+                                    removeElement(menuItems.orders);
+                                    removeElement(menuItems.manageAccounts);
+                                    removeElement(menuItems.reports);
+                                    removeElement(menuItems.manageFridges);
                                 }
                                 if (userRole !== 3 && userRole !== 2) {
-                                    ordersLink.style.display = "none";
-                                    manageAccountsLink.style.display = "none";
-                                    reportsLink.style.display = "none";
-                                    manageFridgesLink.style.display = "none";
-                                    inventoryLink.style.display = "none";
-                                    alertsLink.style.display = "none";
+                                    removeElement(menuItems.orders);
+                                    removeElement(menuItems.manageAccounts);
+                                    removeElement(menuItems.reports);
+                                    removeElement(menuItems.manageFridges);
+                                    removeElement(menuItems.inventory);
+                                    removeElement(menuItems.alerts);
                                 }
                             } catch (error) {
                                 console.error("Error fetching user role: ", error);
                                 window.location.href = "index.html";
                             }
                         });
+
+                        function removeElement(element) {
+                            if (element)
+                                element.remove();
+                        }
 
 
 

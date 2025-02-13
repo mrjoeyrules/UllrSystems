@@ -133,161 +133,170 @@
         </div>
         <script>
             function exportToCSV() {
-            let table = document.getElementById("eventTable");
-            let rows = table.querySelectorAll("tr");
-            let csvContent = "data:text/csv;charset=utf-8,";
-            // Add table headers
-            let headers = table.querySelectorAll("thead tr th");
-            let headerRow = [];
-            headers.forEach(header => headerRow.push(header.innerText));
-            csvContent += headerRow.join(",") + "\n";
-            // Add only visible rows (filtered results)
-            let tableBody = document.getElementById("eventTableBody");
-            let visibleRows = tableBody.querySelectorAll("tr");
-            visibleRows.forEach(row => {
-            if (row.style.display !== "none") { // Only include visible rows
-            let cols = row.querySelectorAll("td");
-            let rowData = [];
-            cols.forEach(col => rowData.push(col.innerText));
-            csvContent += rowData.join(",") + "\n";
-            }
-            });
-            let encodedUri = encodeURI(csvContent);
-            let link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "filtered_event_log.csv");
-            document.body.appendChild(link);
-            link.click();
+                let table = document.getElementById("eventTable");
+                let rows = table.querySelectorAll("tr");
+                let csvContent = "data:text/csv;charset=utf-8,";
+                // Add table headers
+                let headers = table.querySelectorAll("thead tr th");
+                let headerRow = [];
+                headers.forEach(header => headerRow.push(header.innerText));
+                csvContent += headerRow.join(",") + "\n";
+                // Add only visible rows (filtered results)
+                let tableBody = document.getElementById("eventTableBody");
+                let visibleRows = tableBody.querySelectorAll("tr");
+                visibleRows.forEach(row => {
+                    if (row.style.display !== "none") { // Only include visible rows
+                        let cols = row.querySelectorAll("td");
+                        let rowData = [];
+                        cols.forEach(col => rowData.push(col.innerText));
+                        csvContent += rowData.join(",") + "\n";
+                    }
+                });
+                let encodedUri = encodeURI(csvContent);
+                let link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "filtered_event_log.csv");
+                document.body.appendChild(link);
+                link.click();
             }
 
 
             function filterByDate() {
-            let filterDate = document.getElementById("dateFilter").value;
-            let tableBody = document.getElementById("eventTableBody");
-            let rows = tableBody.getElementsByTagName("tr");
-            for (let row of rows) {
-            let dateCell = row.cells[3].innerText.split(" ")[0];
-            if (filterDate === "" || dateCell === filterDate) {
-            row.style.display = "";
-            } else {
-            row.style.display = "none";
+                let filterDate = document.getElementById("dateFilter").value;
+                let tableBody = document.getElementById("eventTableBody");
+                let rows = tableBody.getElementsByTagName("tr");
+                for (let row of rows) {
+                    let dateCell = row.cells[3].innerText.split(" ")[0];
+                    if (filterDate === "" || dateCell === filterDate) {
+                        row.style.display = "";
+                    } else {
+                        row.style.display = "none";
+                    }
+                }
             }
-            }
-            }
-            
-            document.addEventListener("DOMContentLoaded", function(){
+
+            document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById("dateFilter").addEventListener("change", fetchReports);
             })
-            
+
             function fetchReports() {
-        let eventType = document.getElementById("eventType").value;
-        let selectedDate = document.getElementById("dateFilter").value; // Get selected date
-        let tableBody = document.getElementById("eventTableBody");
+                let eventType = document.getElementById("eventType").value;
+                let selectedDate = document.getElementById("dateFilter").value; // Get selected date
+                let tableBody = document.getElementById("eventTableBody");
 
-        // Clear table before updating
-        tableBody.innerHTML = "";
+                // Clear table before updating
+                tableBody.innerHTML = "";
 
-        // Fetch data from servlet with event type and (optional) date filter
-        fetch(`/UllrSystems/getAllReports?eventType=${eventType}&date=${selectedDate}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.events && data.events.length > 0) {
-                let filteredEvents = data.events;
+                // Fetch data from servlet with event type and (optional) date filter
+                fetch(`/UllrSystems/getAllReports?eventType=${eventType}&date=${selectedDate}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.events && data.events.length > 0) {
+                                let filteredEvents = data.events;
 
-                // If a date is selected, filter events by date
-                if (selectedDate) {
-                    filteredEvents = data.events.filter(event => {
-                        return event.eventtime.startsWith(selectedDate); // Match date
-                    });
-                }
+                                // If a date is selected, filter events by date
+                                if (selectedDate) {
+                                    filteredEvents = data.events.filter(event => {
+                                        return event.eventtime.startsWith(selectedDate); // Match date
+                                    });
+                                }
 
-                // Display filtered logs or show "No data found"
-                if (filteredEvents.length > 0) {
-                    filteredEvents.forEach(event => {
-                        let row = document.createElement("tr");
+                                // Display filtered logs or show "No data found"
+                                if (filteredEvents.length > 0) {
+                                    filteredEvents.forEach(event => {
+                                        let row = document.createElement("tr");
 
-                        let cellId = document.createElement("td");
-                        cellId.textContent = event.eventid;
-                        row.appendChild(cellId);
+                                        let cellId = document.createElement("td");
+                                        cellId.textContent = event.eventid;
+                                        row.appendChild(cellId);
 
-                        let cellType = document.createElement("td");
-                        cellType.textContent = eventType === "1" ? "Admin Logs" : "HSE Logs"; 
-                        row.appendChild(cellType);
+                                        let cellType = document.createElement("td");
+                                        cellType.textContent = eventType === "1" ? "Admin Logs" : "HSE Logs";
+                                        row.appendChild(cellType);
 
-                        let cellText = document.createElement("td");
-                        cellText.textContent = event.eventtext;
-                        row.appendChild(cellText);
+                                        let cellText = document.createElement("td");
+                                        cellText.textContent = event.eventtext;
+                                        row.appendChild(cellText);
 
-                        let cellTime = document.createElement("td");
-                        cellTime.textContent = event.eventtime;
-                        row.appendChild(cellTime);
+                                        let cellTime = document.createElement("td");
+                                        cellTime.textContent = event.eventtime;
+                                        row.appendChild(cellTime);
 
-                        tableBody.appendChild(row);
-                    });
-                } else {
-                    showNoDataMessage(tableBody);
-                }
-            } else {
-                showNoDataMessage(tableBody);
+                                        tableBody.appendChild(row);
+                                    });
+                                } else {
+                                    showNoDataMessage(tableBody);
+                                }
+                            } else {
+                                showNoDataMessage(tableBody);
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error fetching reports:", error);
+                        });
             }
-        })
-        .catch(error => {
-            console.error("Error fetching reports:", error);
-        });
-    }
-    
-    document.addEventListener("DOMContentLoaded", async function () {
+
+            document.addEventListener("DOMContentLoaded", async function () {
                 // Retrieve the user's role
-            try{
-                const response = await fetch('/UllrSystems/getUserRole');
-                if(!response.ok) throw new Error("Not Authed");
-                const data = await response.json();
-                const userRole = data.role;
-                
-                if(userRole !== 3){
-                    window.location.href = "inventory.html";
+                try {
+                    const response = await fetch('/UllrSystems/getUserRole');
+                    if (!response.ok)
+                        throw new Error("Not Authed");
+                    const data = await response.json();
+                    const userRole = data.role;
+
+                    if (userRole !== 3) {
+                        window.location.href = "inventory.html";
+                    }
+
+                    const menuItems = {
+                        manageAccounts: document.getElementById("manageAccountsLink"),
+                        manageFridges: document.getElementById("manageFridgesLink"),
+                        reports: document.getElementById("reportsLink"),
+                        orders: document.getElementById("orderLink"),
+                        alerts: document.getElementById("alertsLink"),
+                        inventory: document.getElementById("inventoryLink"),
+                        logout: document.getElementById("logoutLink")
+                    };
+
+
+                    if (userRole !== 3) {
+                        removeElement(menuItems.orders);
+                        removeElement(menuItems.manageAccounts);
+                        removeElement(menuItems.reports);
+                        removeElement(menuItems.manageFridges);
+                    }
+                    if (userRole !== 3 && userRole !== 2) {
+                        removeElement(menuItems.orders);
+                        removeElement(menuItems.manageAccounts);
+                        removeElement(menuItems.reports);
+                        removeElement(menuItems.manageFridges);
+                        removeElement(menuItems.inventory);
+                        removeElement(menuItems.alerts);
+                    }
+                } catch (error) {
+                    console.error("Error fetching user role: ", error);
+                    window.location.href = "index.html";
                 }
-                
-                const manageAccountsLink = document.getElementById("manageAccountsLink");
-                const manageFridgesLink = document.getElementById("manageFridgesLink");
-                const reportsLink = document.getElementById("reportsLink");
-                const ordersLink = document.getElementById("orderLink");
-                const alertsLink = document.getElementById("alertsLink");
-                const inventoryLink = document.getElementById("inventoryLink");
-                const logoutLink = document.getElementById("logoutLink");
-                
-                if(userRole !== 3){
-                    ordersLink.style.display = "none";
-                    manageAccountsLink.style.display = "none";
-                    reportsLink.style.display = "none";
-                    manageFridgesLink.style.display = "none";
-                }
-                if(userRole !==3 && userRole !== 2){
-                    ordersLink.style.display = "none";
-                    manageAccountsLink.style.display = "none";
-                    reportsLink.style.display = "none";
-                    manageFridgesLink.style.display = "none";
-                    inventoryLink.style.display = "none";
-                    alertsLink.style.display = "none";
-                }
-            }catch(error){
-                console.error("Error fetching user role: ", error);
-                window.location.href="index.html";
+            });
+
+            function removeElement(element) {
+                if (element)
+                    element.remove();
             }
-        });
-    
-    
-    
-    function showNoDataMessage(tableBody){
-        let row = document.createElement("tr");
-        let cell = document.createElement("td");
-        cell.colSpan = 4;
-        cell.textContent = "No events found.";
-        cell.style.textAlign = "center";
-        row.appendChild(cell);
-        tableBody.appendChild(row);
-    }
-           
+
+
+
+            function showNoDataMessage(tableBody) {
+                let row = document.createElement("tr");
+                let cell = document.createElement("td");
+                cell.colSpan = 4;
+                cell.textContent = "No events found.";
+                cell.style.textAlign = "center";
+                row.appendChild(cell);
+                tableBody.appendChild(row);
+            }
+
         </script>
     </body>
 </html>

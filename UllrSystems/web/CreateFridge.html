@@ -180,46 +180,55 @@
                         })
                         .catch(error => console.error("Error creating fridge:", error));
             });
-            
+
             document.addEventListener("DOMContentLoaded", async function () {
                 // Retrieve the user's role
-            try{
-                const response = await fetch('/UllrSystems/getUserRole');
-                if(!response.ok) throw new Error("Not Authed");
-                const data = await response.json();
-                const userRole = data.role;
-                
-                if(userRole !== 3){
-                    window.location.href = "inventory.html";
+                try {
+                    const response = await fetch('/UllrSystems/getUserRole');
+                    if (!response.ok)
+                        throw new Error("Not Authed");
+                    const data = await response.json();
+                    const userRole = data.role;
+
+                    if (userRole !== 3) {
+                        window.location.href = "inventory.html";
+                    }
+
+                    const menuItems = {
+                        manageAccounts: document.getElementById("manageAccountsLink"),
+                        manageFridges: document.getElementById("manageFridgesLink"),
+                        reports: document.getElementById("reportsLink"),
+                        orders: document.getElementById("orderLink"),
+                        alerts: document.getElementById("alertsLink"),
+                        inventory: document.getElementById("inventoryLink"),
+                        logout: document.getElementById("logoutLink")
+                    };
+
+
+                    if (userRole !== 3) {
+                        removeElement(menuItems.orders);
+                        removeElement(menuItems.manageAccounts);
+                        removeElement(menuItems.reports);
+                        removeElement(menuItems.manageFridges);
+                    }
+                    if (userRole !== 3 && userRole !== 2) {
+                        removeElement(menuItems.orders);
+                        removeElement(menuItems.manageAccounts);
+                        removeElement(menuItems.reports);
+                        removeElement(menuItems.manageFridges);
+                        removeElement(menuItems.inventory);
+                        removeElement(menuItems.alerts);
+                    }
+                } catch (error) {
+                    console.error("Error fetching user role: ", error);
+                    window.location.href = "index.html";
                 }
-                
-                const manageAccountsLink = document.getElementById("manageAccountsLink");
-                const manageFridgesLink = document.getElementById("manageFridgesLink");
-                const reportsLink = document.getElementById("reportsLink");
-                const ordersLink = document.getElementById("orderLink");
-                const alertsLink = document.getElementById("alertsLink");
-                const inventoryLink = document.getElementById("inventoryLink");
-                const logoutLink = document.getElementById("logoutLink");
-                
-                if(userRole !== 3){
-                    ordersLink.style.display = "none";
-                    manageAccountsLink.style.display = "none";
-                    reportsLink.style.display = "none";
-                    manageFridgesLink.style.display = "none";
-                }
-                if(userRole !==3 && userRole !== 2){
-                    ordersLink.style.display = "none";
-                    manageAccountsLink.style.display = "none";
-                    reportsLink.style.display = "none";
-                    manageFridgesLink.style.display = "none";
-                    inventoryLink.style.display = "none";
-                    alertsLink.style.display = "none";
-                }
-            }catch(error){
-                console.error("Error fetching user role: ", error);
-                window.location.href="index.html";
+            });
+
+            function removeElement(element) {
+                if (element)
+                    element.remove();
             }
-        });
 
         </script>
     </body>
