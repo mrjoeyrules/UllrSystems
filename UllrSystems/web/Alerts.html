@@ -199,7 +199,7 @@
         <script>
             window.addEventListener('DOMContentLoaded', async () => {
                 try {
-                    const response = await fetch('/UllrSystems/alerts');
+                    const response = await fetch('/alerts');
                     if (!response.ok) {
                         throw new Error(`Server error: ${response.status}`);
                     }
@@ -229,7 +229,7 @@
         <script>
             async function markAsRead(alertId) {
                 try {
-                    const response = await fetch(`UllrSystems/markAsRead?alertId=${alertId}`, {
+                    const response = await fetch(`/markAsRead?alertId=${alertId}`, {
                         method: "POST"
                     });
 
@@ -250,7 +250,7 @@
 
             async function CheckForNewAlert() {
                 try {
-                    const response = await fetch("/UllrSystems/generate-expiry-alerts", {
+                    const response = await fetch("/generate-expiry-alerts", {
                         method: "POST"
                     });
                     const text = await response.text();
