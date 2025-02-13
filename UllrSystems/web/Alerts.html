@@ -156,13 +156,13 @@
             <aside class="sidebar">
                 <nav class="main-menu">
                     <ul id="menu-items">
-                        <li><a href="inventory.html">Inventory</a></li>
-                        <li><a href="Order.html">Order</a></li>
-                        <li><a href="Alerts.html" class="active">Alerts</a></li>
+                        <li><a href="inventory.html" id="inventoryLink">Inventory</a></li>
+                        <li><a href="Order.html" id="orderLink">Order</a></li>
+                        <li><a href="Alerts.html" class="active" id="alertsLink">Alerts</a></li>
                         <li><a href="ManageAccounts.html" id="manageAccountsLink">Manage Accounts</a></li>
                         <li><a href="ManageFridges.html" id="manageFridgesLink">Manage Fridges</a></li>
                         <li><a href="Reports.html" id="reportsLink">Reports</a></li>
-                        <li><a href="#" id="logoutLink">Logout</a></li>
+                        <li><a href="logout" id="logoutLink">Logout</a></li>
                     </ul>
                 </nav>
             </aside>
@@ -198,15 +198,15 @@
         <!-- Script to fetch real alerts from your back-end servlet -->
         <script>
             window.addEventListener('DOMContentLoaded', async () => {
-            try {
-            const response = await fetch('/UllrSystems/alerts');
-            if (!response.ok) {
-            throw new Error(`Server error: ${response.status}`);
-            }
-            const alerts = await response.json();
-            const expiryTable = document.getElementById("expiry-alerts");
-            if (alerts.length > 0) {
-            expiryTable.innerHTML = alerts.map((alert, index) => `
+                try {
+                    const response = await fetch('/UllrSystems/alerts');
+                    if (!response.ok) {
+                        throw new Error(`Server error: ${response.status}`);
+                    }
+                    const alerts = await response.json();
+                    const expiryTable = document.getElementById("expiry-alerts");
+                    if (alerts.length > 0) {
+                        expiryTable.innerHTML = alerts.map((alert, index) => `
                 <tr id="alert-${alert.alertId}">
                   <td>${index + 1}</td>
                   <td>${alert.alertMsg}</td>
@@ -214,67 +214,143 @@
                   <td><button class="btn btn-success" onclick="markAsRead(${alert.alertId})">Mark as Read</button></td>
                 </tr>
               `).join("");
-            } else {
-            expiryTable.innerHTML = `
+                    } else {
+                        expiryTable.innerHTML = `
                 <tr>
                   <td colspan="4" class="text-center">No items nearing expiry.</td>
                 </tr>
               `;
-            }
-            } catch (error) {
-            console.error("Failed to load alerts:", error);
-            }
+                    }
+                } catch (error) {
+                    console.error("Failed to load alerts:", error);
+                }
             });
         </script>
         <script>
-            async function markAsRead(alertId){
-                try{
-                    const response = await fetch(`UllrSystems/markAsRead?alertId=${alertId}`,{
+            async function markAsRead(alertId) {
+                try {
+                    const response = await fetch(`UllrSystems/markAsRead?alertId=${alertId}`, {
                         method: "POST"
                     });
-                    
-                    if(response.ok){
+
+                    if (response.ok) {
                         console.log(`Alert ${alertId} marked as read`);
                         document.getElementById(`alert-${alertId}`).remove();
-                    }else{
+                    } else {
                         console.error("failed to mark as read");
                     }
-                }catch(error){
+                } catch (error) {
                     console.error("error making alert as read: ", error);
                 }
             }
-            
-            
-            
-            
-            
-            async function CheckForNewAlert(){
-            try {
-            const response = await fetch("/UllrSystems/generate-expiry-alerts", {
-            method: "POST"
-            });
-            const text = await response.text();
-            console.log(text);
-            } catch (err) {
-            console.error("Error generating alerts:", err);
+
+
+
+
+
+            async function CheckForNewAlert() {
+                try {
+                    const response = await fetch("/UllrSystems/generate-expiry-alerts", {
+                        method: "POST"
+                    });
+                    const text = await response.text();
+                    console.log(text);
+                } catch (err) {
+                    console.error("Error generating alerts:", err);
+                }
             }
-            };
-            </script>
+            ;
+        </script>
 
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('success')) {
-            const successMessage = document.getElementById('successMessage');
-            successMessage.style.display = 'block';
-            }
+            document.addEventListener('DOMContentLoaded', function () {
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.has('success')) {
+                    const successMessage = document.getElementById('successMessage');
+                    successMessage.style.display = 'block';
+                }
             });
+
+            document.addEventListener("DOMContentLoaded", async function () {
+                // Retrieve the user's role
+            try{
+                const response = await fetch('/UllrSystems/getUserRole');
+                if(!response.ok) throw new Error("Not Authed");
+                const data = await response.json();
+                const userRole = data.role;
+                
+                if(userRole !== 3 && userRole !== 2){
+                    window.location.href = "inventory.html";
+                }
+                
+                const manageAccountsLink = document.getElementById("manageAccountsLink");
+                const manageFridgesLink = document.getElementById("manageFridgesLink");
+                const reportsLink = document.getElementById("reportsLink");
+                const ordersLink = document.getElementById("orderLink");
+                const alertsLink = document.getElementById("alertsLink");
+                const inventoryLink = document.getElementById("inventoryLink");
+                const logoutLink = document.getElementById("logoutLink");
+                
+                if(userRole !== 3){
+                    ordersLink.style.display = "none";
+                    manageAccountsLink.style.display = "none";
+                    reportsLink.style.display = "none";
+                    manageFridgesLink.style.display = "none";
+                }
+                if(userRole !==3 && userRole !== 2){
+                    ordersLink.style.display = "none";
+                    manageAccountsLink.style.display = "none";
+                    reportsLink.style.display = "none";
+                    manageFridgesLink.style.display = "none";
+                    inventoryLink.style.display = "none";
+                    alertsLink.style.display = "none";
+                }
+            }catch(error){
+                console.error("Error fetching user role: ", error);
+                window.location.href="index.html";
+            }
+        });
             
-            function refreshPage(){
+
+            function applyRoleBasedMenu(role) {
+                
+
+                // Define which roles can access which sections
+                const rolePermissions = {
+                    "3": ["Manage Accounts", "Manage Fridges", "Reports", "Inventory", "Order", "Logout", "Alerts"],
+                    "2": ["Inventory", "Alerts", "Logout"],
+                };
+
+                // Hide menu items not available for the user's role
+                if (!rolePermissions[role].includes("Manage Accounts")) {
+                    manageAccountsLink.style.display = "none";
+                }
+                if (!rolePermissions[role].includes("Manage Fridges")) {
+                    manageFridgesLink.style.display = "none";
+                }
+                if (!rolePermissions[role].includes("Reports")) {
+                    reportsLink.style.display = "none";
+                }
+            }
+
+            async function GetUserRole() {
+                try {
+                    const response = await fetch(`/UllrSystems/getUserRole`);
+                    const data = await response.json();
+                    return data.role;
+                } catch (error) {
+                    console.error("Failed to fetch user role:", error);
+                    return null;
+                }
+            }
+
+
+
+            function refreshPage() {
                 location.reload();
             }
-            
-            window.onload = function (){
+
+            window.onload = function () {
                 CheckForNewAlert();
             }
         </script>

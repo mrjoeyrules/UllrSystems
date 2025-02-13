@@ -17,7 +17,7 @@ public class GetUserRole extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("application/json");
 
-        HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession();
         JSONObject json = new JSONObject();
 
         // If session doesn’t exist or role not set, we can default to -1 or 0

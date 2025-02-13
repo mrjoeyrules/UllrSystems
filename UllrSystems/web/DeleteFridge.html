@@ -5,215 +5,255 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
 -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Delete Fridge | Ullr Systems</title>
-  <link rel="stylesheet" href="mainmenu.css">
-  <style>
-    /* General Reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <head>
+        <meta charset="UTF-8">
+        <title>Delete Fridge | Ullr Systems</title>
+        <link rel="stylesheet" href="mainmenu.css">
+        <style>
+            /* General Reset */
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
 
-    /* Body and Layout */
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f7fa;
-    }
+            /* Body and Layout */
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f7fa;
+            }
 
-    .layout-container {
-      display: flex;
-    }
+            .layout-container {
+                display: flex;
+            }
 
-    /* Header Styling */
-    .header-bar {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #ffffff;
-      padding: 10px;
-      width: 100%;
-    }
+            /* Header Styling */
+            .header-bar {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #ffffff;
+                padding: 10px;
+                width: 100%;
+            }
 
-    .header-logo {
-      height: 50px;
-      margin-right: 15px;
-    }
+            .header-logo {
+                height: 50px;
+                margin-right: 15px;
+            }
 
-    .brand {
-      color: white;
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
+            .brand {
+                color: white;
+                font-size: 1.5rem;
+                font-weight: bold;
+            }
 
-    .brand span {
-      color: #ffdd57;
-    }
+            .brand span {
+                color: #ffdd57;
+            }
 
-    /* Sidebar Styling */
-    .sidebar {
-      width: 200px;
-      background-color: #ffffff;
-      color: rgb(0, 0, 0);
-      padding-top: 20px;
-    }
+            /* Sidebar Styling */
+            .sidebar {
+                width: 200px;
+                background-color: #ffffff;
+                color: rgb(0, 0, 0);
+                padding-top: 20px;
+            }
 
-    .sidebar nav ul {
-      list-style-type: none;
-      padding: 0;
-    }
+            .sidebar nav ul {
+                list-style-type: none;
+                padding: 0;
+            }
 
-    .sidebar nav ul li {
-      padding: 10px;
-      text-align: center;
-    }
+            .sidebar nav ul li {
+                padding: 10px;
+                text-align: center;
+            }
 
-    .sidebar nav ul li a {
-      color: rgb(0, 0, 0);
-      text-decoration: none;
-      display: block;
-      padding: 12px 0;
-    }
+            .sidebar nav ul li a {
+                color: rgb(0, 0, 0);
+                text-decoration: none;
+                display: block;
+                padding: 12px 0;
+            }
 
-    .sidebar nav ul li a:hover,
-    .sidebar nav ul li a.active {
-      background-color: #111111;
-    }
+            .sidebar nav ul li a:hover,
+            .sidebar nav ul li a.active {
+                background-color: #111111;
+            }
 
-    /* Main Content Area */
-    .content-area {
-      flex-grow: 1;
-      padding: 20px;
-    }
+            /* Main Content Area */
+            .content-area {
+                flex-grow: 1;
+                padding: 20px;
+            }
 
-    h2 {
-      color: #0277bd;
-      margin-bottom: 20px;
-    }
+            h2 {
+                color: #0277bd;
+                margin-bottom: 20px;
+            }
 
-    /* Form Styling */
-    form input,
-    form select {
-      padding: 0.75rem;
-      margin: 8px 0;
-      width: 100%;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
+            /* Form Styling */
+            form input,
+            form select {
+                padding: 0.75rem;
+                margin: 8px 0;
+                width: 100%;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+            }
 
-    form button {
-      width: 100%;
-      padding: 1rem;
-      background-color: #0277bd;
-      color: white;
-      font-size: 1.1rem;
-      border: none;
-      cursor: pointer;
-      border-radius: 4px;
-    }
+            form button {
+                width: 100%;
+                padding: 1rem;
+                background-color: #0277bd;
+                color: white;
+                font-size: 1.1rem;
+                border: none;
+                cursor: pointer;
+                border-radius: 4px;
+            }
 
-    form button:hover {
-      background-color: #003366;
-    }
+            form button:hover {
+                background-color: #003366;
+            }
 
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      .layout-container {
-        flex-direction: column;
-      }
+            /* Responsive Design */
+            @media (max-width: 768px) {
+                .layout-container {
+                    flex-direction: column;
+                }
 
-      .sidebar {
-        width: 100%;
-        padding: 10px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <header class="header-bar">
-    <img src="logo.jpeg" alt="Logo" class="header-logo">
-    <h1 class="header-title" style="color: cadetblue;">Ullr <span style="color: #000000;"> Systems</span></h1>
-  </header>
+                .sidebar {
+                    width: 100%;
+                    padding: 10px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <header class="header-bar">
+            <img src="logo.jpeg" alt="Logo" class="header-logo">
+            <h1 class="header-title" style="color: cadetblue;">Ullr <span style="color: #000000;"> Systems</span></h1>
+        </header>
 
-  <div class="layout-container">
-    <aside class="sidebar">
-      <nav class="main-menu">
-        <ul id="menu-items">
-          <li><a href="inventory.html">Inventory</a></li>
-          <li><a href="Order.html">Order</a></li>
-          <li><a href="Alerts.html">Alerts</a></li>
-          <li><a href="ManageAccounts.html" id="manageAccountsLink">Manage Accounts</a></li>
-          <li><a href="ManageFridges.html" id="manageFridgesLink">Manage Fridges</a></li>
-          <li><a href="Reports.html" id="reportsLink">Reports</a></li>
-          <li><a href="#" id="logoutLink">Logout</a></li>
-        </ul>
-      </nav>
-    </aside>
-      <main class="content-area">
-      <h2 class="text-center" style="color: #000000; font-weight: bold; font-size:xx-large;">Delete Fridge</h2>
+        <div class="layout-container">
+            <aside class="sidebar">
+                <nav class="main-menu">
+                    <ul id="menu-items">
+                        <li><a href="inventory.html" id="inventoryLink">Inventory</a></li>
+                        <li><a href="Order.html" id="orderLink">Order</a></li>
+                        <li><a href="Alerts.html" id="alertsLink">Alerts</a></li>
+                        <li><a href="ManageAccounts.html" id="manageAccountsLink">Manage Accounts</a></li>
+                        <li><a href="ManageFridges.html" id="manageFridgesLink">Manage Fridges</a></li>
+                        <li><a href="Reports.html" id="reportsLink">Reports</a></li>
+                        <li><a href="logout" id="logoutLink">Logout</a></li>
+                    </ul>
+                </nav>
+            </aside>
+            <main class="content-area">
+                <h2 class="text-center" style="color: #000000; font-weight: bold; font-size:xx-large;">Delete Fridge</h2>
 
-      <form id="deleteFridgeForm" class="form-group">
-          <select id="fridgeId" onchange="loadFoodItems()" required>
-              <option value="" disabled selected>
-                  Select your Fridge
-              </option>
-              <!-- Fridge options will be populated dynamically -->
-          </select>
-        
-        <button type="submit" class="btn btn-danger mt-3">Delete Fridge</button>
-      </form>
-    </main>
-  </div>
+                <form id="deleteFridgeForm" class="form-group">
+                    <select id="fridgeId" onchange="loadFoodItems()" required>
+                        <option value="" disabled selected>
+                            Select your Fridge
+                        </option>
+                        <!-- Fridge options will be populated dynamically -->
+                    </select>
 
-  <script>
-    document.getElementById("deleteFridgeForm").addEventListener("submit", function(event) {
-      event.preventDefault();
-      const fridgeId = document.getElementById("fridgeId").value;
-      
-      fetch("/deleteFridge", {
-        method: "POST",
-        body: new URLSearchParams({ fridgeId })
-      })
-      .then(response => response.json())
-      .then(() => {
-        alert("Fridge deleted successfully!");
-        window.location.href = "ManageFridges.html";
-      })
-      .catch(error => console.error("Error deleting fridge:", error));
-    });
-    
-    
-    async function loadFridgeList() {
-                        try {
-                            const response = await fetch('/UllrSystems/GetAllFridgesManagementVer'); // Adjust path if needed
-                            if (!response.ok) {
-                                throw new Error('Failed to fetch fridge list');
-                            }
-                            const data = await response.json();
-                            const fridgeSelect = document.getElementById('fridgeId'); // where the data from servlet is going to go
+                    <button type="submit" class="btn btn-danger mt-3">Delete Fridge</button>
+                </form>
+            </main>
+        </div>
 
-                            // Clear any existing options
-                            fridgeSelect.innerHTML = '';
+        <script>
+            document.getElementById("deleteFridgeForm").addEventListener("submit", function (event) {
+                event.preventDefault();
+                const fridgeId = document.getElementById("fridgeId").value;
 
-                            // data.fridges is the array we expect from the servlet
-                            data.fridges.forEach(fridge => {
-                                const option = document.createElement('option');
-                                option.value = fridge.fridgeId;
-                                option.textContent = `Fridge ID: ${fridge.fridgeId}, Serial Number: ${fridge.serialNumber}`;
-                                fridgeSelect.appendChild(option);
-                            });
-                        } catch (error) {
-                            console.error(error);
-                            const messageDiv = document.getElementById('message');
-                            messageDiv.textContent = 'Error loading fridges';
-                            messageDiv.classList.add('error');
-                        }
+                fetch("/deleteFridge", {
+                    method: "POST",
+                    body: new URLSearchParams({fridgeId})
+                })
+                        .then(response => response.json())
+                        .then(() => {
+                            alert("Fridge deleted successfully!");
+                            window.location.href = "ManageFridges.html";
+                        })
+                        .catch(error => console.error("Error deleting fridge:", error));
+            });
+
+
+            async function loadFridgeList() {
+                try {
+                    const response = await fetch('/UllrSystems/GetAllFridgesManagementVer'); // Adjust path if needed
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch fridge list');
                     }
-               window.onload = function () {
-                        loadFridgeList();
-                    }
-  </script>
-</body>
+                    const data = await response.json();
+                    const fridgeSelect = document.getElementById('fridgeId'); // where the data from servlet is going to go
+
+                    // Clear any existing options
+                    fridgeSelect.innerHTML = '';
+
+                    // data.fridges is the array we expect from the servlet
+                    data.fridges.forEach(fridge => {
+                        const option = document.createElement('option');
+                        option.value = fridge.fridgeId;
+                        option.textContent = `Fridge ID: ${fridge.fridgeId}, Serial Number: ${fridge.serialNumber}`;
+                        fridgeSelect.appendChild(option);
+                    });
+                } catch (error) {
+                    console.error(error);
+                    const messageDiv = document.getElementById('message');
+                    messageDiv.textContent = 'Error loading fridges';
+                    messageDiv.classList.add('error');
+                }
+            }
+            
+            document.addEventListener("DOMContentLoaded", async function () {
+                // Retrieve the user's role
+            try{
+                const response = await fetch('/UllrSystems/getUserRole');
+                if(!response.ok) throw new Error("Not Authed");
+                const data = await response.json();
+                const userRole = data.role;
+                
+                if(userRole !== 3){
+                    window.location.href = "inventory.html";
+                }
+                
+                const manageAccountsLink = document.getElementById("manageAccountsLink");
+                const manageFridgesLink = document.getElementById("manageFridgesLink");
+                const reportsLink = document.getElementById("reportsLink");
+                const ordersLink = document.getElementById("orderLink");
+                const alertsLink = document.getElementById("alertsLink");
+                const inventoryLink = document.getElementById("inventoryLink");
+                const logoutLink = document.getElementById("logoutLink");
+                
+                if(userRole !== 3){
+                    ordersLink.style.display = "none";
+                    manageAccountsLink.style.display = "none";
+                    reportsLink.style.display = "none";
+                    manageFridgesLink.style.display = "none";
+                }
+                if(userRole !== 3 && userRole !== 2){
+                    ordersLink.style.display = "none";
+                    manageAccountsLink.style.display = "none";
+                    reportsLink.style.display = "none";
+                    manageFridgesLink.style.display = "none";
+                    inventoryLink.style.display = "none";
+                    alertsLink.style.display = "none";
+                }
+            }catch(error){
+                console.error("Error fetching user role: ", error);
+                window.location.href="index.html";
+            }
+        });
+            window.onload = function () {
+                loadFridgeList();
+            }
+        </script>
+    </body>
 </html>
