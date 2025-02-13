@@ -715,6 +715,9 @@ public class SQLInterfacing {
         String query = "SELECT itemid, foodname, expirationdate, quantity "
                      + "FROM food "
                      + "WHERE expirationdate <= ? AND expirationdate >= ?";
+        // Inside checkExpiringFood()
+// or you could store itemId or some unique fields in the table
+
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setObject(1, threshold);

@@ -18,11 +18,7 @@ public class AlertsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            dbInterface.checkExpiringFood();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+      
 
         ArrayList<Alerts> allAlerts = new ArrayList<>();
         try {

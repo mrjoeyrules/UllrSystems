@@ -105,6 +105,21 @@
       border: 1px solid #ddd;
       text-align: left;
     }
+    .card-title {
+    color: #0277bd;
+     border-bottom: 2px solid #0277bd;
+    padding-bottom: 0.5rem;
+    }
+
+    .btn-primary {
+    background-color: #0277bd;
+    border-color: #0267a7;
+    }
+
+    .btn-primary:hover {
+    background-color: #0267a7;
+    border-color: #02568f;
+    }
 
     .table th {
       background-color: #0277bd;
@@ -153,6 +168,7 @@
     </aside>
 
     <main class="content-area">
+  
 
       <!-- Expiry Date Alerts Table -->
       <div class="mb-5">
@@ -172,6 +188,8 @@
             </tr>
           </tbody>
         </table>
+          <button id="generateAlertsBtn">Generate Alerts</button>
+
       </div>
 
     </main>
@@ -209,6 +227,31 @@
     }
   });
   </script>
+<script>
+document.getElementById("generateAlertsBtn").addEventListener("click", async () => {
+  try {
+    const response = await fetch("/UllrSystems/admin/generate-expiry-alerts", {
+      method: "POST"
+    });
+    const text = await response.text();
+    console.log(text);
+    // Then reload the alerts table
+    loadAlerts(); // if you wrap your fetch('/api/alerts') in a function named loadAlerts
+  } catch (err) {
+    console.error("Error generating alerts:", err);
+  }
+});
+</script>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if(urlParams.has('success')) {
+      const successMessage = document.getElementById('successMessage');
+      successMessage.style.display = 'block';
+    }
+  });
+</script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
           integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
