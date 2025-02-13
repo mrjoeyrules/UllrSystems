@@ -704,7 +704,47 @@ public class SQLInterfacing {
             conn.close();
         }
     }
-    //Alerts
+    
+    //////////ALERTS//////
+    
+    public void checkExpiringFood() throws SQLException {
+        Connection conn = getConnection("Fridges");
+
+        LocalDate today = LocalDate.now();
+        LocalDate threshold = today.plusDays(3);
+        String query = "SELECT itemid, foodname, expirationdate, quantity "
+                     + "FROM food "
+                     + "WHERE expirationdate <= ? AND expirationdate >= ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setObject(1, threshold);
+            stmt.setObject(2, today);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int itemId = rs.getInt("itemid");
+                String name = rs.getString("foodname");
+                LocalDate expiry = rs.getObject("expirationdate", LocalDate.class);
+                double quantity = rs.getDouble("quantity");  
+
+                String alertMsg = "Food \"" + name + "\" (ID: " + itemId 
+                                  + ") expires on " + expiry 
+                                  + " (less than or equal to 3 days left).";
+
+                boolean wroteAlert = writeAlert(2, alertMsg);
+                if (wroteAlert) {
+                    System.out.println("Alert created for item " + itemId);
+                } else {
+                    System.out.println("Failed to create alert for item " + itemId);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            conn.close();
+        }
+    }
+   
      public boolean writeAlert(int alerttype, String alertmsg) throws SQLException {
         Connection conn = getConnection("AdminInfo");
         boolean iscomplete = false;
@@ -754,6 +794,6 @@ public class SQLInterfacing {
         conn.close();
         return alerts;
     }
-    
+ 
     
 }
