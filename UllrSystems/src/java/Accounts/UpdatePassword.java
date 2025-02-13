@@ -12,6 +12,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +25,7 @@ import java.util.logging.Logger;
 public class UpdatePassword extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
         String username = request.getParameter("username"); // gets username from form
         String password = request.getParameter("password"); // and password and reconfirmed password
         String repeatPassword = request.getParameter("repeatPassword");
@@ -36,9 +38,11 @@ public class UpdatePassword extends HttpServlet {
                 if (actionComplete) {
                     String message = username + "'s password has been updated";
                     response.setContentType("application/json");
+                    sql.WriteLog("User " + session.getAttribute("username") + " updated a password for account with username" + username + ".", 1);
                     response.getWriter().write("{\"success\": true, \"message\": \"" + message + "\"}");
                 } else {
                     errorMessage = "Error updating password";
+                     sql.WriteLog("User " + session.getAttribute("username") + " attempted to update a password for account with username" + username + " but was unsuccessful.", 1);
                     response.sendRedirect("UpdatePassword.html?error=" + java.net.URLEncoder.encode(errorMessage, "UTF-8")); // send error is fails
                 }
             } catch (SQLException ex) {

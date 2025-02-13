@@ -172,7 +172,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
       event.preventDefault();
       const fridgeId = document.getElementById("fridgeId").value;
       
-      fetch("/UllrSystems/deleteFridge", {
+      fetch("/deleteFridge", {
         method: "POST",
         body: new URLSearchParams({ fridgeId })
       })

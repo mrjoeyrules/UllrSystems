@@ -167,12 +167,11 @@
     event.preventDefault();
     const serialNumber = document.getElementById("serialNumber").value;
     const maxCapacity = document.getElementById("fridgeCapacity").value;
-    const currentCapacity = document.getElementById("currentCapacity").value;
 
     fetch("/UllrSystems/addFridge", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({ serialNumber, maxCapacity, currentCapacity })
+        body: new URLSearchParams({ serialNumber, maxCapacity })
     })
     .then(response => response.json())
     .then(() => {

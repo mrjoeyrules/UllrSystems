@@ -14,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.json.simple.JSONObject;
 
 /**
@@ -25,6 +26,7 @@ public class ModifyFridgeServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
@@ -42,9 +44,11 @@ public class ModifyFridgeServlet extends HttpServlet {
 
             if (success) {
                 responseJson.put("success", true);
+                sql.WriteLog("User " + session.getAttribute("username") + " modified fridgeid:  " + fridgeId + "." , 1);
                 responseJson.put("message", "Fridge modified successfully!"); // display message for correct to user in frontend
             } else {
                 responseJson.put("success", false);
+                sql.WriteLog("User " + session.getAttribute("username") + " attempted to delete fridgeid:  " + fridgeId + " but was unsuccessful." , 1);
                 responseJson.put("error", "Failed to modify fridge."); // reverse for error
             }
 
