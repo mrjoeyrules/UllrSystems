@@ -36,7 +36,6 @@ public class SQLInterfacing {
                 }
                 // Connect to PostgreSQL database
                 conn = DriverManager.getConnection(url, username, password); // actually connects using the url above and username and password for admin acc
-                System.out.println("Connected to the PostgreSQL server successfully."); // console test to prove connection succeded
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }
@@ -95,9 +94,8 @@ public class SQLInterfacing {
     }
 
     //////// LOGGING SYSTEM
-    public boolean WriteLog(String logMessage, int eventType) throws SQLException {
+    public void WriteLog(String logMessage, int eventType) throws SQLException {
         Connection conn = getConnection("AdminInfo");
-        boolean isEntered = false;
         String table = "";
         if (eventType == 1) {
             table = "adminlogs";
@@ -105,9 +103,9 @@ public class SQLInterfacing {
             table = "hselogs";
         } else {
             System.out.println("You didnt enter a correct event type");
-            return isEntered; // stops code from running and crashing
+            return;
         }
-        String query = "INSERT INTO " + table + " (eventid, eventype, eventtext, eventtime) VALUES (?,?,?,?)";
+        String query = "INSERT INTO " + table + " (eventid, eventtype, eventtext, eventtime) VALUES (?,?,?,?)";
         int eventid = GetRowCount(conn, table) + 1;
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, eventid);
@@ -116,15 +114,13 @@ public class SQLInterfacing {
             stmt.setObject(4, GetTimestamp());
             int rowsInserted = stmt.executeUpdate();
             if (rowsInserted > 0) {
-                System.out.println("Rows inserted");
-                isEntered = true;
+                conn.close();
             }
         } catch (SQLException e) {
             e.printStackTrace();
             conn.close();
         }
         conn.close();
-        return isEntered;
     }
 
     public ArrayList<Report> GetAllReportsOfType(int eventType) throws SQLException {
@@ -654,7 +650,7 @@ public class SQLInterfacing {
         shelfNames[4] = "Baked Goods";
         for (int i = 0; i < newShelfCount; i++) {
             try (PreparedStatement stmt = conn.prepareStatement(query)) {
-                stmt.setInt(1, rowCount + i);
+                stmt.setInt(1, rowCount + i + 1);
                 stmt.setInt(2, fridgeId);
                 stmt.setString(3, shelfNames[i]);
                 stmt.setDouble(4, maxCapacity);

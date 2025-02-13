@@ -30,6 +30,7 @@ public class CreateUser extends HttpServlet {
         SQLInterfacing sql = new SQLInterfacing();
         PasswordGenerator pwg = new PasswordGenerator();
         String errorMessage;
+        HttpSession session = request.getSession();
         String username = request.getParameter("username"); // gets username from form
         String role = request.getParameter("role");
         int roleNum = Integer.valueOf(role);
@@ -41,11 +42,22 @@ public class CreateUser extends HttpServlet {
         } catch (SQLException ex) {
             Logger.getLogger(CreateUser.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if (isCreated == false) { // if the user fails either server is down or the username is already in use
+        if (isCreated == false) { try {
+            
+            // if the user fails either server is down or the username is already in use
+            sql.WriteLog("User " + session.getAttribute("username") + " Attempted to create new account with username" + username + " but was unsuccessful", 1);
+            } catch (SQLException ex) {
+                Logger.getLogger(CreateUser.class.getName()).log(Level.SEVERE, null, ex);
+            }
             errorMessage = "Username already in use";
             response.sendRedirect("CreateAccount.html?error=" + java.net.URLEncoder.encode(errorMessage, "UTF-8")); // send error is fails
             return;
         } else {
+            try {
+                sql.WriteLog("User " + session.getAttribute("username") + " Created a new account with username" + username + ".", 1);
+            } catch (SQLException ex) {
+                Logger.getLogger(CreateUser.class.getName()).log(Level.SEVERE, null, ex);
+            }
             response.setContentType("application/json");
             response.getWriter().write("{\"success\": true, \"password\": \"" + newPassword + "\"}");
             return;

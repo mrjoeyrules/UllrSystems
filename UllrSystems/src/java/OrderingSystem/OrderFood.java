@@ -13,6 +13,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class OrderFood extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         SQLInterfacing sql = new SQLInterfacing();
@@ -78,8 +80,10 @@ public class OrderFood extends HttpServlet {
                     sql.DeleteFoodFromSupplier(food.GetFoodID());
                 }
                 responseJson.put("success", true);
+                sql.WriteLog("User " + session.getAttribute("username") + " ordered food for fridgeid:  " + fridgeId + "." , 1);
             } else {
                 responseJson.put("success", false);
+                sql.WriteLog("User " + session.getAttribute("username") + " attempted to order food for fridgeid:  " + fridgeId + " but was unsuccessful." , 1);
                 responseJson.put("error", "Database insert failed.");
             }
         } catch (Exception e) {
