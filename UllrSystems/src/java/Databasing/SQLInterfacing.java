@@ -1,7 +1,6 @@
 package Databasing;
 
 import Accounts.User;
-import Alerts.Alerts;
 import Food.FoodItem;
 import Fridge.Fridge;
 import Inventory.Shelf;
@@ -33,7 +32,7 @@ public class SQLInterfacing {
                 try {
                     Class.forName("org.postgresql.Driver");
                 } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                     e.printStackTrace();
                 }
                 // Connect to PostgreSQL database
                 conn = DriverManager.getConnection(url, username, password); // actually connects using the url above and username and password for admin acc
@@ -622,8 +621,8 @@ public class SQLInterfacing {
             stmt.setInt(2, serialNumber);
             stmt.setDouble(3, maxCapacity);
             stmt.setDouble(4, currentCapacity);
-            if (stmt.executeUpdate() > 0) {
-                isComplete = addShelvesForFridge(fridgeId, conn);
+            if(stmt.executeUpdate() > 0){
+                isComplete =  addShelvesForFridge(fridgeId, conn);
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -656,12 +655,13 @@ public class SQLInterfacing {
                 stmt.setString(3, shelfNames[i]);
                 stmt.setDouble(4, maxCapacity);
                 stmt.setDouble(5, currentCapacity);
-                if (stmt.executeUpdate() > 0) {
+                if(stmt.executeUpdate() > 0){
                     isComplete = true;
-                } else {
+                }
+                else{
                     isComplete = false;
                 }
-            } catch (SQLException e) {
+            }catch(SQLException e){
                 e.printStackTrace();
             }
         }
@@ -701,47 +701,47 @@ public class SQLInterfacing {
         }
     }
 
-    //////////ALERTS//////
-    private boolean checkIfIdExists(int itemId) throws SQLException {
-        Connection conn = getConnection("AdminInfo");
-        String query = "SELECT 1 FROM alerts WHERE itemid = ? LIMIT 1";
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, itemId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next();
-            }
+    //////////CLEAN UP/////
+    public boolean cleanupTestUsers() throws SQLException {
+        Connection conn = getConnection("Accounts");
+        String sql = "DELETE FROM users WHERE username LIKE 'testUser%'";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            int rows = stmt.executeUpdate();
+            return rows > 0; // true if at least 1 row was removed
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            conn.close();
         }
     }
     
-    public boolean MarkAsRead(int alertId) throws SQLException{
-        Connection conn = getConnection("AdminInfo");
-        String query = "UPDATE alerts SET markedasread = TRUE WHERE alertid = ?";
-        boolean isComplete = false;
-        try(PreparedStatement stmt = conn.prepareStatement(query)){
-            stmt.setInt(1, alertId);
-            int rowsUpdated = stmt.executeUpdate();
-            if(rowsUpdated >0){
-                isComplete = true;
-                conn.close();
-            }
-        }catch(SQLException e){
-            conn.close();
+    public boolean cleanupTestFridges() throws SQLException {
+        Connection conn = getConnection("Fridges");
+        String sql = "DELETE FROM fridge WHERE serialnumber >= 5000";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            int rows = stmt.executeUpdate();
+            return rows > 0;
+        } catch (SQLException e) {
             e.printStackTrace();
+            return false;
+        } finally {
+            conn.close();
         }
-        conn.close();
-        return isComplete;
     }
-
+    //////////ALERTS//////
+    
     public void checkExpiringFood() throws SQLException {
         Connection conn = getConnection("Fridges");
 
         LocalDate today = LocalDate.now();
         LocalDate threshold = today.plusDays(3);
         String query = "SELECT itemid, foodname, expirationdate, quantity "
-                + "FROM food "
-                + "WHERE expirationdate <= ? AND expirationdate >= ?";
+                     + "FROM food "
+                     + "WHERE expirationdate <= ? AND expirationdate >= ?";
         // Inside checkExpiringFood()
 // or you could store itemId or some unique fields in the table
+
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setObject(1, threshold);
@@ -752,21 +752,17 @@ public class SQLInterfacing {
                 int itemId = rs.getInt("itemid");
                 String name = rs.getString("foodname");
                 LocalDate expiry = rs.getObject("expirationdate", LocalDate.class);
-                double quantity = rs.getDouble("quantity");
+                double quantity = rs.getDouble("quantity");  
 
-                String alertMsg = "Food \"" + name + "\" (ID: " + itemId
-                        + ") expires on " + expiry
-                        + " (less than or equal to 3 days left).";
+                String alertMsg = "Food \"" + name + "\" (ID: " + itemId 
+                                  + ") expires on " + expiry 
+                                  + " (less than or equal to 3 days left).";
 
-                if (checkIfIdExists(itemId)) {
-                    System.out.println("Alert exists skip");
+                boolean wroteAlert = writeAlert(2, alertMsg);
+                if (wroteAlert) {
+                    System.out.println("Alert created for item " + itemId);
                 } else {
-                    boolean wroteAlert = writeAlert(2, alertMsg, itemId);
-                    if (wroteAlert) {
-                        System.out.println("Alert created for item " + itemId);
-                    } else {
-                        System.out.println("Failed to create alert for item " + itemId);
-                    }
+                    System.out.println("Failed to create alert for item " + itemId);
                 }
             }
         } catch (SQLException e) {
@@ -775,20 +771,20 @@ public class SQLInterfacing {
             conn.close();
         }
     }
-
-    public boolean writeAlert(int alerttype, String alertmsg, int itemId) throws SQLException {
+   
+     public boolean writeAlert(int alerttype, String alertmsg) throws SQLException {
         Connection conn = getConnection("AdminInfo");
         boolean iscomplete = false;
-        String query = "INSERT INTO alerts (alertid, alertmsg, timestamp, markedasread, alerttype, itemid) VALUES (?,?,?,?,?,?) ";
+        String query = "INSERT INTO alerts (alertid, alertmsg, timestamp, markedasread, alerttype) VALUES (?,?,?,?,?) ";
         int rowcount = GetRowCount(conn, "alerts");
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        try(PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, rowcount + 1);
             stmt.setString(2, alertmsg);
             stmt.setObject(3, GetTimestamp());
             stmt.setBoolean(4, false);
             stmt.setInt(5, alerttype);
-            stmt.setInt(6, itemId);
             int rowsInserted = stmt.executeUpdate();
+
 
             if (rowsInserted > 0) {
                 iscomplete = true;
@@ -803,7 +799,6 @@ public class SQLInterfacing {
 
         return iscomplete;
     }
-
     public ArrayList<Alerts> GetAllAlerts() throws SQLException {
         Connection conn = getConnection("AdminInfo");
         ArrayList<Alerts> alerts = new ArrayList<Alerts>();
@@ -813,7 +808,7 @@ public class SQLInterfacing {
             while (rs.next()) {
                 Alerts alert = new Alerts();
                 alert.setAlertId(rs.getInt("alertid"));
-                alert.setAlertMsg(rs.getString("alertmsg"));
+                alert.setAlertMsg(rs.getString ("alertmsg"));
                 alert.setTimestamp(rs.getObject("timestamp", LocalDateTime.class));
                 alert.setAlertType(rs.getInt("alerttype"));
                 alert.setMarkedAsRead(rs.getBoolean("markedasread"));
@@ -826,5 +821,6 @@ public class SQLInterfacing {
         conn.close();
         return alerts;
     }
-
+ 
+    
 }
