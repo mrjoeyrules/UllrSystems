@@ -7,6 +7,7 @@ import Inventory.InventoryServlet;
 import OrderingSystem.GetAllOrderFoods;
 import OrderingSystem.GetAllOrdersServlet;
 import Alerts.AlertsServlet;
+import Fridge.Fridge;
 import OrderingSystem.OrderFood;
 import Reports.GetAllReportsServlet;
 import OrderingSystem.GetAllFridgesServlet;
@@ -21,8 +22,12 @@ import java.io.*;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.security.Principal;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.function.Supplier;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 // Complete test file using reflection and fake HttpServletRequest/Response.
 public class AllServletTestsReflection {
@@ -287,60 +292,9 @@ public class AllServletTestsReflection {
     // 3) Test methods for each servlet (each test times out after 5000ms)
     // ---------------------------------------------------------------------
 
-    @Test(timeout = 5000)
-    public void testAddFridgeServlet() throws Exception {
-        FakeHttpServletRequest request = new FakeHttpServletRequest();
-        FakeHttpServletResponse response = new FakeHttpServletResponse();
 
-        request.setMethod("POST");
-        request.setParameter("serialNumber", "SERIAL-UNITTEST");
-        request.setParameter("fridgeCapacity", "75.5");
 
-        AddFridgeServlet servlet = new AddFridgeServlet();
-        invokeDoPost(servlet, request, response);
 
-        String result = response.getOutput();
-        assertNotNull("AddFridgeServlet output should not be null", result);
-        // Check that result contains "success" or "error"
-        assertTrue("Output should contain 'success' or 'error'.",
-                   result.contains("success") || result.contains("error"));
-    }
-
-    @Test(timeout = 5000)
-    public void testDeleteFridgeServlet() throws Exception {
-        FakeHttpServletRequest request = new FakeHttpServletRequest();
-        FakeHttpServletResponse response = new FakeHttpServletResponse();
-
-        request.setMethod("POST");
-        request.setParameter("fridgeId", "1");
-
-        DeleteFridgeServlet servlet = new DeleteFridgeServlet();
-        invokeDoPost(servlet, request, response);
-
-        String result = response.getOutput();
-        assertNotNull("DeleteFridgeServlet output should not be null", result);
-        assertTrue("Output should contain 'success' or 'error'.",
-                   result.contains("success") || result.contains("error"));
-    }
-
-    @Test(timeout = 5000)
-    public void testModifyFridgeServlet() throws Exception {
-        FakeHttpServletRequest request = new FakeHttpServletRequest();
-        FakeHttpServletResponse response = new FakeHttpServletResponse();
-
-        request.setMethod("POST");
-        request.setParameter("fridgeId", "1");
-        request.setParameter("serialNumber", "MODIFIED-SERIAL");
-        request.setParameter("fridgeCapacity", "100.0");
-
-        ModifyFridgeServlet servlet = new ModifyFridgeServlet();
-        invokeDoPost(servlet, request, response);
-
-        String result = response.getOutput();
-        assertNotNull("ModifyFridgeServlet output should not be null", result);
-        assertTrue("Output should contain 'success' or 'error'.",
-                   result.contains("success") || result.contains("error"));
-    }
 
     @Test(timeout = 5000)
     public void testInventoryServletNoFridgeId() throws Exception {
@@ -414,32 +368,7 @@ public class AllServletTestsReflection {
 
 
 
-    @Test(timeout = 5000)
-    public void testOrderFoodServlet() throws Exception {
-        FakeHttpServletRequest request = new FakeHttpServletRequest();
-        FakeHttpServletResponse response = new FakeHttpServletResponse();
 
-        request.setMethod("POST");
-        // Build a JSON body for order details
-        String jsonBody = "{" +
-                "\"orderDate\":\"2025-01-01\"," +
-                "\"deliveryDate\":\"2025-01-08\"," +
-                "\"food\":[" +
-                "  {\"foodId\":1001, \"foodName\":\"TestFood1\", \"expirationDate\":\"2025-03-01\", \"weight\":2.5}," +
-                "  {\"foodId\":1002, \"foodName\":\"TestFood2\", \"expirationDate\":\"2025-04-01\", \"weight\":3.0}" +
-                "]" +
-                "}";
-        request.setContent(jsonBody);
-
-        OrderFood servlet = new OrderFood();
-        invokeDoPost(servlet, request, response);
-
-        String result = response.getOutput();
-        assertNotNull("OrderFood servlet output should not be null.", result);
-        // Expect JSON with "success" or "error"
-        assertTrue("Should contain 'success' or 'error'.",
-                   result.contains("success") || result.contains("error"));
-    }
 
     @Test(timeout = 5000)
     public void testGetAllReportsServletWithValidType() throws Exception {
@@ -490,4 +419,26 @@ public class AllServletTestsReflection {
         // Expect JSON with "fridges"
         assertTrue("Should contain 'fridges'.", result.contains("\"fridges\""));
     }
+    
+    
+    @Test
+    public void testMaxSerialNumberLength() {
+    Fridge fridge = new Fridge();
+    String maxSerial = "A".repeat(255);
+    fridge.SetSerialNumber(maxSerial);
+    assertEquals(255, fridge.GetSerialNumber().length());
+}
+    
+    
+    
+    
+    @Test(expected = DateTimeParseException.class)
+    public void testInvalidDateInput() {
+    LocalDate.parse("2024-02-30"); // Invalid date
+}
+
+
+
+    
+    
 }

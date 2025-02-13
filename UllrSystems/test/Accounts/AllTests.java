@@ -18,7 +18,6 @@ public class AllTests {
     public void testPasswordGeneratorLength() {
         PasswordGenerator generator = new PasswordGenerator();
         String password = generator.getNewPassword();
-        // Assuming your generator creates a 9-character password:
         assertEquals("Password should be 9 characters long.", 9, password.length());
     }
 
@@ -76,4 +75,24 @@ public class AllTests {
             fail("Database not connected or query failed: " + e.getMessage());
         }
     }
+    
+    
+    @Test(expected = IllegalArgumentException.class)
+public void testSetNullPassword() {
+    User user = new User("user", 1);
+    user.setNewPassword(null);
+}
+
+@Test
+public void testSetLongUsername() {
+    User user = new User("a".repeat(255), 1); // Assume max length 255
+    assertEquals(255, user.getUsername().length());
+}
+
+@Test(expected = IllegalArgumentException.class)
+public void testSetInvalidRole() {
+    User user = new User("user", -1); // Negative role
+}
+
+    
 }

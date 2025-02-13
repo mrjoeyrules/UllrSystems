@@ -7,6 +7,8 @@ import OrderingSystem.Order;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -139,13 +141,26 @@ public class AllOrderingTests {
         }
     }
 
- /*   @Test(timeout = 5000)
-    public void testGetAllOrdersForHistory() {
+
+    
+    @Test(expected = IllegalArgumentException.class)
+public void testInvalidDeliveryDate() {
+    Order order = new Order();
+    order.SetOrderDate(LocalDate.now());
+    order.SetDeliveryDate(LocalDate.now().minusDays(1));
+}
+
+@Test(expected = IllegalArgumentException.class)
+public void testOrderWithNoFood() {
+    Order order = new Order();
+    order.SetFood(new ArrayList<>()); // Empty list
         try {
-            ArrayList<Order> orders = sql.GetAllOrdersForHistory();
-            assertNotNull("Order history list should not be null.", orders);
-        } catch (SQLException e) {
-            fail("testGetAllOrdersForHistory threw SQLException: " + e.getMessage());
+            sql.AddOrderToDB(order); // Should validate and throw
+        } catch (SQLException ex) {
+            Logger.getLogger(AllOrderingTests.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }*/
+}
+
+    
+    
 }

@@ -238,6 +238,9 @@ public class FridgeTest {
     // ----------------------------------------------------------------
     // 5. Tests for GetAllFridgesManagementVer
     // ----------------------------------------------------------------
+    
+    
+    
 
     @Test
     public void testGetAllFridgesManagementVer_Success() throws ServletException, IOException {
@@ -260,5 +263,9 @@ public class FridgeTest {
         
         assertTrue(output.contains("\"fridges\""));
     }
+    
+    
+    
+    
     
 }

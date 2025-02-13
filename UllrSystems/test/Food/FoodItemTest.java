@@ -51,4 +51,20 @@ public class FoodItemTest {
         assertEquals("addFoodItem's name should be 'Apples'.", 
                      "Apples", FoodItem.addFoodItem.GetFoodName());
     }
+    
+    
+    @Test(expected = IllegalArgumentException.class)
+public void testExpiredFood() {
+    FoodItem item = new FoodItem();
+    item.SetExpirationDate(LocalDate.now().minusDays(1));
+}
+
+@Test(expected = IllegalArgumentException.class)
+public void testNegativeWeight() {
+    FoodItem item = new FoodItem();
+    item.SetWeight(-5.0);
+}
+
+    
+    
 }
