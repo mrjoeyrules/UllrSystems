@@ -569,7 +569,7 @@ public class SQLInterfacing {
     }
 
     public ArrayList<Order> GetAllOrdersForHistory() throws SQLException {
-        Connection conn = getConnection("Fridge");
+        Connection conn = getConnection("Fridges");
         ArrayList<Order> orders = new ArrayList();
         String query = "SELECT * FROM orders";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
