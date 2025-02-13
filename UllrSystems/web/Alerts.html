@@ -5,8 +5,9 @@
   <title>Alerts | Ullr Systems</title>
   <link rel="stylesheet" href="mainmenu.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
-  rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
-  crossorigin="anonymous">
+        rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
+        crossorigin="anonymous">
   <style>
     /* General Reset */
     * {
@@ -25,8 +26,8 @@
       display: flex;
     }
 
-      /* Header Styling */
-      .header-bar {
+    /* Header Styling */
+    .header-bar {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -78,6 +79,7 @@
     .sidebar nav ul li a:hover,
     .sidebar nav ul li a.active {
       background-color: #111111;
+      color: white;
     }
 
     /* Main Content Area */
@@ -91,94 +93,26 @@
       margin-bottom: 20px;
     }
 
-    /* Form and Table Styling */
-    .order-table {
+    /* Table Styling */
+    .table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
     }
 
-    .order-table th, .order-table td {
+    .table th, .table td {
       padding: 10px;
       border: 1px solid #ddd;
       text-align: left;
     }
 
-    .order-table th {
+    .table th {
       background-color: #0277bd;
       color: white;
     }
 
-    .order-table td {
+    .table td {
       background-color: #f9f9f9;
-    }
-
-    .btn-action {
-      background-color: #0277bd;
-      color: white;
-      font-size: 1rem;
-      font-weight: 600;
-      padding: 0.75rem 1rem;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .btn-action:hover {
-      background-color: #003366;
-    }
-
-    .filter-form {
-      margin: 20px 0;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .filter-form input,
-    .filter-form select {
-      padding: 0.5rem;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-
-    .filter-form button {
-      padding: 0.75rem 1.5rem;
-      background-color: #0277bd;
-      color: white;
-      border: none;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-
-    .filter-form button:hover {
-      background-color: #003366;
-    }
-
-    /* Order Form */
-    form input,
-    form select {
-      padding: 0.75rem;
-      margin: 8px 0;
-      width: 100%;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
-
-    form button {
-      width: 100%;
-      padding: 1rem;
-      background-color: #0277bd;
-      color: white;
-      font-size: 1.1rem;
-      border: none;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-
-    form button:hover {
-      background-color: #003366;
     }
 
     /* Responsive Design */
@@ -192,171 +126,92 @@
         padding: 10px;
       }
     }
-
-   
-
-
-
   </style>
-
-
-
 </head>
+
 <body>
   <header class="header-bar">
     <img src="logo.jpeg" alt="Logo" class="header-logo">
-    <h1 class="header-title" style="color: cadetblue; display: flex; font-weight: bold ; font-size:xx-large;">
-        <span>Ullr</span><span style="color: #000000; margin-left: 5px;">Systems</span>
+    <h1 class="header-title" style="color: cadetblue; display: flex; font-weight: bold; font-size:xx-large;">
+      <span>Ullr</span><span style="color: #000000; margin-left: 5px;">Systems</span>
     </h1>
-</header>
-
-
+  </header>
 
   <div class="layout-container">
-<aside class="sidebar">
-  <nav class="main-menu">
-    <ul id="menu-items">
-      <li><a href="inventory.html">Inventory</a></li>
-      <li><a href="Order.html">Order</a></li>
-      <li><a href="Alerts.html">Alerts</a></li>
-      <li><a href="ManageAccounts.html" id="manageAccountsLink">Manage Accounts</a></li>
-      <li><a href="ManageFridges.html" id="manageFridgesLink">Manage Fridges</a></li>
-      <li><a href="Reports.html" id="reportsLink">Reports</a></li>
-      <li><a href="#" id="logoutLink">Logout</a></li>
-    </ul>
-  </nav>
-</aside>
+    <aside class="sidebar">
+      <nav class="main-menu">
+        <ul id="menu-items">
+          <li><a href="inventory.html">Inventory</a></li>
+          <li><a href="Order.html">Order</a></li>
+          <li><a href="Alerts.html" class="active">Alerts</a></li>
+          <li><a href="ManageAccounts.html" id="manageAccountsLink">Manage Accounts</a></li>
+          <li><a href="ManageFridges.html" id="manageFridgesLink">Manage Fridges</a></li>
+          <li><a href="Reports.html" id="reportsLink">Reports</a></li>
+          <li><a href="#" id="logoutLink">Logout</a></li>
+        </ul>
+      </nav>
+    </aside>
 
+    <main class="content-area">
 
-<main class="content-area">
+      <!-- Expiry Date Alerts Table -->
+      <div class="mb-5">
+        <h3 class="text-center mb-2 mt-5">Expiry Date Alerts</h3>
+        <table class="table table-bordered table-striped">
+          <thead class="table-secondary">
+            <tr>
+              <th>#</th>
+              <th>Alert Message</th>
+              <th>Timestamp</th>
+              <th>Read?</th>
+            </tr>
+          </thead>
+          <tbody id="expiry-alerts">
+            <tr>
+              <td colspan="4" class="text-center">No items nearing expiry.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-  <!-- Expiry Date Alerts Table -->
-  <div class="mb-5">
-    <h3 class="text-center mb-2 mt-5">Expiry Date Alerts</h3>
-    <table class="table table-bordered table-striped">
-      <thead class="table-secondary">
-        <tr>
-          <th>#</th>
-          <th>Food Name</th>
-          <th>Quantity</th>
-          <th>Expiration Date</th>
-        </tr>
-      </thead>
-      <tbody id="expiry-alerts">
-        <tr>
-          <td colspan="4" class="text-center">No items nearing expiry.</td>
-        </tr>
-      </tbody>
-    </table>
+    </main>
   </div>
 
-  <!-- Low Stock Alerts Table -->
-  <div>
-    <h3 class="text-center mb-2 mt-3">Low Stock Alerts</h3>
-    <table class="table table-bordered table-striped">
-      <thead class="table-secondary">
-        <tr>
-          <th>#</th>
-          <th>Food Name</th>
-          <th>Quantity</th>
-          <th>Minimum Threshold</th>
-        </tr>
-      </thead>
-      <tbody id="low-stock-alerts">
-        <tr>
-          <td colspan="4" class="text-center">No items low on stock.</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</main>
-</div>
+  <!-- Script to fetch real alerts from your back-end servlet -->
+  <script>
+  window.addEventListener('DOMContentLoaded', async () => {
+    try {
+      const response = await fetch('/UllrSystems/api/alerts');
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+      const alerts = await response.json(); 
+      const expiryTable = document.getElementById("expiry-alerts");
 
-<script>
- // Roles: 1 = Delivery Personnel, 2 = Chef, 3 = Admin
-const currentUser = { username: "john_doe", role: 2 }; // Simulated current user for this example
-
-// Sidebar menu items and their required roles
-// const menuItems = [
-//   { label: "Inventory", href: "inventory.html", roles: [3] },
-//   { label: "Order", href: "Order.html", roles: [3] },
-//   { label: "Alerts", href: "Alerts.html", roles: [2, 3] },
-//   { label: "Manage Accounts", href: "ManageAccounts.html", roles: [3] },
-//   { label: "Manage Fridge", href: "ManageFridges.html", roles: [2, 3] },
-//   { label: "Reports", href: "Reports.html", roles: [3] },
-// ];
-
-// const menuContainer = document.getElementById("menu-items");
-
-// Dynamically populate the menu based on the current user's role
-menuItems.forEach(item => {
-  if (item.roles.includes(currentUser.role)) {
-    const li = document.createElement("li");
-    if(item.label=="Alerts")
-    {
-      li.innerHTML = `<a href="${item.href}" class="active">${item.label}</a>`;
-
-    } 
-    else
-    {
-      li.innerHTML = `<a href="${item.href}">${item.label}</a>`;
+      if (alerts.length > 0) {
+        expiryTable.innerHTML = alerts.map((alert, index) => `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${alert.alertMsg}</td>
+            <td>${alert.timestamp}</td>
+            <td>${alert.markedAsRead}</td>
+          </tr>
+        `).join("");
+      } else {
+        expiryTable.innerHTML = `
+          <tr>
+            <td colspan="4" class="text-center">No items nearing expiry.</td>
+          </tr>
+        `;
+      }
+    } catch (error) {
+      console.error("Failed to load alerts:", error);
     }
-    menuContainer.appendChild(li);
-  }
-});
+  });
+  </script>
 
-// Sample hardcoded data for alerts
-const foodItems = [
-  { foodId: 1, foodName: "Chicken Breast", expirationDate: "2025-01-25", quantity: 10 },
-  { foodId: 2, foodName: "Lettuce", expirationDate: "2025-01-22", quantity: 3 },
-  { foodId: 3, foodName: "Mozzarella Cheese", expirationDate: "2025-01-20", quantity: 1 },
-  { foodId: 4, foodName: "Tomatoes", expirationDate: "2025-01-28", quantity: 8 },
-  { foodId: 5, foodName: "Pasta Sauce", expirationDate: "2025-01-27", quantity: 2 },
-];
-
-const expiryThreshold = 3; // Days before expiry to trigger alert
-const lowStockThreshold = 3; // Minimum quantity threshold
-
-// Filter for expiry alerts
-const today = new Date();
-const expiryAlerts = foodItems.filter(item => {
-  const expiryDate = new Date(item.expirationDate);
-  const daysLeft = (expiryDate - today) / (1000 * 60 * 60 * 24);
-  return daysLeft <= expiryThreshold;
-});
-
-// Filter for low stock alerts
-const lowStockAlerts = foodItems.filter(item => item.quantity <= lowStockThreshold);
-
-// Populate Expiry Alerts Table
-const expiryTable = document.getElementById("expiry-alerts");
-if (expiryAlerts.length > 0) {
-  expiryTable.innerHTML = expiryAlerts.map((item, index) => `
-    <tr>
-      <td>${index + 1}</td>
-      <td>${item.foodName}</td>
-      <td>${item.quantity} pcs</td>
-      <td>${new Date(item.expirationDate).toLocaleDateString()}</td>
-    </tr>
-  `).join("");
-}
-
-// Populate Low Stock Alerts Table
-const lowStockTable = document.getElementById("low-stock-alerts");
-if (lowStockAlerts.length > 0) {
-  lowStockTable.innerHTML = lowStockAlerts.map((item, index) => `
-    <tr>
-      <td>${index + 1}</td>
-      <td>${item.foodName}</td>
-      <td>${item.quantity} pcs</td>
-      <td>${lowStockThreshold} pcs</td>
-    </tr>
-  `).join("");
-}
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
-integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
-crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+          integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
+          crossorigin="anonymous"></script>
 </body>
 </html>
