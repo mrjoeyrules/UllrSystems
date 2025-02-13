@@ -425,4 +425,22 @@ public class SQLInterfacing {
         conn.close();
         return deliveredFood;
     }
+    
+    public String GetShelfName(int shelfId) throws SQLException{
+        Connection conn = getConnection("Fridges");
+        String shelfName = "";
+        String query = "SELECT shelfname FROM shelves WHERE shelfid = ?";
+        try(PreparedStatement stmt = conn.prepareStatement(query)){
+            stmt.setInt(1, shelfId);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()){
+                shelfName = rs.getString("shelfname");
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+            conn.close();
+        }
+        conn.close();
+        return shelfName;
+    }
 }
