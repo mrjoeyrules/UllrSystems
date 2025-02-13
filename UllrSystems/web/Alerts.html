@@ -1,260 +1,286 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Alerts | Ullr Systems</title>
-  <link rel="stylesheet" href="mainmenu.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
-        rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
-        crossorigin="anonymous">
-  <style>
-    /* General Reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <head>
+        <meta charset="UTF-8">
+        <title>Alerts | Ullr Systems</title>
+        <link rel="stylesheet" href="mainmenu.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
+              rel="stylesheet"
+              integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
+              crossorigin="anonymous">
+        <style>
+            /* General Reset */
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
 
-    /* Body and Layout */
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f7fa;
-    }
+            /* Body and Layout */
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f7fa;
+            }
 
-    .layout-container {
-      display: flex;
-    }
+            .layout-container {
+                display: flex;
+            }
 
-    /* Header Styling */
-    .header-bar {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #ffffff;
-      padding: 10px;
-      width: 100%;
-    }
+            /* Header Styling */
+            .header-bar {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #ffffff;
+                padding: 10px;
+                width: 100%;
+            }
 
-    .header-logo {
-      height: 50px;
-      margin-right: 15px;
-    }
+            .header-logo {
+                height: 50px;
+                margin-right: 15px;
+            }
 
-    .brand {
-      color: white;
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
+            .brand {
+                color: white;
+                font-size: 1.5rem;
+                font-weight: bold;
+            }
 
-    .brand span {
-      color: #ffdd57;
-    }
+            .brand span {
+                color: #ffdd57;
+            }
 
-    /* Sidebar Styling */
-    .sidebar {
-      width: 200px;
-      background-color: #ffffff;
-      color: rgb(0, 0, 0);
-      padding-top: 20px;
-    }
+            /* Sidebar Styling */
+            .sidebar {
+                width: 200px;
+                background-color: #ffffff;
+                color: rgb(0, 0, 0);
+                padding-top: 20px;
+            }
 
-    .sidebar nav ul {
-      list-style-type: none;
-      padding: 0;
-    }
-    
-    .sidebar nav ul li {
-      padding: 10px;
-      text-align: center;
-    }
+            .sidebar nav ul {
+                list-style-type: none;
+                padding: 0;
+            }
 
-    .sidebar nav ul li a {
-      color: rgb(0, 0, 0);
-      text-decoration: none;
-      display: block;
-      padding: 12px 0;
-    }
+            .sidebar nav ul li {
+                padding: 10px;
+                text-align: center;
+            }
 
-    .sidebar nav ul li a:hover,
-    .sidebar nav ul li a.active {
-      background-color: #111111;
-      color: white;
-    }
+            .sidebar nav ul li a {
+                color: rgb(0, 0, 0);
+                text-decoration: none;
+                display: block;
+                padding: 12px 0;
+            }
 
-    /* Main Content Area */
-    .content-area {
-      flex-grow: 1;
-      padding: 20px;
-    }
+            .sidebar nav ul li a:hover,
+            .sidebar nav ul li a.active {
+                background-color: #111111;
+                color: white;
+            }
 
-    h2 {
-      color: #0277bd;
-      margin-bottom: 20px;
-    }
+            /* Main Content Area */
+            .content-area {
+                flex-grow: 1;
+                padding: 20px;
+            }
 
-    /* Table Styling */
-    .table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
+            h2 {
+                color: #0277bd;
+                margin-bottom: 20px;
+            }
 
-    .table th, .table td {
-      padding: 10px;
-      border: 1px solid #ddd;
-      text-align: left;
-    }
-    .card-title {
-    color: #0277bd;
-     border-bottom: 2px solid #0277bd;
-    padding-bottom: 0.5rem;
-    }
+            /* Table Styling */
+            .table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
 
-    .btn-primary {
-    background-color: #0277bd;
-    border-color: #0267a7;
-    }
+            .table th, .table td {
+                padding: 10px;
+                border: 1px solid #ddd;
+                text-align: left;
+            }
+            .card-title {
+                color: #0277bd;
+                border-bottom: 2px solid #0277bd;
+                padding-bottom: 0.5rem;
+            }
 
-    .btn-primary:hover {
-    background-color: #0267a7;
-    border-color: #02568f;
-    }
+            .btn-primary {
+                background-color: #0277bd;
+                border-color: #0267a7;
+            }
 
-    .table th {
-      background-color: #0277bd;
-      color: white;
-    }
+            .btn-primary:hover {
+                background-color: #0267a7;
+                border-color: #02568f;
+            }
 
-    .table td {
-      background-color: #f9f9f9;
-    }
+            .table th {
+                background-color: #0277bd;
+                color: white;
+            }
 
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      .layout-container {
-        flex-direction: column;
-      }
+            .table td {
+                background-color: #f9f9f9;
+            }
 
-      .sidebar {
-        width: 100%;
-        padding: 10px;
-      }
-    }
-  </style>
-</head>
+            /* Responsive Design */
+            @media (max-width: 768px) {
+                .layout-container {
+                    flex-direction: column;
+                }
 
-<body>
-  <header class="header-bar">
-    <img src="logo.jpeg" alt="Logo" class="header-logo">
-    <h1 class="header-title" style="color: cadetblue; display: flex; font-weight: bold; font-size:xx-large;">
-      <span>Ullr</span><span style="color: #000000; margin-left: 5px;">Systems</span>
-    </h1>
-  </header>
+                .sidebar {
+                    width: 100%;
+                    padding: 10px;
+                }
+            }
+        </style>
+    </head>
 
-  <div class="layout-container">
-    <aside class="sidebar">
-      <nav class="main-menu">
-        <ul id="menu-items">
-          <li><a href="inventory.html">Inventory</a></li>
-          <li><a href="Order.html">Order</a></li>
-          <li><a href="Alerts.html" class="active">Alerts</a></li>
-          <li><a href="ManageAccounts.html" id="manageAccountsLink">Manage Accounts</a></li>
-          <li><a href="ManageFridges.html" id="manageFridgesLink">Manage Fridges</a></li>
-          <li><a href="Reports.html" id="reportsLink">Reports</a></li>
-          <li><a href="#" id="logoutLink">Logout</a></li>
-        </ul>
-      </nav>
-    </aside>
+    <body>
+        <header class="header-bar">
+            <img src="logo.jpeg" alt="Logo" class="header-logo">
+            <h1 class="header-title" style="color: cadetblue; display: flex; font-weight: bold; font-size:xx-large;">
+                <span>Ullr</span><span style="color: #000000; margin-left: 5px;">Systems</span>
+            </h1>
+        </header>
 
-    <main class="content-area">
-  
+        <div class="layout-container">
+            <aside class="sidebar">
+                <nav class="main-menu">
+                    <ul id="menu-items">
+                        <li><a href="inventory.html">Inventory</a></li>
+                        <li><a href="Order.html">Order</a></li>
+                        <li><a href="Alerts.html" class="active">Alerts</a></li>
+                        <li><a href="ManageAccounts.html" id="manageAccountsLink">Manage Accounts</a></li>
+                        <li><a href="ManageFridges.html" id="manageFridgesLink">Manage Fridges</a></li>
+                        <li><a href="Reports.html" id="reportsLink">Reports</a></li>
+                        <li><a href="#" id="logoutLink">Logout</a></li>
+                    </ul>
+                </nav>
+            </aside>
 
-      <!-- Expiry Date Alerts Table -->
-      <div class="mb-5">
-        <h3 class="text-center mb-2 mt-5">Expiry Date Alerts</h3>
-        <table class="table table-bordered table-striped">
-          <thead class="table-secondary">
-            <tr>
-              <th>#</th>
-              <th>Alert Message</th>
-              <th>Timestamp</th>
-              <th>Read?</th>
-            </tr>
-          </thead>
-          <tbody id="expiry-alerts">
-            <tr>
-              <td colspan="4" class="text-center">No items nearing expiry.</td>
-            </tr>
-          </tbody>
-        </table>
-          <button id="generateAlertsBtn">Generate Alerts</button>
+            <main class="content-area">
 
-      </div>
 
-    </main>
-  </div>
+                <!-- Expiry Date Alerts Table -->
+                <div class="mb-5">
+                    <h3 class="text-center mb-2 mt-5">Expiry Date Alerts</h3>
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th>#</th>
+                                <th>Alert Message</th>
+                                <th>Timestamp</th>
+                                <th>Mark As Read?</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expiry-alerts">
+                            <tr>
+                                <td colspan="4" class="text-center">No items nearing expiry.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button id="refreshAlertsBtn" onclick="refreshPage()">Refresh Alerts</button>
 
-  <!-- Script to fetch real alerts from your back-end servlet -->
-  <script>
-  window.addEventListener('DOMContentLoaded', async () => {
-    try {
-      const response = await fetch('/UllrSystems/api/alerts');
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.status}`);
-      }
-      const alerts = await response.json(); 
-      const expiryTable = document.getElementById("expiry-alerts");
+                </div>
 
-      if (alerts.length > 0) {
-        expiryTable.innerHTML = alerts.map((alert, index) => `
-          <tr>
-            <td>${index + 1}</td>
-            <td>${alert.alertMsg}</td>
-            <td>${alert.timestamp}</td>
-            <td>${alert.markedAsRead}</td>
-          </tr>
-        `).join("");
-      } else {
-        expiryTable.innerHTML = `
-          <tr>
-            <td colspan="4" class="text-center">No items nearing expiry.</td>
-          </tr>
-        `;
-      }
-    } catch (error) {
-      console.error("Failed to load alerts:", error);
-    }
-  });
-  </script>
-<script>
-document.getElementById("generateAlertsBtn").addEventListener("click", async () => {
-  try {
-    const response = await fetch("/UllrSystems/admin/generate-expiry-alerts", {
-      method: "POST"
-    });
-    const text = await response.text();
-    console.log(text);
-    // Then reload the alerts table
-    loadAlerts(); // if you wrap your fetch('/api/alerts') in a function named loadAlerts
-  } catch (err) {
-    console.error("Error generating alerts:", err);
-  }
-});
-</script>
+            </main>
+        </div>
 
-  <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    if(urlParams.has('success')) {
-      const successMessage = document.getElementById('successMessage');
-      successMessage.style.display = 'block';
-    }
-  });
-</script>
+        <!-- Script to fetch real alerts from your back-end servlet -->
+        <script>
+            window.addEventListener('DOMContentLoaded', async () => {
+            try {
+            const response = await fetch('/UllrSystems/alerts');
+            if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`);
+            }
+            const alerts = await response.json();
+            const expiryTable = document.getElementById("expiry-alerts");
+            if (alerts.length > 0) {
+            expiryTable.innerHTML = alerts.map((alert, index) => `
+                <tr id="alert-${alert.alertId}">
+                  <td>${index + 1}</td>
+                  <td>${alert.alertMsg}</td>
+                  <td>${alert.timestamp}</td>
+                  <td><button class="btn btn-success" onclick="markAsRead(${alert.alertId})">Mark as Read</button></td>
+                </tr>
+              `).join("");
+            } else {
+            expiryTable.innerHTML = `
+                <tr>
+                  <td colspan="4" class="text-center">No items nearing expiry.</td>
+                </tr>
+              `;
+            }
+            } catch (error) {
+            console.error("Failed to load alerts:", error);
+            }
+            });
+        </script>
+        <script>
+            async function markAsRead(alertId){
+                try{
+                    const response = await fetch(`UllrSystems/markAsRead?alertId=${alertId}`,{
+                        method: "POST"
+                    });
+                    
+                    if(response.ok){
+                        console.log(`Alert ${alertId} marked as read`);
+                        document.getElementById(`alert-${alertId}`).remove();
+                    }else{
+                        console.error("failed to mark as read");
+                    }
+                }catch(error){
+                    console.error("error making alert as read: ", error);
+                }
+            }
+            
+            
+            
+            
+            
+            async function CheckForNewAlert(){
+            try {
+            const response = await fetch("/UllrSystems/generate-expiry-alerts", {
+            method: "POST"
+            });
+            const text = await response.text();
+            console.log(text);
+            } catch (err) {
+            console.error("Error generating alerts:", err);
+            }
+            };
+            </script>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
-          integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
-          crossorigin="anonymous"></script>
-</body>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('success')) {
+            const successMessage = document.getElementById('successMessage');
+            successMessage.style.display = 'block';
+            }
+            });
+            
+            function refreshPage(){
+                location.reload();
+            }
+            
+            window.onload = function (){
+                CheckForNewAlert();
+            }
+        </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+                integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
+        crossorigin="anonymous"></script>
+    </body>
 </html>

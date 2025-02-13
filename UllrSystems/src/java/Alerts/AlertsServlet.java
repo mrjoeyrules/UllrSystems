@@ -1,5 +1,6 @@
-package Databasing;
+package Alerts;
 
+import Databasing.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -10,7 +11,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/api/alerts")
+@WebServlet("/alerts")
 public class AlertsServlet extends HttpServlet {
 
     private final SQLInterfacing dbInterface = new SQLInterfacing();
@@ -30,8 +31,12 @@ public class AlertsServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         out.print("[");
-        for (int i = 0; i < allAlerts.size(); i++) {
-            Alerts alert = allAlerts.get(i);
+        boolean first = true;
+        for (Alerts alert : allAlerts) {
+            if(!alert.isMarkedAsRead()){
+                if(!first){
+                    out.print(",");
+                }
 
             out.print("{");
             out.print("\"alertId\":" + alert.getAlertId() + ",");
@@ -40,9 +45,8 @@ public class AlertsServlet extends HttpServlet {
             out.print("\"markedAsRead\":" + alert.isMarkedAsRead() + ",");
             out.print("\"alertType\":" + alert.getAlertType());
             out.print("}");
-
-            if (i < allAlerts.size() - 1) {
-                out.print(",");
+            
+            first = false;
             }
         }
         out.print("]");

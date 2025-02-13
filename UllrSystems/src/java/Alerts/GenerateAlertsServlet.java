@@ -1,5 +1,6 @@
-package Databasing;
+package Alerts;
 
+import Databasing.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -10,7 +11,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/admin/generate-expiry-alerts")
+@WebServlet("/generate-expiry-alerts")
 public class GenerateAlertsServlet extends HttpServlet {
 
     private SQLInterfacing dbInterface = new SQLInterfacing();

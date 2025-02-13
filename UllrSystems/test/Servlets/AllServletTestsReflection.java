@@ -6,7 +6,7 @@ import Fridge.ModifyFridgeServlet;
 import Inventory.InventoryServlet;
 import OrderingSystem.GetAllOrderFoods;
 import OrderingSystem.GetAllOrdersServlet;
-import Databasing.AlertsServlet;
+import Alerts.AlertsServlet;
 import OrderingSystem.OrderFood;
 import Reports.GetAllReportsServlet;
 import OrderingSystem.GetAllFridgesServlet;

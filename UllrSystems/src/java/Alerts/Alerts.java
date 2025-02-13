@@ -1,5 +1,6 @@
-package Databasing;
+package Alerts;
 
+import Databasing.*;
 import java.time.LocalDateTime;
 
 public class Alerts {
